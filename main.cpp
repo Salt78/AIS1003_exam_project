@@ -1,37 +1,36 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
+#include "threepp/threepp.hpp"
+
+using namespace threepp;
+
+int main() {
+    Canvas canvas("RandomGeometry", {{"aa", 4}});
+
+    GLRenderer renderer(canvas.size());
 
 
-int main(int argc, char **argv) {
-    cv::VideoCapture cap(0);
+    auto scene{Scene::create()};
 
-    if (cap.isOpened() == false) {
-        std::cout << "Unable to open camera\n";
-        std::cin.get();
-        return -1;
-    }
+    //Camera and orbitial controls
 
-    double dWidth{cap.get(cv::CAP_PROP_FRAME_WIDTH)};
-    double dHeight{cap.get(cv::CAP_PROP_FRAME_HEIGHT)};
+    auto camera{PerspectiveCamera::create(75, 800.0f / 600.0f, 0.1f, 1000.0f)};
+    camera->position.z = 5;
 
-    std::cout << "The resolution is:" << dWidth << "x" << dHeight << std::endl;
+    OrbitControls controls(*camera, canvas);
 
-    cv::namedWindow("Video Capture", cv::WINDOW_AUTOSIZE);
+    //Random geometry for testing
 
-    while (true) {
-        cv::Mat frame;
-        bool bSuccess = cap.read(frame);
+    auto geometry{BoxGeometry::create(1, 1, 1)};
+    auto material{MeshBasicMaterial::create()};
+    material->color = Color::yellow;
 
-        if (bSuccess == false) {
-            std::cout << "Camera got disconnected\n";
-            std::cin.get();
-            return -1;
-        }
-        cv::imshow("Video Capture", frame);
-        const auto key = cv::waitKey(1);
-        if (key == 'q') {
-            break;
-        }
-    }
-    return 0;
+    auto cube{Mesh::create(geometry, material)};
+
+    scene->add(cube);
+
+    Clock clock;
+    canvas.animate([&]() {
+        renderer.render(*scene, *camera);
+    });
 }
