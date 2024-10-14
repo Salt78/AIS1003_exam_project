@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 include(FetchContent)
 
+add_subdirectory(src)
+
 set(THREEPP_BUILD_TESTS OFF)
 set(THREEPP_BUILD_EXAMPLES OFF)
 FetchContent_Declare(
@@ -14,11 +16,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(threepp)
 
-add_executable(threeppxopencv main.cpp)
+add_executable(threeppxopencv src/main.cpp)
 target_link_libraries(threeppxopencv PRIVATE threepp::threepp)
 
 find_package(OpenCV CONFIG REQUIRED)
 target_link_libraries(threeppxopencv PRIVATE ${OpenCV_LIBS})
+
+target_link_libraries(threeppxopencv PRIVATE SceneriesLib)
 
 
 ######### Emscripten #######
