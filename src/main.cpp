@@ -22,10 +22,28 @@ int main(int argc, char **argv) {
     auto camera{PerspectiveCamera::create(75, 800.0f / 600.0f, 0.1f, 1000.0f)};
     camera->position.z = 5;
 
+    // Framebuffer (Help from GPT)
+    std::vector<unsigned char> pixels(imageSize.first * imageSize.second * 3);
+
+    //glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+    // Choose the first pixels that are too be read into the buffer.
+    const int x{0};
+    const int y{0};
+
+    //OPENCV Window
+
+    std::string windowName{"ThreePP"};
+    namedWindow(windowName, WINDOW_AUTOSIZE);
+
+
     canvas.onWindowResize([&](WindowSize size) {
         camera->aspect = size.aspect();
         camera->updateProjectionMatrix();
         renderer.setSize(size);
+
+        imageSize = std::make_pair(size.width(), size.height());
+        pixels.resize(imageSize.first * imageSize.second * 3);
     });
 
 
@@ -41,17 +59,7 @@ int main(int argc, char **argv) {
 
     scene->add(cube);
 
-    // Framebuffer (Help from GPT)
-    std::vector<unsigned char> pixelsBGR(imageSize.first * imageSize.second * 3);
-
-    // Choose the first pixels that are too be read into the buffer.
-    const int x{0};
-    const int y{0};
-
-    //OPENCV Window
-
-    std::string windowName{"ThreePP"};
-    namedWindow(windowName, WINDOW_AUTOSIZE);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
 
     Clock clock;
@@ -59,14 +67,17 @@ int main(int argc, char **argv) {
         renderer.render(*scene, *camera);
 
         //Pixels are read into the buffer here.
-        glReadPixels(x, y, imageSize.first, imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, pixelsBGR.data());
+        glReadPixels(x, y, imageSize.first, imageSize.second, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
+
 
         //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
-        Mat image{imageSize.first, imageSize.second, CV_8UC3, pixelsBGR.data()};
+        Mat image{imageSize.first, imageSize.second, CV_8UC3, pixels.data()};
+        cvtColor(image, image, cv::COLOR_RGB2BGR);
+        flip(image, image, 0);
+
 
         imshow(windowName, image);
 
         waitKey(1);
-
     });
 }
