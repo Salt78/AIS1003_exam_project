@@ -22,6 +22,9 @@ target_link_libraries(threeppxopencv PRIVATE threepp::threepp)
 find_package(OpenCV CONFIG REQUIRED)
 target_link_libraries(threeppxopencv PRIVATE ${OpenCV_LIBS})
 
+find_package(glad CONFIG REQUIRED)
+target_link_libraries(threeppxopencv PRIVATE glad::glad)
+
 target_link_libraries(threeppxopencv PRIVATE SceneriesLib)
 
 
