@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
     Canvas canvas("RandomGeometry", {{"aa", 4}});
 
     GLRenderer renderer(canvas.size());
-    std::pair<int, int> imageSize{1920, 1080};
+    std::pair<int, int> imageSize{800, 600};
     renderer.setSize(imageSize);
 
 
@@ -27,9 +27,6 @@ int main(int argc, char **argv) {
 
     //glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
-    // Choose the first pixels that are too be read into the buffer.
-    const int x{0};
-    const int y{0};
 
     //OPENCV Window
 
@@ -59,20 +56,22 @@ int main(int argc, char **argv) {
 
     scene->add(cube);
 
-    glPixelStorei(GL_PACK_ALIGNMENT, 1);
-
+    // Choose the first pixels that are too be read into the buffer.
+    const int x{0};
+    const int y{0};
 
     Clock clock;
     canvas.animate([&]() {
         renderer.render(*scene, *camera);
 
         //Pixels are read into the buffer here.
-        glReadPixels(x, y, imageSize.first, imageSize.second, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
+        glReadPixels(x, y, imageSize.first, imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, pixels.data());
 
 
         //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
-        Mat image{imageSize.first, imageSize.second, CV_8UC3, pixels.data()};
-        cvtColor(image, image, cv::COLOR_RGB2BGR);
+        Mat image{imageSize.second, imageSize.first, CV_8UC3, pixels.data()};
+
+        //OpenCV uses a different origin for the image, so it is flipped here.
         flip(image, image, 0);
 
 
