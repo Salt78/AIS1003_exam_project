@@ -1,10 +1,12 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
+
+#include "../cmake-build-debug/_deps/threepp-src/src/external/glad/glad/glad.h"
 #include "threepp/threepp.hpp"
 
 using namespace threepp;
 
-int main() {
+int main(int argc, char **argv) {
     Canvas canvas("RandomGeometry", {{"aa", 4}});
 
     GLRenderer renderer(canvas.size());
@@ -31,10 +33,19 @@ int main() {
 
     scene->add(cube);
 
+    // Framebuffer (Help from GPT)
+    std::vector<unsigned char> pixelsBGR(imageSize.first * imageSize.second * 3);
+
+    // Choose the first pixels that are too be read into the buffer.
+    const int x{0};
+    const int y{0};
+
+
     Clock clock;
     canvas.animate([&]() {
         renderer.render(*scene, *camera);
-    });
 
-    std::vector<unsigned char> pixelsRGBA(imageSize.first * imageSize.second * 4);
+        //Pixels are read into the buffer here.
+        glReadPixels(x, y, imageSize.first, imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, pixelsBGR.data());
+    });
 }
