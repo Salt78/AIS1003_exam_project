@@ -8,8 +8,6 @@
 #include <iostream>
 
 
-
-
 #define SCENERY_HPP
 
 #endif //SCENERY_HPP

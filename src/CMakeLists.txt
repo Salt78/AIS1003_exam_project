@@ -1,5 +1,5 @@
 
-add_library(SceneriesLib scenery.cpp)
+add_library(SceneriesLib geoGeneration.cpp)
 
 
 

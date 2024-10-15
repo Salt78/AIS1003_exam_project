@@ -3,6 +3,7 @@
 
 #include "../cmake-build-debug/_deps/threepp-src/src/external/glad/glad/glad.h"
 #include "threepp/threepp.hpp"
+#include "geoGeneration.hpp"
 
 using namespace threepp;
 using namespace cv;
@@ -14,7 +15,6 @@ int main(int argc, char **argv) {
     std::pair<int, int> imageSize{800, 600};
     renderer.setSize(imageSize);
 
-
     auto scene{Scene::create()};
 
     //Camera and orbital controls
@@ -24,8 +24,6 @@ int main(int argc, char **argv) {
 
     // Framebuffer (Help from GPT)
     std::vector<unsigned char> pixels(imageSize.first * imageSize.second * 3);
-
-    //glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
 
     //OPENCV Window
@@ -67,13 +65,11 @@ int main(int argc, char **argv) {
         //Pixels are read into the buffer here.
         glReadPixels(x, y, imageSize.first, imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, pixels.data());
 
-
         //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
         Mat image{imageSize.second, imageSize.first, CV_8UC3, pixels.data()};
 
         //OpenCV uses a different origin for the image, so it is flipped here.
         flip(image, image, 0);
-
 
         imshow(windowName, image);
 
