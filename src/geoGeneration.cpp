@@ -1,30 +1,37 @@
 #include "geoGeneration.hpp"
 
-enum class Shape {
-    CUBE,
-    SPHERE,
-    CYLINDER,
-    CONE
-};
+using namespace threepp;
+
+namespace geoGen {
+    enum class Shape {
+        CUBE,
+        SPHERE,
+        CYLINDER,
+        CONE
+    };
+}
 
 
 class GeoGen {
 private:
+    //General properties
     std::string m_name{};
-    std::string m_color{};
+    Color::ColorName m_color{};
     int m_quantity{};
-    Shape m_shape{};
+    geoGen::Shape m_shape{};
+
+
 
 public:
-    GeoGen(std::string name, std::string color = "yellow", int quantity = 0, Shape shape)
-        : m_name{std::move(name)}, m_color{std::move(color)}, m_quantity{quantity}, m_shape{shape} {
+    GeoGen(std::string name, int quantity = 0, geoGen::Shape shape = geoGen::Shape::CUBE)
+        : m_name{std::move(name)}, m_quantity{quantity}, m_shape{shape} {
     }
 
     [[nodiscard]] std::string getName() const {
         return m_name;
     }
 
-    [[nodiscard]] std::string getColor() const {
+    [[nodiscard]] Color::ColorName getColor() const {
         return m_color;
     }
 
@@ -33,17 +40,69 @@ public:
     }
 
     [[nodiscard]] std::string getShape() const {
-        switch(m_shape) {
-            case Shape::CUBE:
+        switch (m_shape) {
+            case geoGen::Shape::CUBE:
                 return "cube";
-            case Shape::CONE:
+            case geoGen::Shape::CONE:
                 return "cone";
-            case Shape::SPHERE:
+            case geoGen::Shape::SPHERE:
                 return "sphere";
-            case Shape::CYLINDER:
+            case geoGen::Shape::CYLINDER:
                 return "cylinder";
         }
+        return "unknown";
     }
 
+    void generate() const {
+        std::shared_ptr<MeshBasicMaterial> m_material{MeshBasicMaterial::create()};
+        m_material->color = Color::green;
 
+        int i{}; // for loop counter
+        std::vector<std::shared_ptr<Mesh> > geoVec{};
+
+        switch (m_shape) {
+            case geoGen::Shape::CUBE: {
+                std::shared_ptr<BoxGeometry> cubeGeometry{};
+                cubeGeometry = BoxGeometry::create(1, 1, 1);
+
+                for (i; i > m_quantity; i++) {
+                    geoVec[i] = Mesh::create(cubeGeometry, m_material);
+                    geoVec[i]->position.set(i, i, i);
+                }
+
+                break;
+            }
+            case geoGen::Shape::CONE: {
+                std::shared_ptr<ConeGeometry> coneGeometry{};
+                coneGeometry = ConeGeometry::create(1, 1, 1);
+
+                for (i; i > m_quantity; i++) {
+                    geoVec[i] = Mesh::create(coneGeometry, m_material);
+                    geoVec[i]->position.set(i, i, i);
+                }
+                break;
+            }
+            case geoGen::Shape::SPHERE: {
+                std::shared_ptr<SphereGeometry> sphereGeometry{};
+                sphereGeometry = SphereGeometry::create(1, 1, 1);
+
+                for (i; i > m_quantity; i++) {
+                    geoVec[i] = Mesh::create(sphereGeometry, m_material);
+                    geoVec[i]->position.set(i, i, i);
+                }
+
+                break;
+            }
+            case geoGen::Shape::CYLINDER: {
+            }
+                std::shared_ptr<CylinderGeometry> cylinderGeometry{};
+                cylinderGeometry = CylinderGeometry::create(1, 1, 1);
+
+                for (i; i > m_quantity; i++) {
+                    geoVec[i] = Mesh::create(cylinderGeometry, m_material);
+                    geoVec[i]->position.set(i, i, i);
+                }
+                break;
+        }
+    }
 };

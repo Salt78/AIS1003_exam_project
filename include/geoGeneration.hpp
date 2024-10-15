@@ -6,6 +6,7 @@
 
 #include "threepp/threepp.hpp"
 #include <iostream>
+#include <random>
 
 
 #define SCENERY_HPP
