@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
     std::string windowName{"ThreePP"};
     namedWindow(windowName, WINDOW_AUTOSIZE);
 
-
+    //Resize event
     canvas.onWindowResize([&](WindowSize size) {
         camera->aspect = size.aspect();
         camera->updateProjectionMatrix();
@@ -58,16 +58,14 @@ int main(int argc, char **argv) {
     test2.addToScene(scene);
     test3.addToScene(scene);
 
-    // Choose the first pixels that are too be read into the buffer.
-    constexpr int x{0};
-    constexpr int y{0};
 
+    //Render loop
     Clock clock;
     canvas.animate([&]() {
         renderer.render(*scene, *camera);
 
         //Pixels are read into the buffer here.
-        glReadPixels(x, y, imageSize.first, imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, pixels.data());
+        glReadPixels(0, 0, imageSize.first, imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, pixels.data());
 
         //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
         Mat image{imageSize.second, imageSize.first, CV_8UC3, pixels.data()};
