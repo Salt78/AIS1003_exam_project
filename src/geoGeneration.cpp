@@ -20,7 +20,9 @@ private:
     int m_quantity{};
     geoGen::Shape m_shape{};
 
+    std::shared_ptr<MeshBasicMaterial> m_material;
 
+    std::vector<std::shared_ptr<Mesh> > m_geoVec{};
 
 public:
     GeoGen(std::string name, int quantity = 0, geoGen::Shape shape = geoGen::Shape::CUBE)
@@ -53,12 +55,12 @@ public:
         return "unknown";
     }
 
-    void generate() const {
+    void generate() {
         std::shared_ptr<MeshBasicMaterial> m_material{MeshBasicMaterial::create()};
         m_material->color = Color::green;
 
         int i{}; // for loop counter
-        std::vector<std::shared_ptr<Mesh> > geoVec{};
+
 
         switch (m_shape) {
             case geoGen::Shape::CUBE: {
@@ -66,8 +68,8 @@ public:
                 cubeGeometry = BoxGeometry::create(1, 1, 1);
 
                 for (i; i > m_quantity; i++) {
-                    geoVec[i] = Mesh::create(cubeGeometry, m_material);
-                    geoVec[i]->position.set(i, i, i);
+                    m_geoVec[i] = Mesh::create(cubeGeometry, m_material);
+                    m_geoVec[i]->position.set(i, i, i);
                 }
 
                 break;
@@ -77,8 +79,8 @@ public:
                 coneGeometry = ConeGeometry::create(1, 1, 1);
 
                 for (i; i > m_quantity; i++) {
-                    geoVec[i] = Mesh::create(coneGeometry, m_material);
-                    geoVec[i]->position.set(i, i, i);
+                    m_geoVec[i] = Mesh::create(coneGeometry, m_material);
+                    m_geoVec[i]->position.set(i, i, i);
                 }
                 break;
             }
@@ -87,8 +89,8 @@ public:
                 sphereGeometry = SphereGeometry::create(1, 1, 1);
 
                 for (i; i > m_quantity; i++) {
-                    geoVec[i] = Mesh::create(sphereGeometry, m_material);
-                    geoVec[i]->position.set(i, i, i);
+                    m_geoVec[i] = Mesh::create(sphereGeometry, m_material);
+                    m_geoVec[i]->position.set(i, i, i);
                 }
 
                 break;
@@ -99,8 +101,8 @@ public:
                 cylinderGeometry = CylinderGeometry::create(1, 1, 1);
 
                 for (i; i > m_quantity; i++) {
-                    geoVec[i] = Mesh::create(cylinderGeometry, m_material);
-                    geoVec[i]->position.set(i, i, i);
+                    m_geoVec[i] = Mesh::create(cylinderGeometry, m_material);
+                    m_geoVec[i]->position.set(i, i, i);
                 }
                 break;
         }

@@ -44,15 +44,20 @@ int main(int argc, char **argv) {
 
     OrbitControls controls(*camera, canvas);
 
+
+
+
+
+
     //Random geometry for testing
 
-    auto geometry{BoxGeometry::create(1, 1, 1)};
-    auto material{MeshBasicMaterial::create()};
-    material->color = Color::yellow;
+    // auto geometry{BoxGeometry::create(1, 1, 1)};
+    // auto material{MeshBasicMaterial::create()};
+    // material->color = Color::yellow;
+    //
+    // auto cube{Mesh::create(geometry, material)};
 
-    auto cube{Mesh::create(geometry, material)};
-
-    scene->add(cube);
+    // scene->add(cube);
 
     // Choose the first pixels that are too be read into the buffer.
     const int x{0};
