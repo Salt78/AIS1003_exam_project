@@ -53,23 +53,10 @@ int main(int argc, char **argv) {
     test2.generate();
     test3.generate();
 
-    //TEST CODE
-
-    int i{};
-    for (i; i < test.getGeoVec().size(); i++) {
-        scene->add(test.getGeoVec()[i]);
-    }
-
-    int o{};
-    for (o; o < test2.getGeoVec().size(); o++) {
-        scene->add(test2.getGeoVec()[o]);
-    }
-
-     int p{};
-     for (p; p < test3.getGeoVec().size(); p++) {
-         scene->add(test3.getGeoVec()[p]);
-     }
-
+    //Adds the generated geometries to the scene
+    test.addToScene(scene);
+    test2.addToScene(scene);
+    test3.addToScene(scene);
 
     // Choose the first pixels that are too be read into the buffer.
     constexpr int x{0};

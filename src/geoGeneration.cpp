@@ -1,7 +1,8 @@
 #include "geoGeneration.hpp"
 
 GeoGen::GeoGen(int quantity, geoGen::Shape shape, Color::ColorName color)
-    : m_quantity{quantity}, m_shape{shape}, m_color{color} {}
+    : m_quantity{quantity}, m_shape{shape}, m_color{color} {
+}
 
 Color::ColorName GeoGen::getColor() const {
     return m_color;
@@ -83,5 +84,12 @@ void GeoGen::generate() {
                 m_geoVec[i]->position.set(1, 1, 1);
             }
             break;
+    }
+}
+
+void GeoGen::addToScene(std::shared_ptr<Scene> &scene) {
+    int i{};
+    for (i; i < m_geoVec.size(); i++) {
+        scene->add(m_geoVec[i]);
     }
 }

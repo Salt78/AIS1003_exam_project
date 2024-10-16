@@ -11,6 +11,12 @@
 
 using namespace threepp;
 
+// void addToScene(std::shared_ptr<Scene> &scene,std::vector<std::shared_ptr<Mesh> > &geoVec) {
+//
+//
+//
+// }
+
 namespace geoGen {
     enum class Shape {
         CUBE,
@@ -46,6 +52,8 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<Mesh> > getGeoVec() const;
 
     void generate();
+
+    void addToScene(std::shared_ptr<Scene> &scene);
 };
 
 
