@@ -1,7 +1,7 @@
 #include "geoGeneration.hpp"
 
-GeoGen::GeoGen(int quantity, geoGen::Shape shape): m_quantity{quantity}, m_shape{shape} {
-}
+GeoGen::GeoGen(int quantity, geoGen::Shape shape, Color::ColorName color)
+    : m_quantity{quantity}, m_shape{shape}, m_color{color} {}
 
 Color::ColorName GeoGen::getColor() const {
     return m_color;
@@ -31,10 +31,14 @@ std::vector<std::shared_ptr<Mesh> > GeoGen::getGeoVec() const {
 
 void GeoGen::generate() {
     std::shared_ptr<MeshBasicMaterial> m_material{MeshBasicMaterial::create()};
-    m_material->color = Color::green;
+    m_material->color = m_color;
+
+    // Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_real_distribution<float> dist(0, 10);
 
     int i{}; // for loop counter
-
 
     switch (m_shape) {
         case geoGen::Shape::CUBE: {
@@ -43,7 +47,7 @@ void GeoGen::generate() {
 
             for (i; i < m_quantity; i++) {
                 m_geoVec.push_back(Mesh::create(cubeGeometry, m_material));
-                m_geoVec[i]->position.set(i, i, i);
+                m_geoVec[i]->position.set(dist(rd), dist(rd), 1);
             }
 
             break;
@@ -54,7 +58,7 @@ void GeoGen::generate() {
 
             for (i; i < m_quantity; i++) {
                 m_geoVec.push_back(Mesh::create(coneGeometry, m_material));
-                m_geoVec[i]->position.set(i, i, i);
+                m_geoVec[i]->position.set(1, 1, 1);
             }
             break;
         }
@@ -64,7 +68,7 @@ void GeoGen::generate() {
 
             for (i; i < m_quantity; i++) {
                 m_geoVec.push_back(Mesh::create(sphereGeometry, m_material));
-                m_geoVec[i]->position.set(i, i, i);
+                m_geoVec[i]->position.set(1, 1, 1);
             }
 
             break;
@@ -76,7 +80,7 @@ void GeoGen::generate() {
 
             for (i; i < m_quantity; i++) {
                 m_geoVec.push_back(Mesh::create(cylinderGeometry, m_material));
-                m_geoVec[i]->position.set(i, i, i);
+                m_geoVec[i]->position.set(1, 1, 1);
             }
             break;
     }

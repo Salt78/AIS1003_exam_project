@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     //Camera and orbital controls
 
     auto camera{PerspectiveCamera::create(75, 800.0f / 600.0f, 0.1f, 1000.0f)};
-    camera->position.z = 5;
+    camera->position.z = 10;
 
     // Framebuffer (Help from GPT)
     std::vector<unsigned char> pixels(imageSize.first * imageSize.second * 3);
@@ -46,13 +46,29 @@ int main(int argc, char **argv) {
 
 
     //GeoGen class for generating "random geometries"
-    GeoGen test(5, geoGen::Shape::CUBE);
+    GeoGen test(4, geoGen::Shape::CUBE, Color::aqua);
+    GeoGen test2(4, geoGen::Shape::CUBE, Color::red);
+    GeoGen test3(4, geoGen::Shape::CUBE, Color::green);
     test.generate();
+    test2.generate();
+    test3.generate();
+
+    //TEST CODE
 
     int i{};
     for (i; i < test.getGeoVec().size(); i++) {
         scene->add(test.getGeoVec()[i]);
     }
+
+    int o{};
+    for (o; o < test2.getGeoVec().size(); o++) {
+        scene->add(test2.getGeoVec()[o]);
+    }
+
+     int p{};
+     for (p; p < test3.getGeoVec().size(); p++) {
+         scene->add(test3.getGeoVec()[p]);
+     }
 
 
     // Choose the first pixels that are too be read into the buffer.

@@ -6,6 +6,7 @@
 
 #include "threepp/threepp.hpp"
 #include <iostream>
+#include <random>
 
 
 using namespace threepp;
@@ -32,7 +33,8 @@ private:
     std::vector<std::shared_ptr<Mesh> > m_geoVec{};
 
 public:
-    GeoGen(int quantity = 0, geoGen::Shape shape = geoGen::Shape::CUBE);
+    GeoGen(int quantity = 0, geoGen::Shape shape = geoGen::Shape::CUBE,
+           Color::ColorName color = Color::red);
 
 
     [[nodiscard]] Color::ColorName getColor() const;
@@ -41,7 +43,7 @@ public:
 
     [[nodiscard]] std::string getShape() const;
 
-    std::vector<std::shared_ptr<Mesh> > getGeoVec() const;
+    [[nodiscard]] std::vector<std::shared_ptr<Mesh> > getGeoVec() const;
 
     void generate();
 };
