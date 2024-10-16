@@ -41,27 +41,23 @@ int main(int argc, char **argv) {
         pixels.resize(imageSize.first * imageSize.second * 3);
     });
 
-
+    //Camera controls enabled
     OrbitControls controls(*camera, canvas);
 
 
+    //GeoGen class for generating "random geometries"
+    GeoGen test(5, geoGen::Shape::CUBE);
+    test.generate();
 
+    int i{};
+    for (i; i < test.getGeoVec().size(); i++) {
+        scene->add(test.getGeoVec()[i]);
+    }
 
-
-
-    //Random geometry for testing
-
-    // auto geometry{BoxGeometry::create(1, 1, 1)};
-    // auto material{MeshBasicMaterial::create()};
-    // material->color = Color::yellow;
-    //
-    // auto cube{Mesh::create(geometry, material)};
-
-    // scene->add(cube);
 
     // Choose the first pixels that are too be read into the buffer.
-    const int x{0};
-    const int y{0};
+    constexpr int x{0};
+    constexpr int y{0};
 
     Clock clock;
     canvas.animate([&]() {
