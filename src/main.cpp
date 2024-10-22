@@ -22,8 +22,12 @@ int main(int argc, char **argv) {
 
 
     //Camera and orbital controls
-    auto camera{PerspectiveCamera::create(75, 800.0f / 600.0f, 0.1f, 1000.0f)};
-    camera->position.z = 10;
+    // auto camera{PerspectiveCamera::create(75, 800.0f / 600.0f, 0.1f, 1000.0f)};
+    // camera->position.z = 10;
+
+    //Orthographic camera
+    auto camera = OrthographicCamera::create(0, 10, 0, 10);
+    camera->position.z = 20;
 
     // Framebuffer (Help from GPT)
     std::vector<unsigned char> pixels(imageSize.first * imageSize.second * 3);
@@ -35,7 +39,7 @@ int main(int argc, char **argv) {
 
     //Resize event
     canvas.onWindowResize([&](WindowSize size) {
-        camera->aspect = size.aspect();
+        // camera->aspect = size.aspect();
         camera->updateProjectionMatrix();
         renderer.setSize(size);
 
