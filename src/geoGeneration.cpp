@@ -37,7 +37,7 @@ void GeoGen::generate() {
     // Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
     std::random_device rd;
     std::mt19937 mt(rd());
-    std::uniform_real_distribution<float> dist(0, 10);
+    std::uniform_real_distribution<float> dist(-5, 5);
 
     int i{}; // for loop counter
 

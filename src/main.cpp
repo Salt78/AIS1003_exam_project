@@ -14,24 +14,21 @@ int main(int argc, char **argv) {
 
     //Renderer creation
     GLRenderer renderer(canvas.size());
-    std::pair<int, int> imageSize{800, 600};
+    std::pair<int, int> imageSize{1920, 1080};
     renderer.setSize(imageSize);
 
     //Creates scene
     auto scene{Scene::create()};
 
-
-    //Camera and orbital controls
-    // auto camera{PerspectiveCamera::create(75, 800.0f / 600.0f, 0.1f, 1000.0f)};
-    // camera->position.z = 10;
-
     //Orthographic camera
-    auto camera = OrthographicCamera::create(0, 10, 0, 10);
-    camera->position.z = 20;
+    float aspectRatio{16.0 / 9.0};
+    float frustumSize{12};
+    auto camera = OrthographicCamera::create(-frustumSize * aspectRatio / 2, frustumSize * aspectRatio / 2,
+                                             frustumSize / 2, -frustumSize / 2, 0.1f, 1000);
+    camera->position.z = 2;
 
     // Framebuffer (Help from GPT)
     std::vector<unsigned char> pixels(imageSize.first * imageSize.second * 3);
-
 
     //OPENCV Window
     std::string windowName{"ThreePP"};
@@ -47,10 +44,6 @@ int main(int argc, char **argv) {
         pixels.resize(imageSize.first * imageSize.second * 3);
     });
 
-    //Camera controls enabled
-    OrbitControls controls(*camera, canvas);
-
-
     //GeoGen class for generating "random geometries"
     GeoGen test(4, geoGen::Shape::CUBE, Color::aqua);
     GeoGen test2(4, geoGen::Shape::CUBE, Color::red);
@@ -63,7 +56,6 @@ int main(int argc, char **argv) {
     test.addToScene(scene);
     test2.addToScene(scene);
     test3.addToScene(scene);
-
 
     //Render loop
     Clock clock;
