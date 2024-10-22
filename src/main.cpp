@@ -9,16 +9,19 @@ using namespace threepp;
 using namespace cv;
 
 int main(int argc, char **argv) {
+    //Canvas creation
     Canvas canvas("RandomGeometry", {{"aa", 4}});
 
+    //Renderer creation
     GLRenderer renderer(canvas.size());
     std::pair<int, int> imageSize{800, 600};
     renderer.setSize(imageSize);
 
+    //Creates scene
     auto scene{Scene::create()};
 
-    //Camera and orbital controls
 
+    //Camera and orbital controls
     auto camera{PerspectiveCamera::create(75, 800.0f / 600.0f, 0.1f, 1000.0f)};
     camera->position.z = 10;
 
@@ -27,7 +30,6 @@ int main(int argc, char **argv) {
 
 
     //OPENCV Window
-
     std::string windowName{"ThreePP"};
     namedWindow(windowName, WINDOW_AUTOSIZE);
 

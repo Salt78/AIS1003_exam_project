@@ -3,6 +3,7 @@
 //
 
 #ifndef SCENERY_HPP
+#define SCENERY_HPP
 
 #include "threepp/threepp.hpp"
 #include <iostream>
@@ -34,8 +35,8 @@ private:
     int m_quantity{};
     geoGen::Shape m_shape{};
 
+    //ThreePP properties
     std::shared_ptr<MeshBasicMaterial> m_material;
-
     std::vector<std::shared_ptr<Mesh> > m_geoVec{};
 
 public:
@@ -53,10 +54,10 @@ public:
 
     void generate();
 
-    void addToScene(std::shared_ptr<Scene> &scene);
+    void addToScene(const std::shared_ptr<Scene> &scene);
 };
 
 
-#define SCENERY_HPP
+
 
 #endif //SCENERY_HPP
