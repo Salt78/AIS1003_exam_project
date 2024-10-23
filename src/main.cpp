@@ -1,6 +1,4 @@
 #include <opencv2/opencv.hpp>
-#include <iostream>
-
 #include "glad/glad.h"
 #include "threepp/threepp.hpp"
 #include "geoGeneration.hpp"
@@ -33,16 +31,6 @@ int main(int argc, char **argv) {
     //OPENCV Window
     std::string windowName{"ThreePP"};
     namedWindow(windowName, WINDOW_AUTOSIZE);
-
-    //Resize event
-    canvas.onWindowResize([&](WindowSize size) {
-        // camera->aspect = size.aspect();
-        camera->updateProjectionMatrix();
-        renderer.setSize(size);
-
-        imageSize = std::make_pair(size.width(), size.height());
-        pixels.resize(imageSize.first * imageSize.second * 3);
-    });
 
     //GeoGen class for generating "random geometries"
     GeoGen test(4, geoGen::Shape::CUBE, Color::aqua);

@@ -40,7 +40,7 @@ private:
     std::vector<std::shared_ptr<Mesh> > m_geoVec{};
 
 public:
-    GeoGen(int quantity = 0, geoGen::Shape shape = geoGen::Shape::CUBE,
+    explicit GeoGen(int quantity = 0, geoGen::Shape shape = geoGen::Shape::CUBE,
            Color::ColorName color = Color::red);
 
 
