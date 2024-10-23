@@ -25,6 +25,9 @@ target_link_libraries(threeppxopencv PRIVATE ${OpenCV_LIBS})
 find_package(glad CONFIG REQUIRED)
 target_link_libraries(threeppxopencv PRIVATE glad::glad)
 
+find_package(Bullet CONFIG REQUIRED)
+target_link_libraries(threeppxopencv PRIVATE ${BULLET_LIBRARIES})
+
 target_link_libraries(threeppxopencv PRIVATE SceneriesLib)
 
 

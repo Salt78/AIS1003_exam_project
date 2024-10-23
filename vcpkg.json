@@ -1,6 +1,7 @@
 {
   "dependencies": [
     "opencv",
-    "glad"
+    "glad",
+    "bullet3"
   ]
 }
