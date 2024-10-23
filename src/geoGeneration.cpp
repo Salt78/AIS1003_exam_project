@@ -92,10 +92,5 @@ void GeoGen::addToScene(const std::shared_ptr<Scene> &scene) {
 
     for (i; i < m_geoVec.size(); i++) {
         scene->add(m_geoVec[i]);
-
-        //Creates bounding box for each geometry (Got GPT to make generic example code so it would be easy for me to understand how Box3 works)
-        Box3 boundingBox;
-        m_boundingBoxes.push_back(boundingBox.setFromObject(*m_geoVec[i]));
     }
-
 }
