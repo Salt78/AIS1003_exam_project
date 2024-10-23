@@ -23,7 +23,7 @@ namespace geoGen {
         CUBE,
         CIRCLE,
         CYLINDER,
-        CONE
+        CAPSULE
     };
 }
 

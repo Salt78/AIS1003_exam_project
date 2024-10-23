@@ -16,7 +16,7 @@ std::string GeoGen::getShape() const {
     switch (m_shape) {
         case geoGen::Shape::CUBE:
             return "cube";
-        case geoGen::Shape::CONE:
+        case geoGen::Shape::CAPSULE:
             return "cone";
         case geoGen::Shape::CIRCLE:
             return "sphere";
@@ -53,13 +53,13 @@ void GeoGen::generate() {
 
             break;
         }
-        case geoGen::Shape::CONE: {
-            std::shared_ptr<ConeGeometry> coneGeometry{};
-            coneGeometry = ConeGeometry::create(1, 1, 1);
+        case geoGen::Shape::CAPSULE: {
+            std::shared_ptr<CapsuleGeometry> capsuleGeometry{};
+            capsuleGeometry = CapsuleGeometry::create(0.5, 1, 10, 20);
 
             for (i; i < m_quantity; i++) {
-                m_geoVec.push_back(Mesh::create(coneGeometry, m_material));
-                m_geoVec[i]->position.set(1, 1, 1);
+                m_geoVec.push_back(Mesh::create(capsuleGeometry, m_material));
+                m_geoVec[i]->position.set(dist(rd), dist(rd), 0);
             }
             break;
         }
@@ -81,7 +81,7 @@ void GeoGen::generate() {
 
             for (i; i < m_quantity; i++) {
                 m_geoVec.push_back(Mesh::create(cylinderGeometry, m_material));
-                m_geoVec[i]->position.set(1, 1, 1);
+                m_geoVec[i]->position.set(dist(rd), dist(rd), 0);
             }
             break;
     }

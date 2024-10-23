@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
     float frustumSize{12};
     auto camera = OrthographicCamera::create(-frustumSize * aspectRatio / 2, frustumSize * aspectRatio / 2,
                                              frustumSize / 2, -frustumSize / 2, 0.1f, 1000);
-    camera->position.z = 2;
+    camera->position.z = 10;
 
     // Framebuffer (Help from GPT)
     std::vector<unsigned char> pixels(imageSize.first * imageSize.second * 3);
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
     namedWindow(windowName, WINDOW_AUTOSIZE);
 
     //GeoGen class for generating "random geometries"
-    GeoGen test(4, geoGen::Shape::CUBE, Color::aqua);
+    GeoGen test(4, geoGen::Shape::CAPSULE, Color::aqua);
     GeoGen test2(4, geoGen::Shape::CUBE, Color::red);
     GeoGen test3(4, geoGen::Shape::CIRCLE, Color::green);
     test.generate();
