@@ -33,17 +33,42 @@ int main(int argc, char **argv) {
     namedWindow(windowName, WINDOW_AUTOSIZE);
 
     //GeoGen class for generating "random geometries"
-    GeoGen test(4, geoGen::Shape::CAPSULE, Color::aqua);
+    GeoGen test(4, geoGen::Shape::CUBE, Color::aqua);
     GeoGen test2(4, geoGen::Shape::CUBE, Color::red);
     GeoGen test3(4, geoGen::Shape::CIRCLE, Color::green);
+    GeoGen test4(4, geoGen::Shape::CIRCLE, Color::orange);
     test.generate();
     test2.generate();
     test3.generate();
+    test4.generate();
 
     //Adds the generated geometries to the scene
     test.addToScene(scene);
     test2.addToScene(scene);
     test3.addToScene(scene);
+    test4.addToScene(scene);
+
+    //TEST CODE FOR OPENCV
+
+    Mat threeppCamHSV;
+    Mat mask;
+
+    int hmin{};
+    int hmax{179};
+    int smin{};
+    int smax{255};
+    int vmin{};
+    int vmax{255};
+
+    namedWindow("Trackbars", (640, 200));
+    createTrackbar("Hue Min", "Trackbars", &hmin, 179);
+    createTrackbar("Hue Max", "Trackbars", &hmax, 179);
+    createTrackbar("Sat Min", "Trackbars", &smin, 255);
+    createTrackbar("Sat Max", "Trackbars", &smax, 255);
+    createTrackbar("Val Min", "Trackbars", &vmin, 255);
+    createTrackbar("Val Max", "Trackbars", &vmax, 255);
+
+    //TEST CODE FOR OPENCV
 
     //Render loop
     Clock clock;
@@ -54,12 +79,29 @@ int main(int argc, char **argv) {
         glReadPixels(0, 0, imageSize.first, imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, pixels.data());
 
         //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
-        Mat image{imageSize.second, imageSize.first, CV_8UC3, pixels.data()};
+        Mat threeppCam{imageSize.second, imageSize.first, CV_8UC3, pixels.data()};
 
         //OpenCV uses a different origin for the image, so it is flipped here.
-        flip(image, image, 0);
+        flip(threeppCam, threeppCam, 0);
 
-        imshow(windowName, image);
+        //TEST CODE FOR OPENCV COLOR RECOGNITION
+
+        cvtColor(threeppCam, threeppCamHSV, COLOR_BGR2HSV);
+
+        Scalar lower(hmin, smin, vmin);
+        Scalar upper(hmax, smax, vmax);
+
+        inRange(threeppCamHSV, lower, upper, mask);
+
+        imshow("HSV", threeppCamHSV);
+        imshow("maskTEST", mask);
+
+
+        //TEST CODE FOR OPENCV COLOR RECOGNITION
+
+
+        // imshow(windowName, threeppCam);
+
 
         waitKey(1);
     });
