@@ -6,13 +6,24 @@
 using namespace threepp;
 using namespace cv;
 
+void getContours(Mat imgDil, Mat img) {
+    std::vector<std::vector<Point>> contours;
+    std::vector<Vec4i> hierarchy;
+
+    findContours(imgDil, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+    drawContours(img, contours, -1, Scalar(255, 0, 255), 2);
+
+}
+
+
+
 int main(int argc, char **argv) {
     //Canvas creation
     Canvas canvas("RandomGeometry", {{"aa", 4}});
 
     //Renderer creation
     GLRenderer renderer(canvas.size());
-    std::pair<int, int> imageSize{1920, 1080};
+    std::pair<int, int> imageSize{1280, 720};
     renderer.setSize(imageSize);
 
     //Creates scene
@@ -50,7 +61,7 @@ int main(int argc, char **argv) {
 
     //TEST CODE FOR OPENCV
 
-    Mat threeppCamHSV;
+    /*Mat threeppCamHSV;
     Mat mask;
 
     int hmin{};
@@ -66,7 +77,9 @@ int main(int argc, char **argv) {
     createTrackbar("Sat Min", "Trackbars", &smin, 255);
     createTrackbar("Sat Max", "Trackbars", &smax, 255);
     createTrackbar("Val Min", "Trackbars", &vmin, 255);
-    createTrackbar("Val Max", "Trackbars", &vmax, 255);
+    createTrackbar("Val Max", "Trackbars", &vmax, 255);*/
+
+    Mat imgGray, imgBlur, imgCanny, imgDil, imgErode;
 
     //TEST CODE FOR OPENCV
 
@@ -86,7 +99,7 @@ int main(int argc, char **argv) {
 
         //TEST CODE FOR OPENCV COLOR RECOGNITION
 
-        cvtColor(threeppCam, threeppCamHSV, COLOR_BGR2HSV);
+        /*cvtColor(threeppCam, threeppCamHSV, COLOR_BGR2HSV);
 
         Scalar lower(hmin, smin, vmin);
         Scalar upper(hmax, smax, vmax);
@@ -94,13 +107,26 @@ int main(int argc, char **argv) {
         inRange(threeppCamHSV, lower, upper, mask);
 
         imshow("HSV", threeppCamHSV);
-        imshow("maskTEST", mask);
+        imshow("maskTEST", mask);*/
+
+        //Preprocessing
+        cvtColor(threeppCam, imgGray, COLOR_BGR2GRAY);
+        GaussianBlur(imgGray, imgBlur, Size(3, 3), 3, 0);
+        Canny(imgBlur, imgCanny, 25, 75);
+        Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
+        dilate(imgCanny, imgDil, kernel);
 
 
         //TEST CODE FOR OPENCV COLOR RECOGNITION
 
+        getContours(imgDil, threeppCam);
 
-        // imshow(windowName, threeppCam);
+        imshow(windowName, threeppCam);
+        imshow("Processed Image", imgDil);
+
+
+
+
 
 
         waitKey(1);

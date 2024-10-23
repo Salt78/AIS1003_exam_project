@@ -38,6 +38,7 @@ private:
     //ThreePP properties
     std::shared_ptr<MeshBasicMaterial> m_material;
     std::vector<std::shared_ptr<Mesh> > m_geoVec{};
+    std::vector<Box3> m_boundingBoxes;
 
 public:
     explicit GeoGen(int quantity = 0, geoGen::Shape shape = geoGen::Shape::CUBE,
