@@ -6,7 +6,7 @@
 #define SCENERY_HPP
 
 #include "threepp/threepp.hpp"
-#include <iostream>
+#include <numbers>
 #include <random>
 
 
@@ -21,7 +21,7 @@ using namespace threepp;
 namespace geoGen {
     enum class Shape {
         CUBE,
-        SPHERE,
+        CIRCLE,
         CYLINDER,
         CONE
     };

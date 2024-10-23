@@ -18,7 +18,7 @@ std::string GeoGen::getShape() const {
             return "cube";
         case geoGen::Shape::CONE:
             return "cone";
-        case geoGen::Shape::SPHERE:
+        case geoGen::Shape::CIRCLE:
             return "sphere";
         case geoGen::Shape::CYLINDER:
             return "cylinder";
@@ -44,11 +44,11 @@ void GeoGen::generate() {
     switch (m_shape) {
         case geoGen::Shape::CUBE: {
             std::shared_ptr<BoxGeometry> cubeGeometry{};
-            cubeGeometry = BoxGeometry::create(1, 1, 1);
+            cubeGeometry = BoxGeometry::create(1, 1, 0);
 
             for (i; i < m_quantity; i++) {
                 m_geoVec.push_back(Mesh::create(cubeGeometry, m_material));
-                m_geoVec[i]->position.set(dist(rd), dist(rd), 1);
+                m_geoVec[i]->position.set(dist(rd), dist(rd), 0);
             }
 
             break;
@@ -63,13 +63,13 @@ void GeoGen::generate() {
             }
             break;
         }
-        case geoGen::Shape::SPHERE: {
-            std::shared_ptr<SphereGeometry> sphereGeometry{};
-            sphereGeometry = SphereGeometry::create(1, 1, 1);
+        case geoGen::Shape::CIRCLE: {
+            std::shared_ptr<CircleGeometry> circleGeometry{};
+            circleGeometry = CircleGeometry::create(0.5, 30, 0, 2 * std::numbers::pi);
 
             for (i; i < m_quantity; i++) {
-                m_geoVec.push_back(Mesh::create(sphereGeometry, m_material));
-                m_geoVec[i]->position.set(1, 1, 1);
+                m_geoVec.push_back(Mesh::create(circleGeometry, m_material));
+                m_geoVec[i]->position.set(dist(rd), dist(rd), 1);
             }
 
             break;

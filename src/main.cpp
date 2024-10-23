@@ -1,7 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
-#include "../cmake-build-debug/_deps/threepp-src/src/external/glad/glad/glad.h"
+#include "glad/glad.h"
 #include "threepp/threepp.hpp"
 #include "geoGeneration.hpp"
 
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     //GeoGen class for generating "random geometries"
     GeoGen test(4, geoGen::Shape::CUBE, Color::aqua);
     GeoGen test2(4, geoGen::Shape::CUBE, Color::red);
-    GeoGen test3(4, geoGen::Shape::CUBE, Color::green);
+    GeoGen test3(4, geoGen::Shape::CIRCLE, Color::green);
     test.generate();
     test2.generate();
     test3.generate();
