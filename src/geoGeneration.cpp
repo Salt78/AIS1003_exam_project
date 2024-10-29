@@ -37,14 +37,14 @@ void GeoGen::generate() {
     // Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
     std::random_device rd;
     std::mt19937 mt(rd());
-    std::uniform_real_distribution<float> dist(-5, 5);
+    std::uniform_real_distribution<float> dist(0, 800);
 
     int i{}; // for loop counter
 
     switch (m_shape) {
         case geoGen::Shape::CUBE: {
             std::shared_ptr<BoxGeometry> cubeGeometry{};
-            cubeGeometry = BoxGeometry::create(1, 1, 0);
+            cubeGeometry = BoxGeometry::create(50, 50, 0);
 
             for (i; i < m_quantity; i++) {
                 m_geoVec.push_back(Mesh::create(cubeGeometry, m_material));
@@ -55,7 +55,7 @@ void GeoGen::generate() {
         }
         case geoGen::Shape::CAPSULE: {
             std::shared_ptr<CapsuleGeometry> capsuleGeometry{};
-            capsuleGeometry = CapsuleGeometry::create(0.5, 1, 10, 20);
+            capsuleGeometry = CapsuleGeometry::create(25, 50, 10, 20);
 
             for (i; i < m_quantity; i++) {
                 m_geoVec.push_back(Mesh::create(capsuleGeometry, m_material));
@@ -65,7 +65,7 @@ void GeoGen::generate() {
         }
         case geoGen::Shape::CIRCLE: {
             std::shared_ptr<CircleGeometry> circleGeometry{};
-            circleGeometry = CircleGeometry::create(0.5, 30, 0, 2 * std::numbers::pi);
+            circleGeometry = CircleGeometry::create(25, 30, 0, 2 * std::numbers::pi);
 
             for (i; i < m_quantity; i++) {
                 m_geoVec.push_back(Mesh::create(circleGeometry, m_material));

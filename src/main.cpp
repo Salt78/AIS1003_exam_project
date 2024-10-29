@@ -39,17 +39,15 @@ int main(int argc, char **argv) {
 
     //Renderer creation
     GLRenderer renderer(canvas.size());
-    std::pair<int, int> imageSize{1280, 720};
+    std::pair<int, int> imageSize{800, 800};
     renderer.setSize(imageSize);
 
     //Creates scene
     auto scene{Scene::create()};
 
     //Orthographic camera
-    float aspectRatio{16.0 / 9.0};
-    float frustumSize{12};
-    auto camera = OrthographicCamera::create(-frustumSize * aspectRatio / 2, frustumSize * aspectRatio / 2,
-                                             frustumSize / 2, -frustumSize / 2, 0.1f, 1000);
+    auto camera = OrthographicCamera::create(0, imageSize.first,
+                                            0, imageSize.second, -1000, 1000);
     camera->position.z = 10;
 
     // Framebuffer (Help from GPT)
@@ -60,20 +58,32 @@ int main(int argc, char **argv) {
     namedWindow(windowName, WINDOW_AUTOSIZE);
 
     //GeoGen class for generating "random geometries"
-    GeoGen test(4, geoGen::Shape::CUBE, Color::aqua);
-    GeoGen test2(4, geoGen::Shape::CUBE, Color::red);
-    GeoGen test3(4, geoGen::Shape::CIRCLE, Color::green);
-    GeoGen test4(4, geoGen::Shape::CIRCLE, Color::orange);
-    test.generate();
-    test2.generate();
-    test3.generate();
-    test4.generate();
+    // GeoGen test(4, geoGen::Shape::CUBE, Color::aqua);
+    // GeoGen test2(4, geoGen::Shape::CUBE, Color::red);
+    // GeoGen test3(4, geoGen::Shape::CIRCLE, Color::green);
+    // GeoGen test4(4, geoGen::Shape::CIRCLE, Color::orange);
+    // test.generate();
+    // test2.generate();
+    // test3.generate();
+    // test4.generate();
+    //
+    // //Adds the generated geometries to the scene
+    // test.addToScene(scene);
+    // test2.addToScene(scene);
+    // test3.addToScene(scene);
+    // test4.addToScene(scene);
 
-    //Adds the generated geometries to the scene
-    test.addToScene(scene);
-    test2.addToScene(scene);
-    test3.addToScene(scene);
-    test4.addToScene(scene);
+
+    //Single test mesh
+    auto testmesh{MeshBasicMaterial::create()};
+    testmesh->color = Color::red;
+
+    auto testgeo{BoxGeometry::create(50, 50, 0)};
+
+    auto testmesh2{Mesh::create(testgeo, testmesh)};
+    testmesh2->position.set(50, 50, 0);
+
+    scene->add(testmesh2);
 
     //TEST CODE FOR OPENCV
 
