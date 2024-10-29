@@ -2,19 +2,35 @@
 #include "glad/glad.h"
 #include "threepp/threepp.hpp"
 #include "geoGeneration.hpp"
+#include "../cmake-build-debug/_deps/threepp-src/src/external/glfw/src/internal.h"
 
 using namespace threepp;
 using namespace cv;
 
 void getContours(Mat imgDil, Mat img) {
-    std::vector<std::vector<Point>> contours;
+    std::vector<std::vector<Point> > contours;
     std::vector<Vec4i> hierarchy;
 
+
+
     findContours(imgDil, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
-    drawContours(img, contours, -1, Scalar(255, 0, 255), 2);
+    //drawContours(img, contours, -1, Scalar(255, 0, 255), 2);
 
+    std::vector<std::vector<Point> > conPoly{contours.size()};
+    std::vector<Rect> boundRect{contours.size()};
+
+    for (int i{}; i < contours.size(); i++) {
+        int area = contourArea(contours[i]);
+        if (area < 4000) {
+            float peri = arcLength(contours[i], true);
+            approxPolyDP(contours[i], conPoly[i], 0.02 * peri, true);
+            drawContours(img, conPoly, i, Scalar(255, 0, 255), 2);
+            boundRect[i] = boundingRect(conPoly[i]);
+            rectangle(img, boundRect[i].tl(), boundRect[i].br(), Scalar(0, 255, 0), 5);
+        }
+    }
+    std::cout << "Topleft corner: "<< boundRect[0].tl() << " RightBotton corner: " << boundRect[0].br() << std::endl;
 }
-
 
 
 int main(int argc, char **argv) {
@@ -123,10 +139,6 @@ int main(int argc, char **argv) {
 
         imshow(windowName, threeppCam);
         imshow("Processed Image", imgDil);
-
-
-
-
 
 
         waitKey(1);

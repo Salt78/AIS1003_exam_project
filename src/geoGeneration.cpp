@@ -88,9 +88,7 @@ void GeoGen::generate() {
 }
 
 void GeoGen::addToScene(const std::shared_ptr<Scene> &scene) {
-    int i{}; // for loop counter
-
-    for (i; i < m_geoVec.size(); i++) {
+    for (int i{}; i < m_geoVec.size(); i++) {
         scene->add(m_geoVec[i]);
     }
 }
