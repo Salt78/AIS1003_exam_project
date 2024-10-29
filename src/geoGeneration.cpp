@@ -37,16 +37,15 @@ void GeoGen::generate() {
     // Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
     std::random_device rd;
     std::mt19937 mt(rd());
-    std::uniform_real_distribution<float> dist(0, 800);
+    std::uniform_real_distribution<float> dist(50, 800);
 
-    int i{}; // for loop counter
 
     switch (m_shape) {
         case geoGen::Shape::CUBE: {
             std::shared_ptr<BoxGeometry> cubeGeometry{};
             cubeGeometry = BoxGeometry::create(50, 50, 0);
 
-            for (i; i < m_quantity; i++) {
+            for (int i{}; i < m_quantity; i++) {
                 m_geoVec.push_back(Mesh::create(cubeGeometry, m_material));
                 m_geoVec[i]->position.set(dist(rd), dist(rd), 0);
             }
@@ -57,9 +56,9 @@ void GeoGen::generate() {
             std::shared_ptr<CapsuleGeometry> capsuleGeometry{};
             capsuleGeometry = CapsuleGeometry::create(25, 50, 10, 20);
 
-            for (i; i < m_quantity; i++) {
+            for (int o{}; o < m_quantity; o++) {
                 m_geoVec.push_back(Mesh::create(capsuleGeometry, m_material));
-                m_geoVec[i]->position.set(dist(rd), dist(rd), 0);
+                m_geoVec[o]->position.set(dist(rd), dist(rd), 0);
             }
             break;
         }
@@ -67,9 +66,10 @@ void GeoGen::generate() {
             std::shared_ptr<CircleGeometry> circleGeometry{};
             circleGeometry = CircleGeometry::create(25, 30, 0, 2 * std::numbers::pi);
 
-            for (i; i < m_quantity; i++) {
+            for (int z{}; z < m_quantity; z++) {
                 m_geoVec.push_back(Mesh::create(circleGeometry, m_material));
-                m_geoVec[i]->position.set(dist(rd), dist(rd), 1);
+                m_geoVec[z]->position.set(dist(rd), dist(rd), 1);
+                m_geoVec[z]->rotation.x = std::numbers::pi;
             }
 
             break;
@@ -79,9 +79,9 @@ void GeoGen::generate() {
             std::shared_ptr<CylinderGeometry> cylinderGeometry{};
             cylinderGeometry = CylinderGeometry::create(1, 1, 1);
 
-            for (i; i < m_quantity; i++) {
+            for (int x{}; x < m_quantity; x++) {
                 m_geoVec.push_back(Mesh::create(cylinderGeometry, m_material));
-                m_geoVec[i]->position.set(dist(rd), dist(rd), 0);
+                m_geoVec[x]->position.set(dist(rd), dist(rd), 0);
             }
             break;
     }
