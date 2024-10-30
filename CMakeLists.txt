@@ -25,7 +25,11 @@ target_link_libraries(threeppxopencv PRIVATE ${OpenCV_LIBS})
 find_package(glad CONFIG REQUIRED)
 target_link_libraries(threeppxopencv PRIVATE glad::glad)
 
+target_link_libraries(threeppxopencv PRIVATE GridManagerLib)
+
 target_link_libraries(threeppxopencv PRIVATE SceneriesLib)
+
+
 
 
 ######### Emscripten #######

@@ -41,7 +41,7 @@ private:
 
 public:
     explicit GeoGen(int quantity = 0, geoGen::Shape shape = geoGen::Shape::CUBE,
-           Color::ColorName color = Color::red);
+                    Color::ColorName color = Color::red);
 
 
     [[nodiscard]] Color::ColorName getColor() const;
@@ -55,10 +55,7 @@ public:
     void generate();
 
     void addToScene(const std::shared_ptr<Scene> &scene);
-
 };
-
-
 
 
 #endif //SCENERY_HPP

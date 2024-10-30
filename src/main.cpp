@@ -2,7 +2,7 @@
 #include "glad/glad.h"
 #include "threepp/threepp.hpp"
 #include "geoGeneration.hpp"
-#include "../cmake-build-debug/_deps/threepp-src/src/external/glfw/src/internal.h"
+//#include "gridManager.hpp"
 
 using namespace threepp;
 using namespace cv;
@@ -10,7 +10,6 @@ using namespace cv;
 void getContours(Mat imgDil, Mat img) {
     std::vector<std::vector<Point> > contours;
     std::vector<Vec4i> hierarchy;
-
 
 
     findContours(imgDil, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
@@ -29,7 +28,7 @@ void getContours(Mat imgDil, Mat img) {
             rectangle(img, boundRect[i].tl(), boundRect[i].br(), Scalar(0, 255, 0), 5);
         }
     }
-    std::cout << "Topleft corner: "<< boundRect[0].tl() << " RightBotton corner: " << boundRect[0].br() << std::endl;
+    std::cout << "Topleft corner: " << boundRect[0].tl() << " RightBotton corner: " << boundRect[0].br() << std::endl;
 }
 
 
@@ -47,7 +46,7 @@ int main(int argc, char **argv) {
 
     //Orthographic camera
     auto camera = OrthographicCamera::create(0, imageSize.first,
-                                            0, imageSize.second, -1000, 1000);
+                                             0, imageSize.second, -1000, 1000);
     camera->position.z = 10;
 
     // Framebuffer (Help from GPT)
