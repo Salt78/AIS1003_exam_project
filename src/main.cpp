@@ -2,7 +2,7 @@
 #include "glad/glad.h"
 #include "threepp/threepp.hpp"
 #include "geoGeneration.hpp"
-//#include "gridManager.hpp"
+#include "gridManager.hpp"
 
 using namespace threepp;
 using namespace cv;
@@ -56,6 +56,10 @@ int main(int argc, char **argv) {
     std::string windowName{"ThreePP"};
     namedWindow(windowName, WINDOW_AUTOSIZE);
 
+    //Mapping coords to a grid
+    GridManager mainGrid(imageSize.first, 14, 50);
+    mainGrid.createGrid();
+
     //GeoGen class for generating "random geometries"
     GeoGen test(4, geoGen::Shape::CUBE, Color::aqua);
     GeoGen test2(4, geoGen::Shape::CUBE, Color::red);
@@ -71,6 +75,10 @@ int main(int argc, char **argv) {
     test2.addToScene(scene);
     test3.addToScene(scene);
     test4.addToScene(scene);
+
+
+
+
 
 
     //Single test mesh
@@ -149,6 +157,10 @@ int main(int argc, char **argv) {
 
         imshow(windowName, threeppCam);
         imshow("Processed Image", imgDil);
+
+
+        //TEST CODE
+        //std::cout << mainGrid.getTestValue(14).first << std::endl;
 
 
         waitKey(1);
