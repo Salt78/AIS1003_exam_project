@@ -35,11 +35,11 @@ void getContours(Mat imgDil, Mat img) {
 int main(int argc, char **argv) {
     //Canvas creation
     Canvas canvas("RandomGeometry", {{"aa", 4}});
+    constexpr std::pair<int, int> imageSize{800, 800};
+    canvas.setSize({imageSize.first, imageSize.second});
 
     //Renderer creation
     GLRenderer renderer(canvas.size());
-    std::pair<int, int> imageSize{800, 800};
-    renderer.setSize(imageSize);
 
     //Creates scene
     auto scene{Scene::create()};
@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
     namedWindow(windowName, WINDOW_AUTOSIZE);
 
     //Mapping coords to a grid
-    GridManager mainGrid(imageSize.first, 14, 50);
+    GridManager mainGrid(imageSize.first, 15, 50);
     mainGrid.createGrid();
 
     //GeoGen class for generating "random geometries"
