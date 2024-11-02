@@ -16,7 +16,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(threepp)
 
-add_executable(threeppxopencv src/main.cpp)
+add_executable(threeppxopencv main.cpp)
 target_link_libraries(threeppxopencv PRIVATE threepp::threepp)
 
 find_package(OpenCV CONFIG REQUIRED)

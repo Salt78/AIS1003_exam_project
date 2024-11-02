@@ -30,24 +30,31 @@ std::vector<std::shared_ptr<Mesh> > GeoGen::getGeoVec() const {
     return m_geoVec;
 }
 
-void GeoGen::generate() {
-    std::shared_ptr<MeshBasicMaterial> m_material{MeshBasicMaterial::create()};
+void GeoGen::generate(GridManager &grid) {
+    std::shared_ptr<MeshBasicMaterial> m_material = MeshBasicMaterial::create();
     m_material->color = m_color;
 
     // Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
     std::random_device rd;
     std::mt19937 mt(rd());
-    std::uniform_real_distribution<float> dist(50, 800);
+    std::uniform_int_distribution<int> dist(1, grid.getCoordQuantity());
 
 
     switch (m_shape) {
         case geoGen::Shape::CUBE: {
             std::shared_ptr<BoxGeometry> cubeGeometry{};
-            cubeGeometry = BoxGeometry::create(50, 50, 0);
+            cubeGeometry = BoxGeometry::create(40, 40, 0);
 
             for (int i{}; i < m_quantity; i++) {
+
+                int randomKey{dist(rd)};
+
+                while (grid.isUsed(randomKey)) {
+                    randomKey = dist(rd);
+                }
+
                 m_geoVec.push_back(Mesh::create(cubeGeometry, m_material));
-                m_geoVec[i]->position.set(dist(rd), dist(rd), 0);
+                m_geoVec[i]->position.set(grid.getCoords(randomKey).first, grid.getCoords(randomKey).second, 0);
             }
 
             break;

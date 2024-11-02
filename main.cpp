@@ -63,12 +63,12 @@ int main(int argc, char **argv) {
     //GeoGen class for generating "random geometries"
     GeoGen test(4, geoGen::Shape::CUBE, Color::aqua);
     GeoGen test2(4, geoGen::Shape::CUBE, Color::red);
-    GeoGen test3(4, geoGen::Shape::CIRCLE, Color::green);
-    GeoGen test4(4, geoGen::Shape::CIRCLE, Color::orange);
-    test.generate();
-    test2.generate();
-    test3.generate();
-    test4.generate();
+    GeoGen test3(4, geoGen::Shape::CUBE, Color::green);
+    GeoGen test4(4, geoGen::Shape::CUBE, Color::orange);
+    test.generate(mainGrid);
+    test2.generate(mainGrid);
+    test3.generate(mainGrid);
+    test4.generate(mainGrid);
 
     //Adds the generated geometries to the scene
     test.addToScene(scene);

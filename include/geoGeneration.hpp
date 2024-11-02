@@ -8,9 +8,11 @@
 #include "threepp/threepp.hpp"
 #include <numbers>
 #include <random>
+#include "gridManager.hpp"
 
 
 using namespace threepp;
+using namespace gridManager;
 
 // void addToScene(std::shared_ptr<Scene> &scene,std::vector<std::shared_ptr<Mesh> > &geoVec) {
 //
@@ -31,9 +33,10 @@ namespace geoGen {
 class GeoGen {
 private:
     //General properties
-    Color::ColorName m_color{};
     int m_quantity{};
     geoGen::Shape m_shape{};
+    Color::ColorName m_color{};
+
 
     //ThreePP properties
     std::shared_ptr<MeshBasicMaterial> m_material;
@@ -52,7 +55,7 @@ public:
 
     [[nodiscard]] std::vector<std::shared_ptr<Mesh> > getGeoVec() const;
 
-    void generate();
+    void generate(GridManager &grid);
 
     void addToScene(const std::shared_ptr<Scene> &scene);
 };
