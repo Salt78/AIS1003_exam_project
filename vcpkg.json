@@ -1,6 +1,3 @@
 {
-  "dependencies": [
-    "opencv",
-    "glad"
-  ]
+  "dependencies" : [ "glad", "opencv" ]
 }

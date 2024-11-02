@@ -17,6 +17,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(threepp)
 
 add_executable(threeppxopencv main.cpp)
+
 target_link_libraries(threeppxopencv PRIVATE threepp::threepp)
 
 find_package(OpenCV CONFIG REQUIRED)
@@ -28,7 +29,6 @@ target_link_libraries(threeppxopencv PRIVATE glad::glad)
 target_link_libraries(threeppxopencv PRIVATE GridManagerLib)
 
 target_link_libraries(threeppxopencv PRIVATE SceneriesLib)
-
 
 ######### Emscripten #######
 if (DEFINED EMSCRIPTEN)

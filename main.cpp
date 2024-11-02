@@ -61,24 +61,14 @@ int main(int argc, char **argv) {
     mainGrid.createGrid();
 
     //GeoGen class for generating "random geometries"
-    GeoGen test(4, geoGen::Shape::CUBE, Color::aqua);
+    GeoGen test(4, geoGen::Shape::CIRCLE, Color::aqua);
     GeoGen test2(4, geoGen::Shape::CUBE, Color::red);
     GeoGen test3(4, geoGen::Shape::CUBE, Color::green);
     GeoGen test4(4, geoGen::Shape::CUBE, Color::orange);
-    test.generate(mainGrid);
-    test2.generate(mainGrid);
-    test3.generate(mainGrid);
-    test4.generate(mainGrid);
-
-    //Adds the generated geometries to the scene
-    test.addToScene(scene);
-    test2.addToScene(scene);
-    test3.addToScene(scene);
-    test4.addToScene(scene);
-
-
-
-
+    test.generate(mainGrid, *scene);
+    test2.generate(mainGrid, *scene);
+    test3.generate(mainGrid, *scene);
+    test4.generate(mainGrid, *scene);
 
 
     //Single test mesh

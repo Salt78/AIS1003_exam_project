@@ -1,4 +1,3 @@
-
 add_library(SceneriesLib geoGeneration.cpp)
 add_library(GridManagerLib gridManager.cpp)
 

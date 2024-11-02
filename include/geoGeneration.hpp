@@ -42,8 +42,13 @@ private:
     std::shared_ptr<MeshBasicMaterial> m_material;
     std::vector<std::shared_ptr<Mesh> > m_geoVec{};
 
+    template<typename T>
+    void createMesh(GridManager &grid, std::shared_ptr<T> &geometry);
+
+    void addToScene(Scene &scene);
+
 public:
-    explicit GeoGen(int quantity = 0, geoGen::Shape shape = geoGen::Shape::CUBE,
+    explicit GeoGen(int quantity = 4, geoGen::Shape shape = geoGen::Shape::CUBE,
                     Color::ColorName color = Color::red);
 
 
@@ -55,10 +60,9 @@ public:
 
     [[nodiscard]] std::vector<std::shared_ptr<Mesh> > getGeoVec() const;
 
-    void generate(GridManager &grid);
-
-    void addToScene(const std::shared_ptr<Scene> &scene);
+    void generate(GridManager &grid, Scene &scene);
 };
 
+#include "createMesh.tpp"
 
 #endif //SCENERY_HPP
