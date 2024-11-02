@@ -24,7 +24,7 @@ namespace gridManager {
         std::vector<int> m_usedCoords{};
 
 
-        //Googled to figure out what i could use in the standard library to sort a vector. https://www.digitalocean.com/community/tutorials/sorting-a-vector-in-c-plus-plus
+        //Googled to figure out what I could use in the standard library to sort a vector. https://www.digitalocean.com/community/tutorials/sorting-a-vector-in-c-plus-plus
         // I originally landed on std::sort, but Clion recommended std::ranges::sort instead. The code is definitely cleaner.
         void logUsedCoords(int key);
 
@@ -39,7 +39,7 @@ namespace gridManager {
 
         //I originally was recommended to use std::find https://stackoverflow.com/questions/571394/how-to-find-out-if-an-item-is-present-in-a-stdvector
         //But the second most popular answer recommended std::binary_search instead when dealing with larger vectors.
-        bool isUsed(const int key);
+        bool isUsed(int key);
 
         [[nodiscard]] int getCoordQuantity() const;
     };

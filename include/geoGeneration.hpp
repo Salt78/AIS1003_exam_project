@@ -33,6 +33,7 @@ namespace geoGen {
 class GeoGen {
 private:
     //General properties
+    float m_meshSize{};
     int m_quantity{};
     geoGen::Shape m_shape{};
     Color::ColorName m_color{};
@@ -48,7 +49,7 @@ private:
     void addToScene(Scene &scene);
 
 public:
-    explicit GeoGen(int quantity = 4, geoGen::Shape shape = geoGen::Shape::CUBE,
+    explicit GeoGen(float meshSize = 40, int quantity = 4, geoGen::Shape shape = geoGen::Shape::CUBE,
                     Color::ColorName color = Color::red);
 
 

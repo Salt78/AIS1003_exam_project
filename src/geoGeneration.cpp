@@ -1,7 +1,7 @@
 #include "geoGeneration.hpp"
 
-GeoGen::GeoGen(int quantity, geoGen::Shape shape, Color::ColorName color)
-    : m_quantity{quantity}, m_shape{shape}, m_color{color} {
+GeoGen::GeoGen(float meshSize, int quantity, geoGen::Shape shape, Color::ColorName color)
+    : m_meshSize{meshSize}, m_quantity{quantity}, m_shape{shape}, m_color{color} {
 }
 
 
@@ -45,7 +45,7 @@ void GeoGen::generate(GridManager &grid, Scene &scene) {
     switch (m_shape) {
         case geoGen::Shape::CUBE: {
             std::shared_ptr<BoxGeometry> cubeGeometry{};
-            cubeGeometry = BoxGeometry::create(40, 40, 0);
+            cubeGeometry = BoxGeometry::create(m_meshSize, m_meshSize, 0);
 
             createMesh(grid, cubeGeometry);
             addToScene(scene);
@@ -61,7 +61,7 @@ void GeoGen::generate(GridManager &grid, Scene &scene) {
         }
         case geoGen::Shape::CIRCLE: {
             std::shared_ptr<CircleGeometry> circleGeometry{};
-            circleGeometry = CircleGeometry::create(20, 30, 0, 2 * std::numbers::pi);
+            circleGeometry = CircleGeometry::create(m_meshSize / 2, 30, 0, 2 * std::numbers::pi);
 
             createMesh(grid, circleGeometry);
             addToScene(scene);
