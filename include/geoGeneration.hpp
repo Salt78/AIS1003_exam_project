@@ -1,7 +1,3 @@
-//
-// Created by Andreas on 13.10.2024.
-//
-
 #ifndef SCENERY_HPP
 #define SCENERY_HPP
 

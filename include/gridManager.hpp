@@ -1,7 +1,3 @@
-//
-// Created by Andreas on 30.10.2024.
-//
-
 #ifndef GRIDMANAGER_HPP
 #define GRIDMANAGER_HPP
 

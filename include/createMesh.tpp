@@ -1,7 +1,3 @@
-//
-// Created by Andreas on 02.11.2024.
-//
-
 #ifndef CREATEMESH_TPP
 #define CREATEMESH_TPP
 

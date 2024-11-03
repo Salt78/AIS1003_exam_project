@@ -1,13 +1,13 @@
-#include <opencv2/opencv.hpp>
-#include "glad/glad.h"
 #include "threepp/threepp.hpp"
 #include "geoGeneration.hpp"
 #include "gridManager.hpp"
+#include "geoDetection.hpp"
 
 using namespace threepp;
 using namespace cv;
+using namespace GeoDetectionNS;
 
-void getContours(Mat imgDil, Mat img) {
+/*void getContours(Mat imgDil, Mat img) {
     std::vector<std::vector<Point> > contours;
     std::vector<Vec4i> hierarchy;
 
@@ -29,7 +29,7 @@ void getContours(Mat imgDil, Mat img) {
         }
     }
     std::cout << "Topleft corner: " << boundRect[0].tl() << " RightBotton corner: " << boundRect[0].br() << std::endl;
-}
+}*/
 
 
 int main(int argc, char **argv) {
@@ -49,13 +49,6 @@ int main(int argc, char **argv) {
                                              0, imageSize.second, -1000, 1000);
     camera->position.z = 10;
 
-    // Framebuffer (Help from GPT)
-    std::vector<unsigned char> pixels(imageSize.first * imageSize.second * 3);
-
-    //OPENCV Window
-    std::string windowName{"ThreePP"};
-    namedWindow(windowName, WINDOW_AUTOSIZE);
-
     //Mapping coords to a grid
     GridManager mainGrid(imageSize.first, 15, 50);
     mainGrid.createGrid();
@@ -68,20 +61,9 @@ int main(int argc, char **argv) {
     test.generate(mainGrid, *scene);
     test2.generate(mainGrid, *scene);
     test3.generate(mainGrid, *scene);
-    test4.generate(mainGrid, *scene); 
+    test4.generate(mainGrid, *scene);
 
-
-    //Single test mesh
-    // auto testmesh{MeshBasicMaterial::create()};
-    // testmesh->color = Color::red;
-    // testmesh->side=Side::Double;
-    //
-    // auto testgeo{CircleGeometry::create(50, 50, 0, 2 * std::numbers::pi)};
-    //
-    // auto testmesh2{Mesh::create(testgeo, testmesh)};
-    // testmesh2->position.set(400, 400, 0);
-    //
-    // scene->add(testmesh2);
+    GeoDetection mainScene("OPENCV test", imageSize);
 
     //TEST CODE FOR OPENCV
 
@@ -103,7 +85,7 @@ int main(int argc, char **argv) {
     createTrackbar("Val Min", "Trackbars", &vmin, 255);
     createTrackbar("Val Max", "Trackbars", &vmax, 255);*/
 
-    Mat imgGray, imgBlur, imgCanny, imgDil, imgErode;
+    //Mat imgGray, imgBlur, imgCanny, imgDil, imgErode;
 
     //TEST CODE FOR OPENCV
 
@@ -112,14 +94,7 @@ int main(int argc, char **argv) {
     canvas.animate([&]() {
         renderer.render(*scene, *camera);
 
-        //Pixels are read into the buffer here.
-        glReadPixels(0, 0, imageSize.first, imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, pixels.data());
-
-        //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
-        Mat threeppCam{imageSize.second, imageSize.first, CV_8UC3, pixels.data()};
-
-        //OpenCV uses a different origin for the image, so it is flipped here.
-        flip(threeppCam, threeppCam, 0);
+        mainScene.virtualCamera();
 
         //TEST CODE FOR OPENCV COLOR RECOGNITION
 
@@ -134,25 +109,19 @@ int main(int argc, char **argv) {
         imshow("maskTEST", mask);*/
 
         //Preprocessing
-        cvtColor(threeppCam, imgGray, COLOR_BGR2GRAY);
+        /*cvtColor(threeppCam, imgGray, COLOR_BGR2GRAY);
         GaussianBlur(imgGray, imgBlur, Size(3, 3), 3, 0);
         Canny(imgBlur, imgCanny, 25, 75);
         Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
-        dilate(imgCanny, imgDil, kernel);
+        dilate(imgCanny, imgDil, kernel);*/
 
 
         //TEST CODE FOR OPENCV COLOR RECOGNITION
 
         //getContours(imgDil, threeppCam);
 
-        imshow(windowName, threeppCam);
-        imshow("Processed Image", imgDil);
-
-
-        //TEST CODE
-        //std::cout << mainGrid.getTestValue(14).first << std::endl;
-
-
+        /*imshow(windowName, threeppCam);
+        imshow("Processed Image", imgDil);*/
         waitKey(1);
     });
 }

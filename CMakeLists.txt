@@ -30,6 +30,8 @@ target_link_libraries(threeppxopencv PRIVATE GridManagerLib)
 
 target_link_libraries(threeppxopencv PRIVATE SceneriesLib)
 
+target_link_libraries(threeppxopencv PRIVATE geoDetectionLib)
+
 ######### Emscripten #######
 if (DEFINED EMSCRIPTEN)
 
