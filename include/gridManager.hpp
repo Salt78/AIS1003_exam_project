@@ -5,7 +5,7 @@
 #include <vector>
 #include <algorithm>
 
-namespace gridManager {
+namespace gridManagerNS {
     class GridManager {
     private:
         // The size of the image. Should always be a square.

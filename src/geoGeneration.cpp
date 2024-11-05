@@ -1,6 +1,8 @@
 #include "geoGeneration.hpp"
 
-GeoGen::GeoGen(float meshSize, int quantity, geoGen::Shape shape, Color::ColorName color)
+using namespace geoGenNS;
+
+GeoGen::GeoGen(float meshSize, int quantity, geoGenNS::Shape shape, Color::ColorName color)
     : m_meshSize{meshSize}, m_quantity{quantity}, m_shape{shape}, m_color{color} {
 }
 
@@ -15,13 +17,13 @@ int GeoGen::getQuantity() const {
 
 std::string GeoGen::getShape() const {
     switch (m_shape) {
-        case geoGen::Shape::CUBE:
+        case geoGenNS::Shape::CUBE:
             return "cube";
-        case geoGen::Shape::CAPSULE:
+        case geoGenNS::Shape::CAPSULE:
             return "cone";
-        case geoGen::Shape::CIRCLE:
+        case geoGenNS::Shape::CIRCLE:
             return "sphere";
-        case geoGen::Shape::CYLINDER:
+        case geoGenNS::Shape::CYLINDER:
             return "cylinder";
     }
     return "unknown";
@@ -43,7 +45,7 @@ void GeoGen::generate(GridManager &grid, Scene &scene) {
 
 
     switch (m_shape) {
-        case geoGen::Shape::CUBE: {
+        case Shape::CUBE: {
             std::shared_ptr<BoxGeometry> cubeGeometry{};
             cubeGeometry = BoxGeometry::create(m_meshSize, m_meshSize, 0);
 
@@ -51,7 +53,7 @@ void GeoGen::generate(GridManager &grid, Scene &scene) {
             addToScene(scene);
             break;
         }
-        case geoGen::Shape::CAPSULE: {
+        case Shape::CAPSULE: {
             std::shared_ptr<CapsuleGeometry> capsuleGeometry{};
             capsuleGeometry = CapsuleGeometry::create(25, 50, 10, 20);
 
@@ -59,7 +61,7 @@ void GeoGen::generate(GridManager &grid, Scene &scene) {
             addToScene(scene);
             break;
         }
-        case geoGen::Shape::CIRCLE: {
+        case Shape::CIRCLE: {
             std::shared_ptr<CircleGeometry> circleGeometry{};
             circleGeometry = CircleGeometry::create(m_meshSize / 2, 30, 0, 2 * std::numbers::pi);
 
@@ -67,7 +69,7 @@ void GeoGen::generate(GridManager &grid, Scene &scene) {
             addToScene(scene);
             break;
         }
-        case geoGen::Shape::CYLINDER: {
+        case Shape::CYLINDER: {
             std::shared_ptr<CylinderGeometry> cylinderGeometry{};
             cylinderGeometry = CylinderGeometry::create(1, 1, 1);
 

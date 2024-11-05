@@ -8,7 +8,7 @@
 #include <glad/glad.h>
 #include <opencv2/opencv.hpp>
 
-namespace GeoDetectionNS {
+namespace geoDetectionNS {
     using namespace cv;
 
     class GeoDetection {

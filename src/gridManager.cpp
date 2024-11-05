@@ -1,16 +1,16 @@
 #include "gridManager.hpp"
 
 
-void gridManager::GridManager::logUsedCoords(int key) {
+void gridManagerNS::GridManager::logUsedCoords(int key) {
     m_usedCoords.push_back(key);
     std::ranges::sort(m_usedCoords);
 }
 
-gridManager::GridManager::GridManager(int imageSize, float gridSize, int spacing): m_imageSize(imageSize),
+gridManagerNS::GridManager::GridManager(int imageSize, float gridSize, int spacing): m_imageSize(imageSize),
     m_gridSize(gridSize), m_spacing(spacing) {
 }
 
-void gridManager::GridManager::createGrid() {
+void gridManagerNS::GridManager::createGrid() {
     const float centerImage = static_cast<float>(m_imageSize) / 2;
     const float centerGrid = m_gridSize / 2;
 
@@ -33,15 +33,15 @@ void gridManager::GridManager::createGrid() {
     }
 }
 
-std::pair<float, float> gridManager::GridManager::getCoords(const int key) {
+std::pair<float, float> gridManagerNS::GridManager::getCoords(const int key) {
     logUsedCoords(key);
     return m_gridMap.at(key);
 }
 
-bool gridManager::GridManager::isUsed(const int key) {
+bool gridManagerNS::GridManager::isUsed(const int key) {
     return std::ranges::binary_search(m_usedCoords.begin(), m_usedCoords.end(), key);
 }
 
-int gridManager::GridManager::getCoordQuantity() const {
+int gridManagerNS::GridManager::getCoordQuantity() const {
     return static_cast<int>(m_gridMap.size());
 }

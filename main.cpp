@@ -5,7 +5,8 @@
 
 using namespace threepp;
 using namespace cv;
-using namespace GeoDetectionNS;
+using namespace geoDetectionNS;
+using namespace geoGenNS;
 
 /*void getContours(Mat imgDil, Mat img) {
     std::vector<std::vector<Point> > contours;
@@ -54,10 +55,10 @@ int main(int argc, char **argv) {
     mainGrid.createGrid();
 
     //GeoGen class for generating "random geometries"
-    GeoGen test(40, 10, geoGen::Shape::CIRCLE, Color::burlywood);
-    GeoGen test2(40, 15, geoGen::Shape::CUBE, Color::red);
-    GeoGen test3(40, 4, geoGen::Shape::CUBE, Color::green);
-    GeoGen test4(40, 4, geoGen::Shape::CUBE, Color::orange);
+    GeoGen test(40, 10, geoGenNS::Shape::CIRCLE, Color::burlywood);
+    GeoGen test2(40, 15, geoGenNS::Shape::CUBE, Color::red);
+    GeoGen test3(40, 4, geoGenNS::Shape::CUBE, Color::green);
+    GeoGen test4(40, 4, geoGenNS::Shape::CUBE, Color::orange);
     test.generate(mainGrid, *scene);
     test2.generate(mainGrid, *scene);
     test3.generate(mainGrid, *scene);

@@ -3,10 +3,10 @@ project(threeppxopencv)
 
 set(CMAKE_CXX_STANDARD 20)
 
-include(FetchContent)
-
 add_subdirectory(src)
+add_subdirectory(tests)
 
+include(FetchContent)
 set(THREEPP_BUILD_TESTS OFF)
 set(THREEPP_BUILD_EXAMPLES OFF)
 FetchContent_Declare(
@@ -16,21 +16,28 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(threepp)
 
+option(BUILD_TESTS "Build tests" ON)
+if (BUILD_TESTS)
+    FetchContent_Declare(
+            Catch2
+            GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+            GIT_TAG v3.7.1 # or a later release
+    )
+    FetchContent_MakeAvailable(Catch2)
+endif ()
+
 add_executable(threeppxopencv main.cpp)
 
-target_link_libraries(threeppxopencv PRIVATE threepp::threepp)
-
 find_package(OpenCV CONFIG REQUIRED)
-target_link_libraries(threeppxopencv PRIVATE ${OpenCV_LIBS})
-
 find_package(glad CONFIG REQUIRED)
-target_link_libraries(threeppxopencv PRIVATE glad::glad)
 
-target_link_libraries(threeppxopencv PRIVATE GridManagerLib)
-
-target_link_libraries(threeppxopencv PRIVATE SceneriesLib)
-
-target_link_libraries(threeppxopencv PRIVATE geoDetectionLib)
+target_link_libraries(threeppxopencv PRIVATE
+        threepp::threepp
+        ${OpenCV_LIBS}
+        glad::glad
+        GridManagerLib
+        SceneriesLib
+        geoDetectionLib)
 
 ######### Emscripten #######
 if (DEFINED EMSCRIPTEN)
