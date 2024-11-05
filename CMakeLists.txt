@@ -35,8 +35,7 @@ target_link_libraries(threeppxopencv PRIVATE
         threepp::threepp
         ${OpenCV_LIBS}
         glad::glad
-        GridManagerLib
-        SceneriesLib
+        geoGenerationLib
         geoDetectionLib)
 
 ######### Emscripten #######
