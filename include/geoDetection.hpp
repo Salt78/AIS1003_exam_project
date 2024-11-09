@@ -15,26 +15,69 @@ namespace geoDetectionNS {
     private:
         std::string m_windowName{};
         std::pair<int, int> m_imageSize{};
-        std::vector<unsigned char> pixels{};
+        std::vector<unsigned char> m_pixels{};
+        Mat m_mainCam{};
+        Mat m_editedCam{};
+
+        void processImage() {
+            // Used a YT video to get the idea of how to pre-process the image: https://www.youtube.com/watch?v=2FYm3GOonhk&t=7467s
+            Mat imgGray{};
+            cvtColor(m_mainCam, imgGray, COLOR_BGR2GRAY);
+
+            Mat imgBlur{};
+            GaussianBlur(imgGray, imgBlur, Size(3, 3), 3, 0);
+
+            Mat imgCanny{};
+            Canny(imgBlur, imgCanny, 25, 75);
+            const Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
+
+            dilate(imgCanny, m_editedCam, kernel);
+        }
+
+        void setContours() {
+            std::vector<std::vector<Point> > contours;
+            std::vector<Vec4i> hierarchy;
+            findContours(m_editedCam, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+
+            std::vector<std::vector<Point> > conPoly{contours.size()};
+            std::vector<Rect> boundRect{contours.size()};
+            for (int i{}; i < contours.size(); i++) {
+                double peri = arcLength(contours[i], true);
+                approxPolyDP(contours[i], conPoly[i], 0.02 * peri, true);
+                drawContours(m_mainCam, conPoly, i, Scalar(255, 0, 255), 2);
+                boundRect[i] = boundingRect(conPoly[i]);
+                rectangle(m_mainCam, boundRect[i].tl(), boundRect[i].br(), Scalar(0, 255, 0), 2);
+            }
+        }
+
+        void setupVirtualCam() {
+            //Pixels are read into the buffer here.
+            glReadPixels(0, 0, m_imageSize.first, m_imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, m_pixels.data());
+
+            //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
+            m_mainCam = Mat(m_imageSize.second, m_imageSize.first, CV_8UC3, m_pixels.data());
+
+            //OpenCV uses a different origin for the image, so it is flipped here.
+            flip(m_mainCam, m_mainCam, 0);
+        }
 
     public:
         GeoDetection(std::string windowName, std::pair<int, int> imageSize)
             : m_windowName(std::move(windowName)), m_imageSize(imageSize),
-              pixels(imageSize.first * imageSize.second * 3) {
+              m_pixels(imageSize.first * imageSize.second * 3) {
             namedWindow(m_windowName, WINDOW_AUTOSIZE);
         }
 
-        void virtualCamera() {
-            //Pixels are read into the buffer here.
-            glReadPixels(0, 0, m_imageSize.first, m_imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, pixels.data());
 
-            //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
-            Mat threeppCam{m_imageSize.second, m_imageSize.first, CV_8UC3, pixels.data()};
 
-            //OpenCV uses a different origin for the image, so it is flipped here.
-            flip(threeppCam, threeppCam, 0);
+        void imageProcessing(const bool showCam = true) {
+            setupVirtualCam();
+            processImage();
+            setContours();
 
-            imshow(m_windowName, threeppCam);
+            if (showCam == true) {
+                imshow(m_windowName, m_mainCam);
+            }
         }
     };
 }
