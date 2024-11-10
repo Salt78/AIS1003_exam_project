@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
     mainGrid.createGrid();
 
     //GeoGen class for generating "random geometries"
-    GeoGen test(40, 10, geoGenNS::Shape::CIRCLE, Color::aqua);
+    GeoGen test(40, 10, geoGenNS::Shape::CUBE, Color::aqua);
     GeoGen test2(40, 15, geoGenNS::Shape::CUBE, Color::red);
     GeoGen test3(40, 4, geoGenNS::Shape::CUBE, Color::green);
     GeoGen test4(40, 4, geoGenNS::Shape::CUBE, Color::orange);

@@ -10,6 +10,7 @@
 
 namespace geoDetectionNS {
     using namespace cv;
+    using namespace threepp;
 
     class GeoDetection {
     private:
@@ -19,25 +20,25 @@ namespace geoDetectionNS {
         Mat m_mainCam{};
         Mat m_editedCam{};
 
-        void processImage() {
+        static Mat processImage(Mat &img) {
             // Used a YT video to get the idea of how to pre-process the image: https://www.youtube.com/watch?v=2FYm3GOonhk&t=7467s
-            Mat imgGray{};
-            cvtColor(m_mainCam, imgGray, COLOR_BGR2GRAY);
 
-            Mat imgBlur{};
-            GaussianBlur(imgGray, imgBlur, Size(3, 3), 3, 0);
+            Mat imgBlur;
+            GaussianBlur(img, imgBlur, Size(3, 3), 3, 0);
 
-            Mat imgCanny{};
+            Mat imgCanny;
             Canny(imgBlur, imgCanny, 25, 75);
             const Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
+            Mat imgDilate;
+            dilate(imgCanny, imgDilate, kernel);
 
-            dilate(imgCanny, m_editedCam, kernel);
+            return imgDilate;
         }
 
-        void setContours() {
+        void setContours(Mat &img) {
             std::vector<std::vector<Point> > contours;
             std::vector<Vec4i> hierarchy;
-            findContours(m_editedCam, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+            findContours(img, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
             std::vector<std::vector<Point> > conPoly{contours.size()};
             std::vector<Rect> boundRect{contours.size()};
@@ -46,7 +47,7 @@ namespace geoDetectionNS {
                 approxPolyDP(contours[i], conPoly[i], 0.02 * peri, true);
                 drawContours(m_mainCam, conPoly, i, Scalar(255, 0, 255), 2);
                 boundRect[i] = boundingRect(conPoly[i]);
-                rectangle(m_mainCam, boundRect[i].tl(), boundRect[i].br(), Scalar(0, 255, 0), 2);
+                rectangle(m_mainCam, boundRect[i].tl(), boundRect[i].br(), Scalar(255, 0, 255), 2);
             }
         }
 
@@ -68,16 +69,25 @@ namespace geoDetectionNS {
             namedWindow(m_windowName, WINDOW_AUTOSIZE);
         }
 
-
-
         void imageProcessing(const bool showCam = true) {
             setupVirtualCam();
-            processImage();
-            setContours();
+            colorDetection();
 
             if (showCam == true) {
                 imshow(m_windowName, m_mainCam);
             }
+        }
+
+        void colorDetection() {
+            Mat mainCamHSV{};
+            cvtColor(m_mainCam, mainCamHSV, COLOR_BGR2HSV);
+            Scalar greenLower(46, 0, 0);
+            Scalar greenUpper(68, 255, 255);
+            Mat greenMask{};
+            inRange(mainCamHSV, greenLower, greenUpper, greenMask);
+
+            setContours(greenMask);
+
         }
     };
 }
