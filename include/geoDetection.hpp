@@ -7,6 +7,7 @@
 #include <threepp/threepp.hpp>
 #include <glad/glad.h>
 #include <opencv2/opencv.hpp>
+#include "det"
 
 namespace geoDetectionNS {
     using namespace cv;
