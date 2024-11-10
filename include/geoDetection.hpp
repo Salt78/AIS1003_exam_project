@@ -12,6 +12,8 @@ namespace geoDetectionNS {
     using namespace cv;
     using namespace threepp;
 
+
+
     class GeoDetection {
     private:
         std::string m_windowName{};
@@ -19,8 +21,7 @@ namespace geoDetectionNS {
         std::vector<unsigned char> m_pixels{};
         Mat m_mainCam{};
         Mat m_editedCam{};
-        std::vector<Rect> m_boundRectCube{};
-        std::vector<Rect> m_boundRectCircle{};
+        std::tuple<std::vector<Rect>, Shape, Color> m_detectedObjects{};
 
         const std::map<Color::ColorName, std::pair<Scalar, Scalar> > colorProfiles = {
             {Color::green, std::pair<Scalar, Scalar>(Scalar(46, 0, 0), Scalar(68, 255, 255))},
@@ -50,21 +51,18 @@ namespace geoDetectionNS {
             findContours(img, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
             std::vector<std::vector<Point> > conPoly{contours.size()};
-            m_boundRectCube.resize(contours.size());
-            m_boundRectCircle.resize(contours.size());
+            std::get<0>(m_detectedObjects).resize(contours.size());
             for (int i{}; i < contours.size(); i++) {
                 double peri = arcLength(contours[i], true);
                 approxPolyDP(contours[i], conPoly[i], 0.02 * peri, true);
 
-                int objCor = static_cast<int>(conPoly[i].size());
+                const int objCor = static_cast<int>(conPoly[i].size());
                 drawContours(m_mainCam, conPoly, i, Scalar(255, 0, 255), 2);
 
                 if (objCor == 4) {
-                    m_boundRectCube[i] = boundingRect(conPoly[i]);
-                    rectangle(m_mainCam, m_boundRectCube[i].tl(), m_boundRectCube[i].br(), Scalar(255, 0, 255), 2);
+                    std::get<0>(m_detectedObjects).emplace_back() = boundingRect(conPoly[i]);
                 } else {
-                    m_boundRectCircle[i] = boundingRect(conPoly[i]);
-                    rectangle(m_mainCam, m_boundRectCircle[i].tl(), m_boundRectCircle[i].br(), Scalar(255, 0, 255), 2);
+
                 }
             }
         }
