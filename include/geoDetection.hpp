@@ -7,12 +7,11 @@
 #include <threepp/threepp.hpp>
 #include <glad/glad.h>
 #include <opencv2/opencv.hpp>
-#include "det"
+#include "detectedObjects.hpp"
 
 namespace geoDetectionNS {
     using namespace cv;
     using namespace threepp;
-
 
 
     class GeoDetection {
@@ -22,7 +21,7 @@ namespace geoDetectionNS {
         std::vector<unsigned char> m_pixels{};
         Mat m_mainCam{};
         Mat m_editedCam{};
-        std::tuple<std::vector<Rect>, Shape, Color> m_detectedObjects{};
+        std::vector<DetectedObjects> m_detectedObjects{};
 
         const std::map<Color::ColorName, std::pair<Scalar, Scalar> > colorProfiles = {
             {Color::green, std::pair<Scalar, Scalar>(Scalar(46, 0, 0), Scalar(68, 255, 255))},
@@ -31,7 +30,7 @@ namespace geoDetectionNS {
             {Color::red, std::pair<Scalar, Scalar>(Scalar(0, 32, 0), Scalar(0, 255, 255))}
         };
 
-        static Mat processImage(Mat &img) {
+        /*static Mat processImage(Mat &img) {
             // Used a YT video to get the idea of how to pre-process the image: https://www.youtube.com/watch?v=2FYm3GOonhk&t=7467s
 
             Mat imgBlur;
@@ -44,15 +43,19 @@ namespace geoDetectionNS {
             dilate(imgCanny, imgDilate, kernel);
 
             return imgDilate;
-        }
+        }*/
 
-        void setContours(Mat &img, Color::ColorName color) {
+        void setContours(Mat &img, const Color::ColorName &color) {
             std::vector<std::vector<Point> > contours;
             std::vector<Vec4i> hierarchy;
             findContours(img, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
+            //Early return if no contours are found.
+            if (contours.empty()) {
+                return;
+            }
+
             std::vector<std::vector<Point> > conPoly{contours.size()};
-            std::get<0>(m_detectedObjects).resize(contours.size());
             for (int i{}; i < contours.size(); i++) {
                 double peri = arcLength(contours[i], true);
                 approxPolyDP(contours[i], conPoly[i], 0.02 * peri, true);
@@ -60,13 +63,17 @@ namespace geoDetectionNS {
                 const int objCor = static_cast<int>(conPoly[i].size());
                 drawContours(m_mainCam, conPoly, i, Scalar(255, 0, 255), 2);
 
+                Rect tempBoundingRect{boundingRect(conPoly[i])};
                 if (objCor == 4) {
-                    std::get<0>(m_detectedObjects).emplace_back() = boundingRect(conPoly[i]);
+                    DetectedObjects currentObject(tempBoundingRect, Shape::CUBE, color);
+                    m_detectedObjects.emplace_back(currentObject);
                 } else {
-
+                    DetectedObjects currentObject(tempBoundingRect, Shape::CIRCLE, color);
+                    m_detectedObjects.emplace_back(currentObject);
                 }
             }
         }
+
 
         void setupVirtualCam() {
             //Pixels are read into the buffer here.
@@ -79,10 +86,12 @@ namespace geoDetectionNS {
             flip(m_mainCam, m_mainCam, 0);
         }
 
-        void colorDetection(const Color::ColorName color) {
+        void contourDetection(const Color::ColorName color) {
+            //Applies HSV color space to the image.
             Mat mainCamHSV{};
             cvtColor(m_mainCam, mainCamHSV, COLOR_BGR2HSV);
 
+            //Applies a mask to the image.
             Mat Mask{};
             inRange(mainCamHSV, colorProfiles.at(color).first, colorProfiles.at(color).second, Mask);
 
@@ -98,9 +107,9 @@ namespace geoDetectionNS {
 
         void imageProcessing(const bool showCam = true) {
             setupVirtualCam();
-            colorDetection(Color::green);
-            colorDetection(Color::aqua);
-            colorDetection(Color::orange);
+            contourDetection(Color::green);
+            contourDetection(Color::aqua);
+            contourDetection(Color::orange);
 
             if (showCam == true) {
                 imshow(m_windowName, m_mainCam);

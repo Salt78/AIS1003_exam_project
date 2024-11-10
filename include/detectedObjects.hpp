@@ -19,7 +19,7 @@ namespace geoDetectionNS {
         threepp::Color m_color{};
 
     public:
-        DetectedObjects(Rect object, Shape shape, threepp::Color color)
+        DetectedObjects(Rect &object, Shape shape, threepp::Color color)
             : m_object{object}, m_shape{shape},
               m_color{color} {
         }
@@ -34,6 +34,18 @@ namespace geoDetectionNS {
 
         [[nodiscard]] threepp::Color getColor() const {
             return m_color;
+        }
+
+        void setObject(const Rect &object) {
+            m_object = object;
+        }
+
+        void setShape(const Shape &shape) {
+            m_shape = shape;
+        }
+
+        void setColor(const threepp::Color &color) {
+            m_color = color;
         }
     };
 }
