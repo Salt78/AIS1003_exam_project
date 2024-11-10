@@ -45,6 +45,17 @@ namespace geoDetectionNS {
             return imgDilate;
         }*/
 
+        void setupVirtualCam() {
+            //Pixels are read into the buffer here.
+            glReadPixels(0, 0, m_imageSize.first, m_imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, m_pixels.data());
+
+            //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
+            m_mainCam = Mat(m_imageSize.second, m_imageSize.first, CV_8UC3, m_pixels.data());
+
+            //OpenCV uses a different origin for the image, so it is flipped here.
+            flip(m_mainCam, m_mainCam, 0);
+        }
+
         void setContours(Mat &img, const Color::ColorName &color) {
             std::vector<std::vector<Point> > contours;
             std::vector<Vec4i> hierarchy;
@@ -74,18 +85,6 @@ namespace geoDetectionNS {
             }
         }
 
-
-        void setupVirtualCam() {
-            //Pixels are read into the buffer here.
-            glReadPixels(0, 0, m_imageSize.first, m_imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, m_pixels.data());
-
-            //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
-            m_mainCam = Mat(m_imageSize.second, m_imageSize.first, CV_8UC3, m_pixels.data());
-
-            //OpenCV uses a different origin for the image, so it is flipped here.
-            flip(m_mainCam, m_mainCam, 0);
-        }
-
         void contourDetection(const Color::ColorName color) {
             //Applies HSV color space to the image.
             Mat mainCamHSV{};
@@ -110,6 +109,7 @@ namespace geoDetectionNS {
             contourDetection(Color::green);
             contourDetection(Color::aqua);
             contourDetection(Color::orange);
+            contourDetection(Color::red);
 
             if (showCam == true) {
                 imshow(m_windowName, m_mainCam);
