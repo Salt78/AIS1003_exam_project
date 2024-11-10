@@ -34,8 +34,8 @@ std::vector<std::shared_ptr<Mesh> > GeoGen::getGeoVec() const {
 }
 
 void GeoGen::addToScene(Scene &scene) {
-    for (int i{}; i < m_geoVec.size(); i++) {
-        scene.add(m_geoVec[i]);
+    for (const auto& i : m_geoVec) {
+        scene.add(i);
     }
 }
 
