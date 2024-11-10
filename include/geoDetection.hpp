@@ -19,6 +19,15 @@ namespace geoDetectionNS {
         std::vector<unsigned char> m_pixels{};
         Mat m_mainCam{};
         Mat m_editedCam{};
+        std::vector<Rect> m_boundRectCube{};
+        std::vector<Rect> m_boundRectCircle{};
+
+        const std::map<Color::ColorName, std::pair<Scalar, Scalar> > colorProfiles = {
+            {Color::green, std::pair<Scalar, Scalar>(Scalar(46, 0, 0), Scalar(68, 255, 255))},
+            {Color::aqua, std::pair<Scalar, Scalar>(Scalar(76, 0, 0), Scalar(90, 255, 255))},
+            {Color::orange, std::pair<Scalar, Scalar>(Scalar(13, 0, 0), Scalar(32, 255, 255))},
+            {Color::red, std::pair<Scalar, Scalar>(Scalar(0, 32, 0), Scalar(0, 255, 255))}
+        };
 
         static Mat processImage(Mat &img) {
             // Used a YT video to get the idea of how to pre-process the image: https://www.youtube.com/watch?v=2FYm3GOonhk&t=7467s
@@ -35,19 +44,28 @@ namespace geoDetectionNS {
             return imgDilate;
         }
 
-        void setContours(Mat &img) {
+        void setContours(Mat &img, Color::ColorName color) {
             std::vector<std::vector<Point> > contours;
             std::vector<Vec4i> hierarchy;
             findContours(img, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
             std::vector<std::vector<Point> > conPoly{contours.size()};
-            std::vector<Rect> boundRect{contours.size()};
+            m_boundRectCube.resize(contours.size());
+            m_boundRectCircle.resize(contours.size());
             for (int i{}; i < contours.size(); i++) {
                 double peri = arcLength(contours[i], true);
                 approxPolyDP(contours[i], conPoly[i], 0.02 * peri, true);
+
+                int objCor = static_cast<int>(conPoly[i].size());
                 drawContours(m_mainCam, conPoly, i, Scalar(255, 0, 255), 2);
-                boundRect[i] = boundingRect(conPoly[i]);
-                rectangle(m_mainCam, boundRect[i].tl(), boundRect[i].br(), Scalar(255, 0, 255), 2);
+
+                if (objCor == 4) {
+                    m_boundRectCube[i] = boundingRect(conPoly[i]);
+                    rectangle(m_mainCam, m_boundRectCube[i].tl(), m_boundRectCube[i].br(), Scalar(255, 0, 255), 2);
+                } else {
+                    m_boundRectCircle[i] = boundingRect(conPoly[i]);
+                    rectangle(m_mainCam, m_boundRectCircle[i].tl(), m_boundRectCircle[i].br(), Scalar(255, 0, 255), 2);
+                }
             }
         }
 
@@ -62,6 +80,16 @@ namespace geoDetectionNS {
             flip(m_mainCam, m_mainCam, 0);
         }
 
+        void colorDetection(const Color::ColorName color) {
+            Mat mainCamHSV{};
+            cvtColor(m_mainCam, mainCamHSV, COLOR_BGR2HSV);
+
+            Mat Mask{};
+            inRange(mainCamHSV, colorProfiles.at(color).first, colorProfiles.at(color).second, Mask);
+
+            setContours(Mask, color);
+        }
+
     public:
         GeoDetection(std::string windowName, std::pair<int, int> imageSize)
             : m_windowName(std::move(windowName)), m_imageSize(imageSize),
@@ -71,25 +99,14 @@ namespace geoDetectionNS {
 
         void imageProcessing(const bool showCam = true) {
             setupVirtualCam();
-            colorDetection();
+            colorDetection(Color::green);
+            colorDetection(Color::aqua);
+            colorDetection(Color::orange);
 
             if (showCam == true) {
                 imshow(m_windowName, m_mainCam);
             }
         }
-
-        void colorDetection() {
-            Mat mainCamHSV{};
-            cvtColor(m_mainCam, mainCamHSV, COLOR_BGR2HSV);
-            Scalar greenLower(46, 0, 0);
-            Scalar greenUpper(68, 255, 255);
-            Mat greenMask{};
-            inRange(mainCamHSV, greenLower, greenUpper, greenMask);
-
-            setContours(greenMask);
-
-        }
     };
 }
-
 #endif //GEODETECTION_HPP
