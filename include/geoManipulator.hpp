@@ -40,9 +40,8 @@ namespace geoManipulatorNS {
                 std::vector<Intersection> intersect{};
                 intersect = raycaster.intersectObject(*mesh, false);
                 //Extracts the mesh from the intersection
-                auto intersectedMesh = intersect[0].object->as<Mesh>();
-                std::shared_ptr<Mesh> intersectedMeshPtr(intersectedMesh);
-                m_meshObjects.emplace_back(intersectedMeshPtr, i.getShape(), i.getColor());
+                auto intersectedMesh = intersect[0].object->as<std::shared_ptr<Mesh>()>;
+                m_meshObjects.emplace_back(intersectedMesh, i.getShape(), i.getColor());
             }
         }
 
