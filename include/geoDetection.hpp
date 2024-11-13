@@ -21,7 +21,7 @@ namespace geoDetectionNS {
         std::vector<unsigned char> m_pixels{};
         Mat m_mainCam{};
         Mat m_editedCam{};
-        std::vector<DetectedObjects> m_detectedObjects{};
+        std::vector<DetectedObjects<Rect>> m_detectedObjects{};
 
         const std::map<Color::ColorName, std::pair<Scalar, Scalar> > colorProfiles = {
             {Color::green, std::pair<Scalar, Scalar>(Scalar(46, 0, 0), Scalar(68, 255, 255))},

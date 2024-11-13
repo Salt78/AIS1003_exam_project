@@ -30,7 +30,7 @@ namespace geoGenNS {
         //General properties
         float m_meshSize{};
         int m_quantity{};
-        geoGenNS::Shape m_shape{};
+        Shape m_shape{};
         Color::ColorName m_color{};
 
 

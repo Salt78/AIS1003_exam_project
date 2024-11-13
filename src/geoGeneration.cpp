@@ -34,8 +34,11 @@ std::vector<std::shared_ptr<Mesh> > GeoGen::getGeoVec() const {
 }
 
 void GeoGen::addToScene(Scene &scene) {
-    for (const auto& i : m_geoVec) {
+    for (const auto &i: m_geoVec) {
         scene.add(i);
+
+        Box3 boundingBox{}; //Adds a bounding box to the mesh
+        boundingBox.setFromObject(*i);
     }
 }
 

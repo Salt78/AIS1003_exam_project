@@ -4,22 +4,26 @@
 #include <opencv2/core.hpp>
 #include <threepp/math/Color.hpp>
 
+#include "threepp/objects/Mesh.hpp"
+
 namespace geoDetectionNS {
     using namespace cv;
+    using namespace threepp;
 
     enum class Shape {
         CUBE,
         CIRCLE,
     };
 
+    template<typename T>
     class DetectedObjects {
     private:
-        Rect m_object{};
+        T m_object{};
         Shape m_shape{};
-        threepp::Color m_color{};
+        Color m_color{};
 
     public:
-        DetectedObjects(Rect &object, Shape shape, threepp::Color color)
+        DetectedObjects(T &object, const Shape &shape, const Color &color)
             : m_object{object}, m_shape{shape},
               m_color{color} {
         }
@@ -32,11 +36,11 @@ namespace geoDetectionNS {
             return m_shape;
         }
 
-        [[nodiscard]] threepp::Color getColor() const {
+        [[nodiscard]] Color getColor() const {
             return m_color;
         }
 
-        void setObject(const Rect &object) {
+        /*void setObject(const Rect &object) {
             m_object = object;
         }
 
@@ -44,9 +48,9 @@ namespace geoDetectionNS {
             m_shape = shape;
         }
 
-        void setColor(const threepp::Color &color) {
+        void setColor(const Color &color) {
             m_color = color;
-        }
+        }*/
     };
 }
 #endif //DETECTEDOBJECTS_HPP
