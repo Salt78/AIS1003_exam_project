@@ -38,6 +38,8 @@ target_link_libraries(threeppxopencv PRIVATE
         geoGenerationLib
         geoDetectionLib)
 
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+
 ######### Emscripten #######
 if (DEFINED EMSCRIPTEN)
 

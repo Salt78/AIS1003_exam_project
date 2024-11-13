@@ -18,7 +18,7 @@ namespace geoManipulatorNS {
 
 
         static Vector2 getCenterMesh(const DetectedObjects<Rect> &rectObject) {
-            Vector2 meshCenter{
+            const Vector2 meshCenter{
                 (rectObject.getObject().tl().x + rectObject.getObject().br().x) / 2,
                 (rectObject.getObject().tl().y + rectObject.getObject().br().y) / 2
             };
@@ -40,11 +40,8 @@ namespace geoManipulatorNS {
                 std::vector<Intersection> intersect{};
                 intersect = raycaster.intersectObject(*mesh, false);
                 //Extracts the mesh from the intersection
-                auto interstectedObject = intersect[0].object;
-                auto intersectedMesh = dynamic_cast<Mesh *>(interstectedObject);
-                std::shared_ptr<Mesh> intersectedMeshPtr(intersectedMesh, [](Mesh *) {
-                });
-
+                auto intersectedMesh = intersect[0].object->as<Mesh>();
+                std::shared_ptr<Mesh> intersectedMeshPtr(intersectedMesh);
                 m_meshObjects.emplace_back(intersectedMeshPtr, i.getShape(), i.getColor());
             }
         }
