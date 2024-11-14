@@ -1,17 +1,31 @@
 #include "gridManager.hpp"
+#include "threepp/threepp.hpp"
+#include <algorithm>
 
+using namespace threepp;
 
 void gridManagerNS::GridManager::logUsedCoords(int key) {
     m_usedCoords.push_back(key);
     std::ranges::sort(m_usedCoords);
 }
 
-gridManagerNS::GridManager::GridManager(int imageSize, float gridSize, int spacing): m_imageSize(imageSize),
-    m_gridSize(gridSize), m_spacing(spacing) {
+gridManagerNS::GridManager::GridManager(const std::string &windowName,
+                                        const std::pair<int, int> imageSize,
+                                        const float gridSize,
+                                        const int spacing): m_imageSize(imageSize),
+                                                            m_gridSize(gridSize), m_spacing(spacing),
+                                                            m_canvas(windowName, {{"aa", 4}}) {
+
+    m_canvas.setSize({m_imageSize.first, m_imageSize.second});
+    m_renderer.setSize(m_canvas.size());
+    m_scene = Scene::create();
+    m_camera = OrthographicCamera::create(0, static_cast<float>(m_imageSize.first),
+                                          0, static_cast<float>(m_imageSize.second), -1000, 1000);
+    m_camera->position.z = 10;
 }
 
 void gridManagerNS::GridManager::createGrid() {
-    const float centerImage = static_cast<float>(m_imageSize) / 2;
+    const float centerImage = static_cast<float>(m_imageSize.first) / 2;
     const float centerGrid = m_gridSize / 2;
 
     const std::pair<float, float> startingCoords{

@@ -6,27 +6,14 @@
 using namespace threepp;
 using namespace cv;
 using namespace geoDetectionNS;
+using namespace gridManagerNS;
 using namespace geoGenNS;
 
 int main(int argc, char **argv) {
-    //Canvas creation
-    Canvas canvas("RandomGeometry", {{"aa", 4}});
     constexpr std::pair<int, int> imageSize{800, 800};
-    canvas.setSize({imageSize.first, imageSize.second});
 
-    //Renderer creation
-    GLRenderer renderer(canvas.size());
 
-    //Creates scene
-    auto scene= Scene::create();
-
-    //Orthographic camera
-    auto camera = OrthographicCamera::create(0, imageSize.first,
-                                             0, imageSize.second, -1000, 1000);
-    camera->position.z = 10;
-
-    //Mapping coords to a grid
-    GridManager mainGrid(imageSize.first, 15, 50);
+    GridManager mainGrid("GeometrySorting", imageSize, 15, 50);
     mainGrid.createGrid();
 
     //GeoGen class for generating "random geometries"
@@ -34,21 +21,15 @@ int main(int argc, char **argv) {
     GeoGen test2(40, 3, geoGenNS::Shape::CUBE, Color::red);
     GeoGen test3(40, 3, geoGenNS::Shape::CIRCLE, Color::green);
     GeoGen test4(40, 3, geoGenNS::Shape::CUBE, Color::orange);
-    test.generate(mainGrid, *scene);
-    test2.generate(mainGrid, *scene);
-    test3.generate(mainGrid, *scene);
-    test4.generate(mainGrid, *scene);
+    test.generate(mainGrid);
+    test2.generate(mainGrid);
+    test3.generate(mainGrid);
+    test4.generate(mainGrid);
 
     GeoDetection mainScene("OPENCV test", imageSize);
 
-
-    //Render loop
-    Clock clock;
-    canvas.animate([&]() {
-        renderer.render(*scene, *camera);
-
+    mainGrid.startAnimation([&]() {
         mainScene.imageProcessing();
-
-        waitKey(1);
     });
+    
 }

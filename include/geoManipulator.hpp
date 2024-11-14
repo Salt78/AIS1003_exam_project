@@ -12,7 +12,7 @@ namespace geoManipulatorNS {
 
     class GeoManipulator {
     private:
-        GridManager m_grid;
+        GridManager &m_grid;
         std::vector<DetectedObjects<std::shared_ptr<Mesh> > > m_meshObjects;
         std::shared_ptr<Camera> m_camera;
 
@@ -38,10 +38,12 @@ namespace geoManipulatorNS {
                 raycaster.setFromCamera(getCenterMesh(i), *m_camera);
 
                 std::vector<Intersection> intersect{};
-                intersect = raycaster.intersectObject(*mesh, false);
-                //Extracts the mesh from the intersection
-                auto intersectedMesh = intersect[0].object->as<std::shared_ptr<Mesh>()>;
-                m_meshObjects.emplace_back(intersectedMesh, i.getShape(), i.getColor());
+                if (!intersect.empty()) {
+                    std::shared_ptr<Object3D> objectPtr(intersect[0].object, [](Object3D *) {});
+                    std::shared_ptr<Mesh> intersectedMesh = std::dynamic_pointer_cast<Mesh>(objectPtr);
+                    m_meshObjects.emplace_back(intersectedMesh, i.getShape(), i.getColor());
+                }
+                //std::shared_ptr<Mesh> intersectedMesh = intersect[0].object->as<std::shared_ptr<Mesh>()>;
             }
         }
 

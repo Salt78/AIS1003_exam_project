@@ -42,7 +42,7 @@ void GeoGen::addToScene(Scene &scene) {
     }
 }
 
-void GeoGen::generate(GridManager &grid, Scene &scene) {
+void GeoGen::generate(GridManager &grid) {
     m_material = MeshBasicMaterial::create();
     m_material->color = m_color;
 
@@ -53,7 +53,7 @@ void GeoGen::generate(GridManager &grid, Scene &scene) {
             cubeGeometry = BoxGeometry::create(m_meshSize, m_meshSize, 0);
 
             createMesh(grid, cubeGeometry);
-            addToScene(scene);
+            addToScene(*grid.getScene());
             break;
         }
         case Shape::CAPSULE: {
@@ -61,7 +61,7 @@ void GeoGen::generate(GridManager &grid, Scene &scene) {
             capsuleGeometry = CapsuleGeometry::create(25, 50, 10, 20);
 
             createMesh(grid, capsuleGeometry);
-            addToScene(scene);
+            addToScene(*grid.getScene());
             break;
         }
         case Shape::CIRCLE: {
@@ -69,7 +69,7 @@ void GeoGen::generate(GridManager &grid, Scene &scene) {
             circleGeometry = CircleGeometry::create(m_meshSize / 2, 30, 0, 2 * std::numbers::pi);
 
             createMesh(grid, circleGeometry);
-            addToScene(scene);
+            addToScene(*grid.getScene());
             break;
         }
         case Shape::CYLINDER: {
@@ -77,7 +77,7 @@ void GeoGen::generate(GridManager &grid, Scene &scene) {
             cylinderGeometry = CylinderGeometry::create(1, 1, 1);
 
             createMesh(grid, cylinderGeometry);
-            addToScene(scene);
+            addToScene(*grid.getScene());
             break;
         }
     }

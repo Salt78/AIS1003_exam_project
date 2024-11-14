@@ -35,7 +35,7 @@ namespace geoGenNS {
 
 
         //ThreePP properties
-        std::shared_ptr<MeshBasicMaterial> m_material;
+        std::shared_ptr<MeshBasicMaterial> m_material{};
         std::vector<std::shared_ptr<Mesh> > m_geoVec{};
 
         template<typename T>
@@ -56,7 +56,7 @@ namespace geoGenNS {
 
         [[nodiscard]] std::vector<std::shared_ptr<Mesh> > getGeoVec() const;
 
-        void generate(GridManager &grid, Scene &scene);
+        void generate(GridManager &grid);
     };
 }
 
