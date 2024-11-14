@@ -4,8 +4,6 @@
 #include <opencv2/core.hpp>
 #include <threepp/math/Color.hpp>
 
-#include "threepp/objects/Mesh.hpp"
-
 namespace geoDetectionNS {
     using namespace cv;
     using namespace threepp;
@@ -39,18 +37,6 @@ namespace geoDetectionNS {
         [[nodiscard]] Color getColor() const {
             return m_color;
         }
-
-        /*void setObject(const Rect &object) {
-            m_object = object;
-        }
-
-        void setShape(const Shape &shape) {
-            m_shape = shape;
-        }
-
-        void setColor(const Color &color) {
-            m_color = color;
-        }*/
     };
 }
 #endif //DETECTEDOBJECTS_HPP
