@@ -1,7 +1,6 @@
 add_library(geoGenerationLib geoGeneration.cpp gridManager.cpp)
 add_library(geoDetectionLib
         geoDetection.cpp
-        detectedObjects.cpp
         geoManipulator.cpp)
 
 target_include_directories(geoGenerationLib PUBLIC ${CMAKE_SOURCE_DIR}/include)

@@ -10,11 +10,6 @@
 using namespace threepp;
 using namespace gridManagerNS;
 
-// void addToScene(std::shared_ptr<Scene> &scene,std::vector<std::shared_ptr<Mesh> > &geoVec) {
-//
-//
-//
-// }
 
 namespace geoGenNS {
     enum class Shape {
@@ -38,8 +33,10 @@ namespace geoGenNS {
         std::shared_ptr<MeshBasicMaterial> m_material{};
         std::vector<std::shared_ptr<Mesh> > m_geoVec{};
 
+
         template<typename T>
         void createMesh(GridManager &grid, std::shared_ptr<T> &geometry);
+
 
         void addToScene(Scene &scene);
 
@@ -50,11 +47,15 @@ namespace geoGenNS {
 
         [[nodiscard]] Color::ColorName getColor() const;
 
+
         [[nodiscard]] int getQuantity() const;
+
 
         [[nodiscard]] std::string getShape() const;
 
+
         [[nodiscard]] std::vector<std::shared_ptr<Mesh> > getGeoVec() const;
+
 
         void generate(GridManager &grid);
     };

@@ -39,7 +39,8 @@ namespace geoManipulatorNS {
 
                 std::vector<Intersection> intersect{};
                 if (!intersect.empty()) {
-                    std::shared_ptr<Object3D> objectPtr(intersect[0].object, [](Object3D *) {});
+                    std::shared_ptr<Object3D> objectPtr(intersect[0].object, [](Object3D *) {
+                    });
                     std::shared_ptr<Mesh> intersectedMesh = std::dynamic_pointer_cast<Mesh>(objectPtr);
                     m_meshObjects.emplace_back(intersectedMesh, i.getShape(), i.getColor());
                 }
@@ -50,9 +51,6 @@ namespace geoManipulatorNS {
     public:
         explicit GeoManipulator(GridManager &grid, Camera &camera): m_grid(grid), m_camera(&camera) {
         }
-
-        /*void setup(const std::vector<DetectedObjects> &objects) {
-        }*/
     };
 }
 

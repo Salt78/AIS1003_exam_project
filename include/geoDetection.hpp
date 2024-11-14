@@ -5,7 +5,6 @@
 #include <utility>
 #include <vector>
 #include <threepp/threepp.hpp>
-#include <glad/glad.h>
 #include <opencv2/opencv.hpp>
 #include "detectedObjects.hpp"
 
@@ -21,7 +20,8 @@ namespace geoDetectionNS {
         std::vector<unsigned char> m_pixels{};
         Mat m_mainCam{};
         Mat m_editedCam{};
-        std::vector<DetectedObjects<Rect>> m_detectedObjects{};
+        std::vector<DetectedObjects<Rect> > m_detectedObjects{};
+
 
         const std::map<Color::ColorName, std::pair<Scalar, Scalar> > colorProfiles = {
             {Color::green, std::pair<Scalar, Scalar>(Scalar(46, 0, 0), Scalar(68, 255, 255))},
@@ -30,91 +30,20 @@ namespace geoDetectionNS {
             {Color::red, std::pair<Scalar, Scalar>(Scalar(0, 32, 0), Scalar(0, 255, 255))}
         };
 
-        /*static Mat processImage(Mat &img) {
-            // Used a YT video to get the idea of how to pre-process the image: https://www.youtube.com/watch?v=2FYm3GOonhk&t=7467s
 
-            Mat imgBlur;
-            GaussianBlur(img, imgBlur, Size(3, 3), 3, 0);
+        void setupVirtualCam();
 
-            Mat imgCanny;
-            Canny(imgBlur, imgCanny, 25, 75);
-            const Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
-            Mat imgDilate;
-            dilate(imgCanny, imgDilate, kernel);
 
-            return imgDilate;
-        }*/
+        void setContours(Mat &img, const Color::ColorName &color);
 
-        void setupVirtualCam() {
-            //Pixels are read into the buffer here.
-            glReadPixels(0, 0, m_imageSize.first, m_imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, m_pixels.data());
 
-            //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
-            m_mainCam = Mat(m_imageSize.second, m_imageSize.first, CV_8UC3, m_pixels.data());
-
-            //OpenCV uses a different origin for the image, so it is flipped here.
-            flip(m_mainCam, m_mainCam, 0);
-        }
-
-        void setContours(Mat &img, const Color::ColorName &color) {
-            std::vector<std::vector<Point> > contours;
-            std::vector<Vec4i> hierarchy;
-            findContours(img, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
-
-            //Early return if no contours are found.
-            if (contours.empty()) {
-                return;
-            }
-
-            std::vector<std::vector<Point> > conPoly{contours.size()};
-            for (int i{}; i < contours.size(); i++) {
-                double peri = arcLength(contours[i], true);
-                approxPolyDP(contours[i], conPoly[i], 0.02 * peri, true);
-
-                const int objCor = static_cast<int>(conPoly[i].size());
-                drawContours(m_mainCam, conPoly, i, Scalar(255, 0, 255), 2);
-
-                Rect tempBoundingRect{boundingRect(conPoly[i])};
-                if (objCor == 4) {
-                    DetectedObjects currentObject(tempBoundingRect, Shape::CUBE, color);
-                    m_detectedObjects.emplace_back(currentObject);
-                } else {
-                    DetectedObjects currentObject(tempBoundingRect, Shape::CIRCLE, color);
-                    m_detectedObjects.emplace_back(currentObject);
-                }
-            }
-        }
-
-        void contourDetection(const Color::ColorName color) {
-            //Applies HSV color space to the image.
-            Mat mainCamHSV{};
-            cvtColor(m_mainCam, mainCamHSV, COLOR_BGR2HSV);
-
-            //Applies a mask to the image.
-            Mat Mask{};
-            inRange(mainCamHSV, colorProfiles.at(color).first, colorProfiles.at(color).second, Mask);
-
-            setContours(Mask, color);
-        }
+        void contourDetection(Color::ColorName color);
 
     public:
-        GeoDetection(std::string windowName, std::pair<int, int> imageSize)
-            : m_windowName(std::move(windowName)), m_imageSize(imageSize),
-              m_pixels(imageSize.first * imageSize.second * 3) {
-            namedWindow(m_windowName, WINDOW_AUTOSIZE);
-        }
+        GeoDetection(std::string windowName, std::pair<int, int> imageSize);
 
-        void imageProcessing(const bool showCam = true) {
-            setupVirtualCam();
-            contourDetection(Color::green);
-            contourDetection(Color::aqua);
-            contourDetection(Color::orange);
-            contourDetection(Color::red);
 
-            if (showCam == true) {
-                imshow(m_windowName, m_mainCam);
-            }
-        }
+        void imageProcessing(bool showCam = true);
     };
 }
 #endif //GEODETECTION_HPP

@@ -6,33 +6,6 @@ GeoGen::GeoGen(float meshSize, int quantity, geoGenNS::Shape shape, Color::Color
     : m_meshSize{meshSize}, m_quantity{quantity}, m_shape{shape}, m_color{color} {
 }
 
-
-Color::ColorName GeoGen::getColor() const {
-    return m_color;
-}
-
-int GeoGen::getQuantity() const {
-    return m_quantity;
-}
-
-std::string GeoGen::getShape() const {
-    switch (m_shape) {
-        case geoGenNS::Shape::CUBE:
-            return "cube";
-        case geoGenNS::Shape::CAPSULE:
-            return "cone";
-        case geoGenNS::Shape::CIRCLE:
-            return "sphere";
-        case geoGenNS::Shape::CYLINDER:
-            return "cylinder";
-    }
-    return "unknown";
-}
-
-std::vector<std::shared_ptr<Mesh> > GeoGen::getGeoVec() const {
-    return m_geoVec;
-}
-
 void GeoGen::addToScene(Scene &scene) {
     for (const auto &i: m_geoVec) {
         scene.add(i);
@@ -45,7 +18,6 @@ void GeoGen::addToScene(Scene &scene) {
 void GeoGen::generate(GridManager &grid) {
     m_material = MeshBasicMaterial::create();
     m_material->color = m_color;
-
 
     switch (m_shape) {
         case Shape::CUBE: {
