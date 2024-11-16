@@ -1,43 +1,45 @@
-name: CMake CI with vcpkg
+name: Build with CMake and vcpkg
 
 on:
   push:
     branches:
-      - dev
+      - main
   pull_request:
     branches:
-      - dev
+      - main
 
 jobs:
   build:
-    name: Build and Test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
 
     steps:
-      # Checkout repository
-      - name: Checkout source code
+      # Step 1: Checkout the source code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      # Setup vcpkg
+      # Step 2: Setup vcpkg
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgJson: true
+          vcpkgGitURL: "https://github.com/microsoft/vcpkg.git"
+          vcpkgGitCommitId: "f3e728a2b19c19c6b27f9b1f53f9799fa22a3583" # Replace with the baseline commit ID
+          doNotUpdateVcpkg: true
+          doNotCache: false # Enable caching
 
-      # Configure CMake
+      # Step 3: Configure CMake
       - name: Configure CMake
         run: |
           cmake -S . -B build \
             -DCMAKE_TOOLCHAIN_FILE=${{ steps.vcpkg.outputs.vcpkgRoot }}/scripts/buildsystems/vcpkg.cmake \
             -DCMAKE_BUILD_TYPE=Release
 
-      # Build the project
+      # Step 4: Build the project
       - name: Build
         run: cmake --build build --config Release
 
-      # Run tests (if you have tests enabled in your CMake project)
+      # Step 5: Run Tests
       - name: Run Tests
         run: ctest --test-dir build --output-on-failure
