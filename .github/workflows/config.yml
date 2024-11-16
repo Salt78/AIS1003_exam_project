@@ -1,4 +1,3 @@
-
 name: Build
 
 on: [push, workflow_dispatch]
@@ -30,9 +29,17 @@ jobs:
           libglfw3 \
           libglfw3-dev
 
+      - name: Install glad with vcpkg
+        uses: lukka/run-vcpkg@v10
+        with:
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          vcpkgGitCommitId: '4cac260c4b7331538d31886f57739fea0bffa27e'
+          vcpkgJsonGlob: 'vcpkg.json'
+          appendedCacheKey: vcpkginstall
+
       - name: Configure and build
         run: |
-          cmake . -B build -DTHREEPP_USE_EXTERNAL_GLFW=ON -DVCPKG_MANIFEST_FEATURES="glad, opencv" -DCMAKE_BUILD_TYPE="Release"
+          cmake . -B build -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE="Release"
           cmake --build build
 
       - name: Test
@@ -64,43 +71,8 @@ jobs:
           libglu1-mesa-dev \
           pkg-config
 
-      - name: Configure and build
-        run: |
-          cmake . -B build -DTHREEPP_WITH_GLFW=OFF -DTHREEPP_BUILD_EXAMPLES=OFF -DCMAKE_BUILD_TYPE="Release"
-          cmake --build build
-
-      - name: Test
-        run: |
-          cd build/tests
-          ctest --output-on-failure
-
-  vcpkg-on-linux:
-
-    runs-on: ${{ matrix.os }}
-    env:
-      CC: gcc-${{ matrix.compiler_version }}
-      CXX: g++-${{ matrix.compiler_version }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-22.04]
-        compiler_version: [11]
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install prerequisites
-        run: |
-          sudo apt-get update && sudo apt-get install -y \
-          libxinerama-dev \
-          libxcursor-dev \
-          xorg-dev \
-          libglu1-mesa-dev \
-          pkg-config
-
-      - name: Restore artifacts, or run vcpkg, build (and cache artifacts as post step)
+      - name: Install glad with vcpkg
         uses: lukka/run-vcpkg@v10
-        id: runvcpkg
         with:
           vcpkgDirectory: '${{ github.workspace }}/vcpkg'
           vcpkgGitCommitId: '4cac260c4b7331538d31886f57739fea0bffa27e'
@@ -109,14 +81,13 @@ jobs:
 
       - name: Configure and build
         run: |
-          cmake . -B build -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE="Release"
+          cmake . -B build -DTHREEPP_WITH_GLFW=OFF -DTHREEPP_BUILD_EXAMPLES=OFF -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE="Release"
           cmake --build build
 
       - name: Test
         run: |
           cd build/tests
           ctest --output-on-failure
-
 
   windows:
 
@@ -129,16 +100,23 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install glad with vcpkg
+        uses: lukka/run-vcpkg@v10
+        with:
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          vcpkgGitCommitId: '4cac260c4b7331538d31886f57739fea0bffa27e'
+          vcpkgJsonGlob: 'vcpkg.json'
+          appendedCacheKey: vcpkginstall
+
       - name: Configure and build
         run: |
-          cmake . -A x64 -B build -DTHREEPP_TREAT_WARNINGS_AS_ERRORS=ON -DCMAKE_BUILD_TYPE="Release"
+          cmake . -A x64 -B build -DTHREEPP_TREAT_WARNINGS_AS_ERRORS=ON -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE="Release"
           cmake --build build --config Release
 
       - name: Test
         run: |
           cd build/tests
           ctest -C Release --output-on-failure
-
 
   darwin:
 
@@ -151,7 +129,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install glad with vcpkg
+        uses: lukka/run-vcpkg@v10
+        with:
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          vcpkgGitCommitId: '4cac260c4b7331538d31886f57739fea0bffa27e'
+          vcpkgJsonGlob: 'vcpkg.json'
+          appendedCacheKey: vcpkginstall
+
       - name: Configure and build
         run: |
-          cmake . -B build -DTHREEPP_BUILD_EXAMPLES=OFF -DTHREEPP_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE="Release"
+          cmake . -B build -DTHREEPP_BUILD_EXAMPLES=OFF -DTHREEPP_BUILD_TESTS=OFF -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE="Release"
           cmake --build build
