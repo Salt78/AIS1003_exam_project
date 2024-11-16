@@ -17,6 +17,8 @@ jobs:
           sudo apt-get update && sudo apt-get install -y \
           build-essential \
           cmake \
+          ninja-build \
+          python3 \
           libxinerama-dev \
           libxcursor-dev \
           xorg-dev \
@@ -35,7 +37,7 @@ jobs:
 
       - name: Configure and build
         run: |
-          cmake . -B build -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE="Release"
+          cmake . -B build -G "Ninja" -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE="Release"
           cmake --build build
 
       - name: Test
