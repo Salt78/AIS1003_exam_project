@@ -53,3 +53,5 @@ if (DEFINED EMSCRIPTEN)
 
 endif ()
 ###########################
+
+message(STATUS "Include directories for geoDetectionLib: ${CMAKE_SOURCE_DIR}/include")
