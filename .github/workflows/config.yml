@@ -106,10 +106,11 @@ jobs:
           vcpkgGitCommitId: '4cac260c4b7331538d31886f57739fea0bffa27e'
           vcpkgJsonGlob: 'vcpkg.json'
           appendedCacheKey: vcpkginstall
+          additionalOptions: '--feature-flags=manifests'
 
       - name: Configure and build
         run: |
-          cmake . -B build -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVCPKG_MANIFEST_FEATURES="assimp" -DCMAKE_BUILD_TYPE="Release"
+          cmake . -B build -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVCPKG_MANIFEST_FEATURES="glad" -DCMAKE_BUILD_TYPE="Release"
           cmake --build build
 
       - name: Test
