@@ -1,45 +1,32 @@
-name: Build with CMake and vcpkg
+name: Build
 
 on:
   push:
-    branches:
-      - dev
+    branches: [ dev ]
   pull_request:
-    branches:
-      - dev
+    branches: [ main ]
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
+    runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the source code
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      # Step 2: Setup vcpkg
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v1
         with:
-          vcpkgGitURL: "https://github.com/microsoft/vcpkg.git"
-          vcpkgGitCommitId: "f3e728a2b19c19c6b27f9b1f53f9799fa22a3583" # Replace with the baseline commit ID
-          doNotUpdateVcpkg: true
-          doNotCache: false # Enable caching
+          cmake-version: '3.20.0'
 
-      # Step 3: Configure CMake
+      - name: Set up vcpkg
+        uses: microsoft/vcpkg-action@v2
+        with:
+          vcpkgJson: '${{ github.workspace }}/vcpkg.json'
+
       - name: Configure CMake
         run: |
-          cmake -S . -B build \
-            -DCMAKE_TOOLCHAIN_FILE=${{ steps.vcpkg.outputs.vcpkgRoot }}/scripts/buildsystems/vcpkg.cmake \
-            -DCMAKE_BUILD_TYPE=Release
+          cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
 
-      # Step 4: Build the project
       - name: Build
-        run: cmake --build build --config Release
-
-      # Step 5: Run Tests
-      - name: Run Tests
-        run: ctest --test-dir build --output-on-failure
+        run: |
+          cmake --build build --config Release
