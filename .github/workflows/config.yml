@@ -25,7 +25,7 @@ jobs:
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgArguments: --triplet x64-${{ matrix.os }}
+          vcpkgJson: true
 
       # Configure CMake
       - name: Configure CMake
