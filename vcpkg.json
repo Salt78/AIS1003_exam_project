@@ -2,6 +2,5 @@
   "dependencies": [
     "glad",
     "opencv"
-  ],
-  "builtin-baseline": "f3e728a2b19c19c6b27f9b1f53f9799fa22a3583"
+  ]
 }
