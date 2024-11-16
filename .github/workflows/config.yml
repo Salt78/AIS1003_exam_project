@@ -3,10 +3,10 @@ name: CMake CI with vcpkg
 on:
   push:
     branches:
-      - main
+      - dev
   pull_request:
     branches:
-      - main
+      - dev
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
       # Checkout repository
       - name: Checkout source code
         uses: actions/checkout@v3
-      
+
       # Setup vcpkg
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
