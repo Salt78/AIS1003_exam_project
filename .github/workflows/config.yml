@@ -43,18 +43,8 @@ jobs:
           cd build/tests
           ctest --output-on-failure
 
-      - name: Test
-        run: |
-          cd build/tests
-          ctest --output-on-failure
-
   windows:
-
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-2022]
+    runs-on: windows-2022
 
     steps:
       - uses: actions/checkout@v3
@@ -78,12 +68,7 @@ jobs:
           ctest -C Release --output-on-failure
 
   darwin:
-
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-13]
+    runs-on: macos-13
 
     steps:
       - uses: actions/checkout@v3
@@ -100,3 +85,8 @@ jobs:
         run: |
           cmake . -B build -DTHREEPP_BUILD_EXAMPLES=OFF -DTHREEPP_BUILD_TESTS=OFF -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE="Release"
           cmake --build build
+
+      - name: Test
+        run: |
+          cd build/tests
+          ctest --output-on-failure
