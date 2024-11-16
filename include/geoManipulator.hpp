@@ -1,7 +1,7 @@
 #ifndef GEOMANIPULATOR_HPP
 #define GEOMANIPULATOR_HPP
 #include <vector>
-#include "DetectedObjects.hpp"
+#include "detectedObjects.hpp"
 #include "threepp/threepp.hpp"
 #include "gridManager.hpp"
 
