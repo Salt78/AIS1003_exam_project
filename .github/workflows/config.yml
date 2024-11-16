@@ -12,6 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Cache vcpkg
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/vcpkg
+            vcpkg_installed
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-
+
       - name: Install prerequisites
         run: |
           sudo apt-get update && sudo apt-get install -y \
@@ -55,6 +65,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Cache vcpkg
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/vcpkg
+            vcpkg_installed
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-
+
       - name: Install prerequisites
         run: |
           sudo apt-get update && sudo apt-get install -y \
@@ -95,6 +115,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Cache vcpkg
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/vcpkg
+            vcpkg_installed
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-
+
       - name: Install glad with vcpkg
         uses: lukka/run-vcpkg@v10
         with:
@@ -118,6 +148,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Cache vcpkg
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/vcpkg
+            vcpkg_installed
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-
 
       - name: Install glad with vcpkg
         uses: lukka/run-vcpkg@v10
