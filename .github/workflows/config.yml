@@ -27,6 +27,10 @@ jobs:
           libglfw3 \
           libglfw3-dev
 
+      - name: Install Ninja
+        run: |
+          sudo apt-get install -y ninja-build
+
       - name: Install glad with vcpkg
         uses: lukka/run-vcpkg@v10
         with:
