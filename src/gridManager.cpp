@@ -36,7 +36,7 @@ void gridManagerNS::GridManager::createGrid() {
         centerImage - centerGrid * static_cast<float>(m_spacing),
         centerImage - centerGrid * static_cast<float>(m_spacing)
     };
-    //Did know the pseudo code, but got some small help from GPT
+    //Did know the pseudo code in detail, but got some small help from GPT
     int key{1};
     for (int i{}; static_cast<float>(i) < m_gridSize; i++) {
         for (int z{}; static_cast<float>(z) < m_gridSize; z++) {

@@ -1,10 +1,8 @@
-#include "threepp/threepp.hpp"
 #include "geoGeneration.hpp"
 #include "gridManager.hpp"
 #include "geoDetection.hpp"
+#include "iostream"
 
-using namespace threepp;
-using namespace cv;
 using namespace geoDetectionNS;
 using namespace gridManagerNS;
 using namespace geoGenNS;
@@ -13,7 +11,7 @@ int main(int argc, char **argv) {
     constexpr std::pair<int, int> imageSize{800, 800};
 
 
-    GridManager mainGrid("GeometrySorting", imageSize, 15, 50);
+    GridManager mainGrid("GeometrySorting", imageSize, 14, 50);
     mainGrid.createGrid();
 
     //GeoGen class for generating "random geometries"

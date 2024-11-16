@@ -37,7 +37,7 @@ namespace gridManagerNS {
 
         void createGrid();
 
-       [[nodiscard]] std::pair<float, float> getCoords(int key);
+        [[nodiscard]] std::pair<float, float> getCoords(int key);
 
         [[nodiscard]] int getCoordQuantity() const;
 
@@ -48,6 +48,7 @@ namespace gridManagerNS {
         }
 
         void startAnimation(const std::function<void()> &additionalCode);
+
     };
 }
 
