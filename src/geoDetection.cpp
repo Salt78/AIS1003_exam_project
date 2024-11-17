@@ -33,10 +33,10 @@ void geoDetectionNS::GeoDetection::setContours(Mat &img, const Color::ColorName 
 
         Rect tempBoundingRect{boundingRect(conPoly[i])};
         if (objCor == 4) {
-            DetectedObjects currentObject(tempBoundingRect, Shape::CUBE, color);
+            DetectedObjects currentObject(tempBoundingRect, Shapes::CUBE, color);
             m_detectedObjects.emplace_back(currentObject);
         } else {
-            DetectedObjects currentObject(tempBoundingRect, Shape::CIRCLE, color);
+            DetectedObjects currentObject(tempBoundingRect, Shapes::CIRCLE, color);
             m_detectedObjects.emplace_back(currentObject);
         }
     }

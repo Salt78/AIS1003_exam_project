@@ -1,8 +1,10 @@
 #ifndef GEOMANIPULATOR_HPP
 #define GEOMANIPULATOR_HPP
 #include "detectedObjects.hpp"
+#include "enum_Shape.hpp"
 #include "gridManager.hpp"
 #include "threepp/threepp.hpp"
+#include <geoDetection.hpp>
 #include <vector>
 
 namespace geoManipulatorNS {
@@ -12,10 +14,21 @@ namespace geoManipulatorNS {
 
     class GeoManipulator {
     private:
+        GeoDetection &m_detector;
         GridManager &m_grid;
         std::shared_ptr<Camera> m_camera;
         //Stores meshes that have been found in the scene
         std::vector<DetectedObjects<std::shared_ptr<Mesh>>> m_meshObjects;
+        std::vector<Shapes> m_supportedShapes{};
+
+        //NEEDS COMMENT
+        void getSupportedShapes() {
+            std::vector<Shapes> supportedShapes{};
+            for (int i{}; i < static_cast<int>(Shapes::ENDOFENUM); i++) {
+                supportedShapes.push_back(static_cast<Shapes>(i));
+            }
+            m_supportedShapes = supportedShapes;
+        }
 
 
         static Vector2 getCenterMesh(const DetectedObjects<Rect> &rectObject) {
@@ -48,8 +61,40 @@ namespace geoManipulatorNS {
             }
         }
 
+        auto sortVector(Shapes shape, Color color) {
+            std::vector<std::shared_ptr<Mesh>> sortedVec{};
+
+            std::copy_if(m_meshObjects.begin(), m_meshObjects.end(), std::back_inserter(sortedVec),
+                         [&](const DetectedObjects<std::shared_ptr<Mesh>> &i) {
+                             return i.getShape() == shape && i.getColor() == color;
+                         });
+            return sortedVec;
+        }
+
+        auto sortMeshes() {
+            std::vector<std::shared_ptr<Mesh>> compSortedVec{};
+            for (auto &j: m_supportedShapes) {
+                for (auto &i: m_detector.getSupportedColors()) {
+                    std::vector<std::shared_ptr<Mesh>> tempVec = sortVector(j, i);
+                    compSortedVec.insert(compSortedVec.end(), tempVec.begin(), tempVec.end());
+                }
+            }
+            return compSortedVec;
+        }
+
+
+        void reArrangeMeshes() {
+            int splitGrid = std::floor(m_grid.getGridSize() / 2);
+            for (auto &i: m_meshObjects) {
+                switch (i.getShape()) {
+                    case Shapes::CUBE:
+                }
+            }
+        }
+
     public:
-        explicit GeoManipulator(GridManager &grid, Camera &camera) : m_grid(grid), m_camera(&camera) {
+        explicit GeoManipulator(GeoDetection &detector, GridManager &grid, Camera &camera) : m_detector(detector), m_grid(grid), m_camera(&camera) {
+            getSupportedShapes();
         }
     };
 }// namespace geoManipulatorNS

@@ -3,34 +3,32 @@
 
 #include <opencv2/core.hpp>
 #include <threepp/math/Color.hpp>
+#include "enum_Shape.hpp"
 
 namespace geoDetectionNS {
     using namespace cv;
     using namespace threepp;
 
-    enum class Shape {
-        CUBE,
-        CIRCLE,
-    };
+
 
     template<typename T>
     class DetectedObjects {
     private:
         T m_object{};
-        Shape m_shape{};
+        Shapes m_shape{};
         Color m_color{};
 
     public:
-        DetectedObjects(T &object, const Shape &shape, const Color &color)
+        DetectedObjects(T &object, const Shapes &shape, const Color &color)
             : m_object{object}, m_shape{shape},
               m_color{color} {
         }
 
-        [[nodiscard]] Rect getObject() const {
+        [[nodiscard]] T getObject() const {
             return m_object;
         }
 
-        [[nodiscard]] Shape getShape() const {
+        [[nodiscard]] Shapes getShape() const {
             return m_shape;
         }
 
