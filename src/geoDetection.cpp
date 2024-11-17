@@ -13,7 +13,7 @@ void geoDetectionNS::GeoDetection::setupVirtualCam() {
 }
 
 void geoDetectionNS::GeoDetection::setContours(Mat &img, const Color::ColorName &color) {
-    std::vector<std::vector<Point> > contours;
+    std::vector<std::vector<Point>> contours;
     std::vector<Vec4i> hierarchy;
     findContours(img, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
@@ -23,7 +23,7 @@ void geoDetectionNS::GeoDetection::setContours(Mat &img, const Color::ColorName 
     }
 
     // Wached a tutorial on YT about OpenCV. Lent a lot of code from there in general https://www.youtube.com/watch?v=2FYm3GOonhk&t
-    std::vector<std::vector<Point> > conPoly{contours.size()};
+    std::vector<std::vector<Point>> conPoly{contours.size()};
     for (int i{}; i < contours.size(); i++) {
         double peri = arcLength(contours[i], true);
         approxPolyDP(contours[i], conPoly[i], 0.02 * peri, true);
@@ -56,9 +56,10 @@ void geoDetectionNS::GeoDetection::contourDetection(const Color::ColorName color
 }
 
 
-geoDetectionNS::GeoDetection::GeoDetection(std::string windowName, std::pair<int, int> imageSize): m_windowName(
-        std::move(windowName)), m_imageSize(imageSize),
-    m_pixels(imageSize.first * imageSize.second * 3) {
+geoDetectionNS::GeoDetection::GeoDetection(std::string windowName, std::pair<int, int> imageSize) : m_windowName(
+                                                                                                            std::move(windowName)),
+                                                                                                    m_imageSize(imageSize),
+                                                                                                    m_pixels(imageSize.first * imageSize.second * 3) {
     namedWindow(m_windowName, WINDOW_AUTOSIZE);
 }
 

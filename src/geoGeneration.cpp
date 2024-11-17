@@ -10,7 +10,7 @@ void GeoGen::addToScene(Scene &scene) {
     for (const auto &i: m_geoVec) {
         scene.add(i);
 
-        Box3 boundingBox{}; //Adds a bounding box to the mesh
+        Box3 boundingBox{};//Adds a bounding box to the mesh
         boundingBox.setFromObject(*i);
     }
 }

@@ -1,10 +1,10 @@
 #ifndef SCENERY_HPP
 #define SCENERY_HPP
 
+#include "gridManager.hpp"
 #include "threepp/threepp.hpp"
 #include <numbers>
 #include <random>
-#include "gridManager.hpp"
 
 
 using namespace threepp;
@@ -31,7 +31,7 @@ namespace geoGenNS {
 
         //ThreePP properties
         std::shared_ptr<MeshBasicMaterial> m_material{};
-        std::vector<std::shared_ptr<Mesh> > m_geoVec{};
+        std::vector<std::shared_ptr<Mesh>> m_geoVec{};
 
 
         template<typename T>
@@ -54,13 +54,13 @@ namespace geoGenNS {
         [[nodiscard]] std::string getShape() const;
 
 
-        [[nodiscard]] std::vector<std::shared_ptr<Mesh> > getGeoVec() const;
+        [[nodiscard]] std::vector<std::shared_ptr<Mesh>> getGeoVec() const;
 
 
         void generate(GridManager &grid);
     };
-}
+}// namespace geoGenNS
 
 #include "createMesh.tpp"
 
-#endif //SCENERY_HPP
+#endif//SCENERY_HPP

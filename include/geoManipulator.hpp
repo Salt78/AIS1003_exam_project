@@ -62,7 +62,7 @@ namespace geoManipulatorNS {
         }
 
         auto sortVector(Shapes shape, Color color) {
-            std::vector<std::shared_ptr<Mesh>> sortedVec{};
+            std::vector<DetectedObjects<std::shared_ptr<Mesh>>> sortedVec{};
 
             std::copy_if(m_meshObjects.begin(), m_meshObjects.end(), std::back_inserter(sortedVec),
                          [&](const DetectedObjects<std::shared_ptr<Mesh>> &i) {
@@ -72,10 +72,10 @@ namespace geoManipulatorNS {
         }
 
         auto sortMeshes() {
-            std::vector<std::shared_ptr<Mesh>> compSortedVec{};
+            std::vector<DetectedObjects<std::shared_ptr<Mesh>>> compSortedVec{};
             for (auto &j: m_supportedShapes) {
                 for (auto &i: m_detector.getSupportedColors()) {
-                    std::vector<std::shared_ptr<Mesh>> tempVec = sortVector(j, i);
+                    std::vector<DetectedObjects<std::shared_ptr<Mesh>>> tempVec = sortVector(j, i);
                     compSortedVec.insert(compSortedVec.end(), tempVec.begin(), tempVec.end());
                 }
             }
@@ -91,14 +91,16 @@ namespace geoManipulatorNS {
         void reArrangeMeshes() {
             m_grid.resetScene();
             int key{1};
-            std::vector<std::shared_ptr<Mesh>> arrangedMesh = sortMeshes();
+            std::vector<DetectedObjects<std::shared_ptr<Mesh>>> arrangedMesh = sortMeshes();
             ;
             for (auto &i: arrangedMesh) {
                 std::pair<float, float> coords = m_grid.getCoords(key);
                 key++;
 
-                i->position.set(coords.first, coords.second, 0);
-                m_grid.getScene()->add(i);
+                i.getObject()->position.x = coords.first;
+                i.getObject()->position.y = coords.second;
+                i.getObject()->position.z = 0;
+                m_grid.getScene()->add(i.getObject());
             }
         }
     };

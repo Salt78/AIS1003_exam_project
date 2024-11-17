@@ -1,14 +1,13 @@
 #ifndef DETECTEDOBJECTS_HPP
 #define DETECTEDOBJECTS_HPP
 
+#include "enum_Shape.hpp"
 #include <opencv2/core.hpp>
 #include <threepp/math/Color.hpp>
-#include "enum_Shape.hpp"
 
 namespace geoDetectionNS {
     using namespace cv;
     using namespace threepp;
-
 
 
     template<typename T>
@@ -36,5 +35,5 @@ namespace geoDetectionNS {
             return m_color;
         }
     };
-}
-#endif //DETECTEDOBJECTS_HPP
+}// namespace geoDetectionNS
+#endif//DETECTEDOBJECTS_HPP

@@ -33,16 +33,15 @@ void gridManagerNS::GridManager::createGrid() {
     const float centerGrid = m_gridSize / 2;
 
     const std::pair<float, float> startingCoords{
-        centerImage - centerGrid * static_cast<float>(m_spacing),
-        centerImage - centerGrid * static_cast<float>(m_spacing)
-    };
+            centerImage - centerGrid * static_cast<float>(m_spacing),
+            centerImage - centerGrid * static_cast<float>(m_spacing)};
     //Did know the pseudo code in detail, but got some small help from GPT
     int key{1};
     for (int i{}; static_cast<float>(i) < m_gridSize; i++) {
         for (int z{}; static_cast<float>(z) < m_gridSize; z++) {
             m_gridMap[key] = std::make_pair(
-                startingCoords.first + static_cast<float>(z) * static_cast<float>(m_spacing),
-                startingCoords.second + static_cast<float>(i) * static_cast<float>(m_spacing));
+                    startingCoords.first + static_cast<float>(z) * static_cast<float>(m_spacing),
+                    startingCoords.second + static_cast<float>(i) * static_cast<float>(m_spacing));
 
             key++;
         }

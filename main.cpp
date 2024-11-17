@@ -26,6 +26,8 @@ int main(int argc, char **argv) {
 
     GeoDetection mainScene("OPENCV test", imageSize);
 
+
+
     mainGrid.startAnimation([&]() {
         mainScene.imageProcessing();
     });
