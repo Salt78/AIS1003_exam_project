@@ -62,10 +62,6 @@ namespace gridManagerNS {
             }
             resetUsedCoords();
         }
-
-        [[nodiscard]] float getGridSize() const {
-            return m_gridSize;
-        }
     };
 }// namespace gridManagerNS
 

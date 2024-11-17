@@ -83,18 +83,23 @@ namespace geoManipulatorNS {
         }
 
 
-        void reArrangeMeshes() {
-            int splitGrid = std::floor(m_grid.getGridSize() / 2);
-            for (auto &i: m_meshObjects) {
-                switch (i.getShape()) {
-                    case Shapes::CUBE:
-                }
-            }
-        }
-
     public:
         explicit GeoManipulator(GeoDetection &detector, GridManager &grid, Camera &camera) : m_detector(detector), m_grid(grid), m_camera(&camera) {
             getSupportedShapes();
+        }
+
+        void reArrangeMeshes() {
+            m_grid.resetScene();
+            int key{1};
+            std::vector<std::shared_ptr<Mesh>> arrangedMesh = sortMeshes();
+            ;
+            for (auto &i: arrangedMesh) {
+                std::pair<float, float> coords = m_grid.getCoords(key);
+                key++;
+
+                i->position.set(coords.first, coords.second, 0);
+                m_grid.getScene()->add(i);
+            }
         }
     };
 }// namespace geoManipulatorNS
