@@ -2,9 +2,9 @@
 #define GRIDMANAGER_HPP
 
 #include <map>
-#include <vector>
 #include <string>
 #include <threepp/threepp.hpp>
+#include <vector>
 
 using namespace threepp;
 
@@ -18,7 +18,7 @@ namespace gridManagerNS {
         // The spacing between each assigned coordinate.
         const int m_spacing{};
         // A map to store the grid coordinates.
-        std::map<int, std::pair<float, float> > m_gridMap{};
+        std::map<int, std::pair<float, float>> m_gridMap{};
         // A vector to store the used coordinates.
         std::vector<int> m_usedCoords{};
 
@@ -31,9 +31,14 @@ namespace gridManagerNS {
 
         void logUsedCoords(int key);
 
+        void resetUsedCoords() {
+            m_usedCoords.clear();
+        }
+
     public:
         explicit GridManager(const std::string &windowName, std::pair<int, int> imageSize, float gridSize,
-                             int spacing);;
+                             int spacing);
+        ;
 
         void createGrid();
 
@@ -49,8 +54,20 @@ namespace gridManagerNS {
 
         void startAnimation(const std::function<void()> &additionalCode);
 
+        // Found a suggestion on Stackoverflow: https://stackoverflow.com/questions/30359830/how-do-i-clear-three-js-scene
+        // I tried to write up something similar, but Copilot gave me a solution. Clang tidy also fixed the code some more.
+        void resetScene() {
+            while (!m_scene->children.empty()) {
+                m_scene->remove(*m_scene->children[0]);
+            }
+            resetUsedCoords();
+        }
+
+        [[nodiscard]] float getGridSize() const {
+            return m_gridSize;
+        }
     };
-}
+}// namespace gridManagerNS
 
 
-#endif //GRIDMANAGER_HPP
+#endif//GRIDMANAGER_HPP

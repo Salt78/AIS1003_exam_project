@@ -6,9 +6,6 @@ add_library(geoDetectionLib
 target_include_directories(geoGenerationLib PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_include_directories(geoDetectionLib PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-find_package(glad CONFIG REQUIRED)
-
-
 target_link_libraries(geoGenerationLib PRIVATE threepp::threepp)
 target_link_libraries(geoDetectionLib PRIVATE
         threepp::threepp

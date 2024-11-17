@@ -3,6 +3,9 @@ project(threeppxopencv)
 
 set(CMAKE_CXX_STANDARD 20)
 
+find_package(OpenCV CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
+
 add_subdirectory(src)
 add_subdirectory(tests)
 
@@ -27,9 +30,6 @@ if (BUILD_TESTS)
 endif ()
 
 add_executable(threeppxopencv main.cpp)
-
-find_package(OpenCV CONFIG REQUIRED)
-find_package(glad CONFIG REQUIRED)
 
 target_link_libraries(threeppxopencv PRIVATE
         threepp::threepp

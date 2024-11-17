@@ -65,7 +65,7 @@ int gridManagerNS::GridManager::getCoordQuantity() const {
     return static_cast<int>(m_gridMap.size());
 }
 
-//Did get help from GPT to figure out how I could make a method accept a lambda.
+//Did get help from GPT to figure out how I could make a method to accept a lambda.
 void gridManagerNS::GridManager::startAnimation(const std::function<void()> &additionalCode) {
     Clock clock;
     m_canvas.animate([&]() {

@@ -1,9 +1,9 @@
 #ifndef GEOMANIPULATOR_HPP
 #define GEOMANIPULATOR_HPP
-#include <vector>
 #include "detectedObjects.hpp"
-#include "threepp/threepp.hpp"
 #include "gridManager.hpp"
+#include "threepp/threepp.hpp"
+#include <vector>
 
 namespace geoManipulatorNS {
     using namespace geoDetectionNS;
@@ -13,19 +13,19 @@ namespace geoManipulatorNS {
     class GeoManipulator {
     private:
         GridManager &m_grid;
-        std::vector<DetectedObjects<std::shared_ptr<Mesh> > > m_meshObjects;
         std::shared_ptr<Camera> m_camera;
+        //Stores meshes that have been found in the scene
+        std::vector<DetectedObjects<std::shared_ptr<Mesh>>> m_meshObjects;
 
 
         static Vector2 getCenterMesh(const DetectedObjects<Rect> &rectObject) {
             const Vector2 meshCenter{
-                (rectObject.getObject().tl().x + rectObject.getObject().br().x) / 2,
-                (rectObject.getObject().tl().y + rectObject.getObject().br().y) / 2
-            };
+                    (rectObject.getObject().tl().x + rectObject.getObject().br().x) / 2,
+                    (rectObject.getObject().tl().y + rectObject.getObject().br().y) / 2};
             return meshCenter;
         }
 
-        void getMeshes(const std::vector<DetectedObjects<Rect> > &rectObjects) {
+        void getMeshes(const std::vector<DetectedObjects<Rect>> &rectObjects) {
             //Creates a mesh for the intersection test
             const auto geometry = BoxGeometry::create(10, 10, 50);
             const auto material = MeshBasicMaterial::create();
@@ -49,10 +49,10 @@ namespace geoManipulatorNS {
         }
 
     public:
-        explicit GeoManipulator(GridManager &grid, Camera &camera): m_grid(grid), m_camera(&camera) {
+        explicit GeoManipulator(GridManager &grid, Camera &camera) : m_grid(grid), m_camera(&camera) {
         }
     };
-}
+}// namespace geoManipulatorNS
 
 
-#endif //GEOMANIPULATOR_HPP
+#endif//GEOMANIPULATOR_HPP

@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
     constexpr std::pair<int, int> imageSize{800, 800};
 
 
-    GridManager mainGrid("GeometrySorting", imageSize, 14, 50);
+    GridManager mainGrid("GeometrySorting", imageSize, 15, 50);
     mainGrid.createGrid();
 
     //GeoGen class for generating "random geometries"
