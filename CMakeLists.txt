@@ -35,8 +35,7 @@ target_link_libraries(threeppxopencv PRIVATE
         threepp::threepp
         ${OpenCV_LIBS}
         glad::glad
-        geoGenerationLib
-        geoDetectionLib)
+        autoShapeSortingLib)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 

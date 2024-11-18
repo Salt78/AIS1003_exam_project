@@ -7,11 +7,10 @@
 #include <random>
 
 
-using namespace threepp;
-using namespace gridManagerNS;
-
-
 namespace geoGenNS {
+    using namespace threepp;
+    using namespace gridManagerNS;
+
     enum class Shape {
         CUBE,
         CIRCLE,

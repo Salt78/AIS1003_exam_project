@@ -2,31 +2,35 @@
 #define GEODETECTION_HPP
 
 #include "detectedObjects.hpp"
+#include "geoManipulator.hpp"
+#include "gridManager.hpp"
+#include "shapeColorHandler.hpp"
 #include <opencv2/opencv.hpp>
 #include <string>
 #include <threepp/threepp.hpp>
 #include <utility>
 #include <vector>
 
+
 namespace geoDetectionNS {
+
     using namespace cv;
     using namespace threepp;
-
+    using namespace shapeColorHandlerNS;
+    using namespace geoManipulatorNS;
 
     class GeoDetection {
     private:
         std::string m_windowName{};
         std::pair<int, int> m_imageSize{};
+        gridManagerNS::GridManager &m_grid;
         std::vector<unsigned char> m_pixels{};
         Mat m_mainCam{};
         Mat m_editedCam{};
         std::vector<DetectedObjects<Rect>> m_detectedObjects{};
 
-        const std::map<Color::ColorName, std::pair<Scalar, Scalar>> colorProfiles = {
-                {Color::green, std::pair<Scalar, Scalar>(Scalar(46, 0, 0), Scalar(68, 255, 255))},
-                {Color::aqua, std::pair<Scalar, Scalar>(Scalar(76, 0, 0), Scalar(90, 255, 255))},
-                {Color::orange, std::pair<Scalar, Scalar>(Scalar(13, 0, 0), Scalar(32, 255, 255))},
-                {Color::red, std::pair<Scalar, Scalar>(Scalar(0, 32, 0), Scalar(0, 255, 255))}};
+        ShapeColorHandler m_colorProfiles{};
+        GeoManipulator m_manipulator{m_colorProfiles, m_grid};
 
 
         void setupVirtualCam();
@@ -38,16 +42,7 @@ namespace geoDetectionNS {
         void contourDetection(Color::ColorName color);
 
     public:
-        GeoDetection(std::string windowName, std::pair<int, int> imageSize);
-
-        [[nodiscard]] std::vector<Color::ColorName> getSupportedColors() const {
-            std::vector<Color::ColorName> supportedColors{};
-            for (const auto &i: colorProfiles) {
-                supportedColors.push_back(i.first);
-            }
-            return supportedColors;
-        }
-
+        GeoDetection(std::string windowName, std::pair<int, int> imageSize, gridManagerNS::GridManager &grid);
 
         void imageProcessing(bool showCam = true);
     };

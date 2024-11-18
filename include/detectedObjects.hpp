@@ -1,24 +1,27 @@
 #ifndef DETECTEDOBJECTS_HPP
 #define DETECTEDOBJECTS_HPP
 
-#include "enum_Shape.hpp"
+#include "shapeColorHandler.hpp"
 #include <opencv2/core.hpp>
 #include <threepp/math/Color.hpp>
 
+
 namespace geoDetectionNS {
+
     using namespace cv;
     using namespace threepp;
+    using namespace shapeColorHandlerNS;
 
 
     template<typename T>
     class DetectedObjects {
     private:
         T m_object{};
-        Shapes m_shape{};
+        ShapeColorHandler::Shapes m_shape{};
         Color m_color{};
 
     public:
-        DetectedObjects(T &object, const Shapes &shape, const Color &color)
+        DetectedObjects(T &object, const ShapeColorHandler::Shapes &shape, const Color &color)
             : m_object{object}, m_shape{shape},
               m_color{color} {
         }
@@ -27,7 +30,7 @@ namespace geoDetectionNS {
             return m_object;
         }
 
-        [[nodiscard]] Shapes getShape() const {
+        [[nodiscard]] ShapeColorHandler::Shapes getShape() const {
             return m_shape;
         }
 

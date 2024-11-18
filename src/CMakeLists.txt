@@ -1,13 +1,15 @@
-add_library(geoGenerationLib geoGeneration.cpp gridManager.cpp)
-add_library(geoDetectionLib
+add_library(autoShapeSortingLib
+        geoGeneration.cpp
+        gridManager.cpp
         geoDetection.cpp
-        geoManipulator.cpp)
+        geoManipulator.cpp
+        shapeColorHandler.cpp
+)
 
-target_include_directories(geoGenerationLib PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_include_directories(geoDetectionLib PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(geoGenerationLib PRIVATE threepp::threepp)
-target_link_libraries(geoDetectionLib PRIVATE
+target_include_directories(autoShapeSortingLib PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+target_link_libraries(autoShapeSortingLib PRIVATE
         threepp::threepp
         ${OpenCV_LIBS}
         glad::glad)

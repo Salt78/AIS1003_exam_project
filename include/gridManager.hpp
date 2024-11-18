@@ -6,9 +6,11 @@
 #include <threepp/threepp.hpp>
 #include <vector>
 
-using namespace threepp;
 
 namespace gridManagerNS {
+
+    using namespace threepp;
+
     class GridManager {
     private:
         // The size of the image. Should always be a square.
@@ -61,6 +63,10 @@ namespace gridManagerNS {
                 m_scene->remove(*m_scene->children[0]);
             }
             resetUsedCoords();
+        }
+
+        auto &getCamera() {
+            return m_camera;
         }
     };
 }// namespace gridManagerNS
