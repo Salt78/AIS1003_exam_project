@@ -17,13 +17,25 @@ namespace geoManipulatorNS {
 
     class GeoManipulator {
     private:
-        ShapeColorHandler &m_shapeColor;
         GridManager &m_grid;
+        Scene &m_scene;
+        Camera &m_camera;
+        std::vector<DetectedObjects<Rect>> &m_object3d;
+        ShapeColorHandler m_shapeColor{};
         //Stores meshes that have been found in the scene
         std::vector<DetectedObjects<Mesh *>> m_meshObjects;
         bool m_hasBeenRun{false};
 
         //NEEDS COMMENT
+
+        // Found a suggestion on Stackoverflow: https://stackoverflow.com/questions/30359830/how-do-i-clear-three-js-scene
+        // I tried to write up something similar, but Copilot gave me a solution. Clang tidy also fixed the code some more.
+        void resetScene() {
+            while (!m_scene.children.empty()) {
+                m_scene.remove(*m_scene.children[0]);
+            }
+            m_grid.resetUsedCoords();
+        }
 
 
         static Vector2 getCenterMesh(const DetectedObjects<Rect> &rectObject) {
@@ -43,9 +55,9 @@ namespace geoManipulatorNS {
                         (getCenterMesh(i).y / 800.0f) * 2.0f - 1.0f // Y normalized (already inverted in getCenterMesh)
                 };
 
-                raycaster.setFromCamera(ndc, *m_grid.getCamera());
+                raycaster.setFromCamera(ndc, m_camera);
 
-                std::vector<Intersection> intersect = raycaster.intersectObjects(m_grid.getScene()->children, false);
+                std::vector<Intersection> intersect = raycaster.intersectObjects(m_scene.children, false);
                 if (!intersect.empty()) {
                     auto objectPtr = intersect[0].object;
                     if (objectPtr) {
@@ -82,8 +94,8 @@ namespace geoManipulatorNS {
 
 
     public:
-        explicit GeoManipulator(ShapeColorHandler &shapeColorProfiles, GridManager &grid)
-            : m_shapeColor(shapeColorProfiles), m_grid(grid) {
+        explicit GeoManipulator(GridManager &grid, Scene &scene, Camera &camera, std::vector<DetectedObjects<Rect>> &object3d)
+            : m_grid(grid), m_scene(scene), m_camera(camera), m_object3d(object3d) {
         }
 
         [[nodiscard]] bool hasBeenRun() const {
@@ -93,10 +105,10 @@ namespace geoManipulatorNS {
             m_hasBeenRun = false;
         }
 
-        void reArrangeMeshes(std::vector<DetectedObjects<Rect>> &object3d) {
-            convertToMesh(object3d);
+        void reArrangeMeshes() {
+            convertToMesh(m_object3d);
 
-            m_grid.resetScene();
+            resetScene();
 
             int key{1};
             std::vector<DetectedObjects<Mesh *>> arrangedMesh = sortMeshes();
@@ -107,7 +119,7 @@ namespace geoManipulatorNS {
                 i.getObject()->position.x = coords.first;
                 i.getObject()->position.y = coords.second;
                 i.getObject()->position.z = 0;
-                m_grid.getScene()->add(std::shared_ptr<Object3D>(i.getObject()));
+                m_scene.add(std::shared_ptr<Object3D>(i.getObject()));
             }
             m_hasBeenRun = true;
         }

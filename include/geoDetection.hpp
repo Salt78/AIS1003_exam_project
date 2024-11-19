@@ -21,17 +21,18 @@ namespace geoDetectionNS {
 
     class GeoDetection {
     private:
+        //Constructor properties
         std::string m_windowName{};
         std::pair<int, int> m_imageSize{};
-        gridManagerNS::GridManager &m_grid;
+
+        //For detection logic
         std::vector<unsigned char> m_pixels{};
         Mat m_mainCam{};
         Mat m_editedCam{};
         std::vector<DetectedObjects<Rect>> m_detectedObjects{};
 
+        //Misc
         ShapeColorHandler m_colorProfiles{};
-        GeoManipulator m_manipulator{m_colorProfiles, m_grid};
-
 
         void setupVirtualCam();
 
@@ -39,12 +40,16 @@ namespace geoDetectionNS {
         void setContours(Mat &img, const Color::ColorName &color);
 
 
-        void contourDetection(Color::ColorName color);
+        void contourDetection(const std::vector<Color::ColorName> &color);
 
     public:
-        GeoDetection(std::string windowName, std::pair<int, int> imageSize, gridManagerNS::GridManager &grid);
+        GeoDetection(std::string windowName, std::pair<int, int> imageSize);
 
         void imageProcessing(bool showCam = true);
+
+        [[nodiscard]] std::vector<DetectedObjects<Rect>> &getDetectedObjects() {
+            return m_detectedObjects;
+        }
     };
 }// namespace geoDetectionNS
 #endif//GEODETECTION_HPP

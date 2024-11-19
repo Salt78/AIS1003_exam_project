@@ -2,14 +2,10 @@
 #define GRIDMANAGER_HPP
 
 #include <map>
-#include <string>
-#include <threepp/threepp.hpp>
 #include <vector>
 
 
 namespace gridManagerNS {
-
-    using namespace threepp;
 
     class GridManager {
     private:
@@ -24,25 +20,14 @@ namespace gridManagerNS {
         // A vector to store the used coordinates.
         std::vector<int> m_usedCoords{};
 
-        //TESTING
-        std::string m_windowName{};
-        Canvas m_canvas{};
-        GLRenderer m_renderer{};
-        std::shared_ptr<Scene> m_scene{};
-        std::shared_ptr<OrthographicCamera> m_camera{};
 
         void logUsedCoords(int key);
 
-        void resetUsedCoords() {
-            m_usedCoords.clear();
-        }
+        void createGrid();
 
     public:
-        explicit GridManager(const std::string &windowName, std::pair<int, int> imageSize, float gridSize,
+        explicit GridManager(std::pair<int, int> imageSize, float gridSize,
                              int spacing);
-        ;
-
-        void createGrid();
 
         [[nodiscard]] std::pair<float, float> getCoords(int key);
 
@@ -50,23 +35,8 @@ namespace gridManagerNS {
 
         bool isUsed(int key);
 
-        auto &getScene() {
-            return m_scene;
-        }
-
-        void startAnimation(const std::function<void()> &additionalCode);
-
-        // Found a suggestion on Stackoverflow: https://stackoverflow.com/questions/30359830/how-do-i-clear-three-js-scene
-        // I tried to write up something similar, but Copilot gave me a solution. Clang tidy also fixed the code some more.
-        void resetScene() {
-            while (!m_scene->children.empty()) {
-                m_scene->remove(*m_scene->children[0]);
-            }
-            resetUsedCoords();
-        }
-
-        auto &getCamera() {
-            return m_camera;
+        void resetUsedCoords() {
+            m_usedCoords.clear();
         }
     };
 }// namespace gridManagerNS

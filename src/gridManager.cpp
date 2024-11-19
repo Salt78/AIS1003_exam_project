@@ -1,31 +1,11 @@
 #include "gridManager.hpp"
 #include <algorithm>
 
-using namespace threepp;
-
-
 //Googled to figure out what I could use in the standard library to sort a vector. https://www.digitalocean.com/community/tutorials/sorting-a-vector-in-c-plus-plus
 // I originally landed on std::sort, but Clion recommended std::ranges::sort instead. The code is definitely cleaner.
 void gridManagerNS::GridManager::logUsedCoords(int key) {
     m_usedCoords.push_back(key);
     std::ranges::sort(m_usedCoords);
-}
-
-gridManagerNS::GridManager::GridManager(const std::string &windowName,
-                                        const std::pair<int, int> imageSize,
-                                        const float gridSize,
-                                        const int spacing)
-    : m_imageSize(imageSize),
-      m_gridSize(gridSize),
-      m_spacing(spacing),
-      m_canvas(windowName, {{"aa", 4}}) {
-    //ThreePP setup
-    m_canvas.setSize({m_imageSize.first, m_imageSize.second});
-    m_renderer.setSize(m_canvas.size());
-    m_scene = Scene::create();
-    m_camera = OrthographicCamera::create(0, static_cast<float>(m_imageSize.first),
-                                          0, static_cast<float>(m_imageSize.second), -1000, 1000);
-    m_camera->position.z = 10;
 }
 
 void gridManagerNS::GridManager::createGrid() {
@@ -48,6 +28,15 @@ void gridManagerNS::GridManager::createGrid() {
     }
 }
 
+gridManagerNS::GridManager::GridManager(
+        const std::pair<int, int> imageSize,
+        const float gridSize,
+        const int spacing)
+    : m_imageSize(imageSize),
+      m_gridSize(gridSize),
+      m_spacing(spacing) { createGrid(); }
+
+
 // Got some help to fix const correctness from GPT (using .at())
 std::pair<float, float> gridManagerNS::GridManager::getCoords(const int key) {
     logUsedCoords(key);
@@ -62,13 +51,4 @@ bool gridManagerNS::GridManager::isUsed(const int key) {
 
 int gridManagerNS::GridManager::getCoordQuantity() const {
     return static_cast<int>(m_gridMap.size());
-}
-
-//Did get help from GPT to figure out how I could make a method to accept a lambda.
-void gridManagerNS::GridManager::startAnimation(const std::function<void()> &additionalCode) {
-    Clock clock;
-    m_canvas.animate([&]() {
-        m_renderer.render(*m_scene, *m_camera);
-        additionalCode();
-    });
 }

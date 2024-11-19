@@ -17,10 +17,6 @@ void geoDetectionNS::GeoDetection::setContours(Mat &img, const Color::ColorName 
     std::vector<Vec4i> hierarchy;
     findContours(img, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
-    //Early return if no contours are found.
-    if (contours.empty()) {
-        return;
-    }
 
     // Wached a tutorial on YT about OpenCV. Lent a lot of code from there in general https://www.youtube.com/watch?v=2FYm3GOonhk&t
     std::vector<std::vector<Point>> conPoly{contours.size()};
@@ -43,24 +39,24 @@ void geoDetectionNS::GeoDetection::setContours(Mat &img, const Color::ColorName 
 }
 
 
-void geoDetectionNS::GeoDetection::contourDetection(const Color::ColorName color) {
+void geoDetectionNS::GeoDetection::contourDetection(const std::vector<Color::ColorName> &color) {
     //Applies HSV color space to the image.
     Mat mainCamHSV{};
     cvtColor(m_mainCam, mainCamHSV, COLOR_BGR2HSV);
 
     //Applies a mask to the image.
     Mat Mask{};
-    inRange(mainCamHSV, m_colorProfiles.getColorProfile(color).first, m_colorProfiles.getColorProfile(color).second, Mask);
-
-    setContours(Mask, color);
+    for (auto &i: color) {
+        inRange(mainCamHSV, m_colorProfiles.getColorProfile(i).first, m_colorProfiles.getColorProfile(i).second, Mask);
+        setContours(Mask, i);
+    }
 }
 
 
-geoDetectionNS::GeoDetection::GeoDetection(std::string windowName, std::pair<int, int> imageSize, GridManager &grid) : m_windowName(
-                                                                                                                               std::move(windowName)),
-                                                                                                                       m_imageSize(imageSize),
-                                                                                                                       m_grid(grid),
-                                                                                                                       m_pixels(imageSize.first * imageSize.second * 3) {
+geoDetectionNS::GeoDetection::GeoDetection(std::string windowName, std::pair<int, int> imageSize) : m_windowName(
+                                                                                                            std::move(windowName)),
+                                                                                                    m_imageSize(imageSize),
+                                                                                                    m_pixels(imageSize.first * imageSize.second * 3) {
     namedWindow(m_windowName, WINDOW_AUTOSIZE);
 }
 
@@ -68,13 +64,8 @@ geoDetectionNS::GeoDetection::GeoDetection(std::string windowName, std::pair<int
 void geoDetectionNS::GeoDetection::imageProcessing(const bool showCam) {
     setupVirtualCam();
 
-    if (!m_manipulator.hasBeenRun()) {
-        contourDetection(Color::green);
-        contourDetection(Color::aqua);
-        contourDetection(Color::orange);
-        contourDetection(Color::red);
-        m_manipulator.reArrangeMeshes(m_detectedObjects);
-    }
+    contourDetection(m_colorProfiles.getSupportedColors());
+
 
     if (showCam == true) {
         imshow(m_windowName, m_mainCam);

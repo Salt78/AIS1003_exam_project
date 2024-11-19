@@ -56,7 +56,7 @@ namespace geoGenNS {
         [[nodiscard]] std::vector<std::shared_ptr<Mesh>> getGeoVec() const;
 
 
-        void generate(GridManager &grid);
+        void generate(GridManager &grid, Scene &scene);
     };
 }// namespace geoGenNS
 
