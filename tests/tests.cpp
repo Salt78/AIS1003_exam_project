@@ -1,15 +1,14 @@
-#include "geoDetection.hpp"
 #include "geoGeneration.hpp"
 #include "gridManager.hpp"
+#include "geoDetection.hpp"
 #include <catch2/catch_test_macros.hpp>
 
 
 using namespace geoGenNS;
 using namespace gridManagerNS;
-using namespace geoDetectionNS;
 
 
-/*TEST_CASE("Grid creation", "[grid]") {
+TEST_CASE("Grid creation", "[grid]") {
     std::pair<int, int> imageSize{800, 800};
 
     GridManager mainGrid("GeometrySorting", imageSize, 14, 50);
@@ -19,7 +18,7 @@ using namespace geoDetectionNS;
     REQUIRE(mainGrid.isUsed(1) == false);
     REQUIRE(mainGrid.getCoords(1) == std::pair<float, float>(50, 50));
     REQUIRE(mainGrid.isUsed(1) == true);
-}*/
+}
 
 
 TEST_CASE("Scene creation", "[scene]") {

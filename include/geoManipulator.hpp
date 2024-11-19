@@ -20,7 +20,7 @@ namespace geoManipulatorNS {
         ShapeColorHandler &m_shapeColor;
         GridManager &m_grid;
         //Stores meshes that have been found in the scene
-        std::vector<DetectedObjects<std::shared_ptr<Mesh>>> m_meshObjects;
+        std::vector<DetectedObjects<Mesh *>> m_meshObjects;
         bool m_hasBeenRun{false};
 
         //NEEDS COMMENT
@@ -38,7 +38,6 @@ namespace geoManipulatorNS {
             //Did use some GPT to help me figure out how to convert from "Intersect" to "Mesh"
             Raycaster raycaster;
             for (const auto &i: object3d) {
-
                 Vector2 ndc = {
                         (getCenterMesh(i).x / 800.0f) * 2.0f - 1.0f,// X normalized
                         (getCenterMesh(i).y / 800.0f) * 2.0f - 1.0f // Y normalized (already inverted in getCenterMesh)
@@ -48,30 +47,33 @@ namespace geoManipulatorNS {
 
                 std::vector<Intersection> intersect = raycaster.intersectObjects(m_grid.getScene()->children, false);
                 if (!intersect.empty()) {
-                    std::shared_ptr<Object3D> objectPtr(intersect[0].object, [](Object3D *) {
-                    });
-                    std::shared_ptr<Mesh> intersectedMesh = std::dynamic_pointer_cast<Mesh>(objectPtr);
-                    m_meshObjects.emplace_back(intersectedMesh, i.getShape(), i.getColor());
+                    auto objectPtr = intersect[0].object;
+                    if (objectPtr) {
+                        auto intersectedMesh = objectPtr->as<Mesh>();
+                        if (intersectedMesh) {
+                            m_meshObjects.emplace_back(intersectedMesh, i.getShape(), i.getColor());
+                        }
+                    }
+                    //std::shared_ptr<Mesh> intersectedMesh = intersect[0].object->as<std::shared_ptr<Mesh>()>;
                 }
-                //std::shared_ptr<Mesh> intersectedMesh = intersect[0].object->as<std::shared_ptr<Mesh>()>;
             }
         }
 
         auto sortVector(ShapeColorHandler::Shapes shape, Color color) {
-            std::vector<DetectedObjects<std::shared_ptr<Mesh>>> sortedVec{};
+            std::vector<DetectedObjects<Mesh *>> sortedVec{};
 
             std::copy_if(m_meshObjects.begin(), m_meshObjects.end(), std::back_inserter(sortedVec),
-                         [&](const DetectedObjects<std::shared_ptr<Mesh>> &i) {
+                         [&](const DetectedObjects<Mesh *> &i) {
                              return i.getShape() == shape && i.getColor() == color;
                          });
             return sortedVec;
         }
 
         auto sortMeshes() {
-            std::vector<DetectedObjects<std::shared_ptr<Mesh>>> compSortedVec{};
+            std::vector<DetectedObjects<Mesh *>> compSortedVec{};
             for (auto &j: m_shapeColor.getSupportedShapes()) {
                 for (auto &i: m_shapeColor.getSupportedColors()) {
-                    std::vector<DetectedObjects<std::shared_ptr<Mesh>>> tempVec = sortVector(j, i);
+                    std::vector<DetectedObjects<Mesh *>> tempVec = sortVector(j, i);
                     compSortedVec.insert(compSortedVec.end(), tempVec.begin(), tempVec.end());
                 }
             }
@@ -97,7 +99,7 @@ namespace geoManipulatorNS {
             m_grid.resetScene();
 
             int key{1};
-            std::vector<DetectedObjects<std::shared_ptr<Mesh>>> arrangedMesh = sortMeshes();
+            std::vector<DetectedObjects<Mesh *>> arrangedMesh = sortMeshes();
             for (auto &i: arrangedMesh) {
                 std::pair<float, float> coords = m_grid.getCoords(key);
                 key++;
@@ -105,7 +107,7 @@ namespace geoManipulatorNS {
                 i.getObject()->position.x = coords.first;
                 i.getObject()->position.y = coords.second;
                 i.getObject()->position.z = 0;
-                m_grid.getScene()->add(i.getObject());
+                m_grid.getScene()->add(std::shared_ptr<Object3D>(i.getObject()));
             }
             m_hasBeenRun = true;
         }

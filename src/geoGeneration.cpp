@@ -37,8 +37,8 @@ void GeoGen::generate(GridManager &grid) {
             break;
         }
         case Shape::CIRCLE: {
-            std::shared_ptr<CircleGeometry> circleGeometry{};
-            circleGeometry = CircleGeometry::create(m_meshSize / 2, 30, 0, 2 * std::numbers::pi);
+            std::shared_ptr<SphereGeometry> circleGeometry{};
+            circleGeometry = SphereGeometry::create(m_meshSize / 2, 30, 20);
 
             createMesh(grid, circleGeometry);
             addToScene(*grid.getScene());

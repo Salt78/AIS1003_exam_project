@@ -15,13 +15,13 @@ int main(int argc, char **argv) {
     mainGrid.createGrid();
 
     //GeoGen class for generating "random geometries"
-    GeoGen test(40, 3, geoGenNS::Shape::CUBE, Color::aqua);
+    GeoGen test(40, 70, geoGenNS::Shape::CUBE, Color::aqua);
     test.generate(mainGrid);
-    GeoGen test2(40, 3, geoGenNS::Shape::CUBE, Color::red);
+    GeoGen test2(40, 15, geoGenNS::Shape::CUBE, Color::red);
     test2.generate(mainGrid);
-    GeoGen test3(40, 3, geoGenNS::Shape::CUBE, Color::green);
+    GeoGen test3(40, 100, geoGenNS::Shape::CUBE, Color::green);
     test3.generate(mainGrid);
-    GeoGen test4(40, 3, geoGenNS::Shape::CUBE, Color::orange);
+    GeoGen test4(40, 9, geoGenNS::Shape::CUBE, Color::orange);
     test4.generate(mainGrid);
 
     GeoDetection mainScene("OPENCV test", imageSize, mainGrid);

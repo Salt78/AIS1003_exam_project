@@ -18,11 +18,6 @@ namespace geoGenNS {
 
             m_geoVec.push_back(Mesh::create(geometry, m_material));
             m_geoVec[i]->position.set(grid.getCoords(randomKey).first, grid.getCoords(randomKey).second, 0);
-
-            //Got some help from copilot for comparing the type of the geometry
-            if (typeid(T) == typeid(CircleGeometry)) {
-                m_geoVec[i]->rotation.x = std::numbers::pi;
-            }
         }
     }
 }// namespace geoGenNS
