@@ -11,8 +11,7 @@ using namespace gridManagerNS;
 TEST_CASE("Grid creation", "[grid]") {
     std::pair<int, int> imageSize{800, 800};
 
-    GridManager mainGrid("GeometrySorting", imageSize, 14, 50);
-    mainGrid.createGrid();
+    GridManager mainGrid(imageSize, 14, 50);
 
     REQUIRE(mainGrid.getCoordQuantity() == 196);
     REQUIRE(mainGrid.isUsed(1) == false);
@@ -21,17 +20,24 @@ TEST_CASE("Grid creation", "[grid]") {
 }
 
 
-TEST_CASE("Scene creation", "[scene]") {
-    std::pair<int, int> imageSizee{800, 800};
-    const int meshQuantity{5};
+TEST_CASE("Mesh generation", "[scene]") {
+    std::pair<int, int> imageSize{800, 800};
+    const int meshQuantity{35};
 
-    GridManager grid2("Scene creation", imageSizee, 14, 50);
-    grid2.createGrid();
+    GridManager grid(imageSize, 14, 50);
 
+
+    auto scene = Scene::create();
     GeoGen test(40, meshQuantity, geoGenNS::Shape::CUBE, Color::aqua);
-    test.generate(grid2);
+    test.generate(grid, *scene);
 
-    std::vector<Object3D *> presentMeshes = grid2.getScene()->children;
+    std::vector<Object3D *> presentMeshes = scene->children;
+
+    /*
+    auto intersectedMesh = presentMeshes[0]->as<Mesh>();
+    std::shared_ptr<Material> mat = intersectedMesh->material();
+    auto color = intersectedMesh->as<MeshBasicMaterial>();
+    */
 
     REQUIRE(presentMeshes.size() == meshQuantity);
 }
