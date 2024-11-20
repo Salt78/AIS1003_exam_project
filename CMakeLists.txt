@@ -4,7 +4,6 @@ project(threeppxopencv)
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(OpenCV CONFIG REQUIRED)
-find_package(glad CONFIG REQUIRED)
 
 add_subdirectory(src)
 add_subdirectory(tests)
@@ -34,7 +33,6 @@ add_executable(threeppxopencv main.cpp)
 target_link_libraries(threeppxopencv PRIVATE
         threepp::threepp
         ${OpenCV_LIBS}
-        glad::glad
         autoShapeSortingLib)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)

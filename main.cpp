@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 
     canvas.animate([&]() {
         renderer.render(*scene, *camera);
-        detector.imageProcessing(true);
+        detector.imageProcessing(renderer, true);
 
     });
 }

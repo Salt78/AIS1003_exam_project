@@ -1,12 +1,12 @@
 #include "geoDetection.hpp"
-#include <glad/glad.h>
-
-void geoDetectionNS::GeoDetection::setupVirtualCam() {
+void geoDetectionNS::GeoDetection::setupVirtualCam(GLRenderer &renderer) {
     //Pixels are read into the buffer here.
-    glReadPixels(0, 0, m_imageSize.first, m_imageSize.second, GL_BGR, GL_UNSIGNED_BYTE, m_pixels.data());
+
+    renderer.readPixels({0, 0}, m_imageSize, Format::RGB, m_pixels.data());
 
     //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
-    m_mainCam = Mat(m_imageSize.second, m_imageSize.first, CV_8UC3, m_pixels.data());
+    Mat mainCam_RGB = Mat(m_imageSize.second, m_imageSize.first, CV_8UC3, m_pixels.data());
+    cvtColor(mainCam_RGB, m_mainCam, COLOR_RGB2BGR);
 
     //OpenCV uses a different origin for the image, so it is flipped here.
     flip(m_mainCam, m_mainCam, 0);
@@ -61,8 +61,8 @@ geoDetectionNS::GeoDetection::GeoDetection(std::string windowName, std::pair<int
 }
 
 
-void geoDetectionNS::GeoDetection::imageProcessing(const bool showCam) {
-    setupVirtualCam();
+void geoDetectionNS::GeoDetection::imageProcessing(GLRenderer &renderer, const bool showCam) {
+    setupVirtualCam(renderer);
 
     contourDetection(m_colorProfiles.getSupportedColors());
 

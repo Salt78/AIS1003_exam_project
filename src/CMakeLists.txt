@@ -11,6 +11,5 @@ target_include_directories(autoShapeSortingLib PUBLIC ${CMAKE_SOURCE_DIR}/includ
 
 target_link_libraries(autoShapeSortingLib PRIVATE
         threepp::threepp
-        ${OpenCV_LIBS}
-        glad::glad)
+        ${OpenCV_LIBS})
 
