@@ -40,7 +40,7 @@ namespace shapeColorHandlerNS {
             return supportedColors;
         }
 
-        std::vector<Shapes> getSupportedShapes() {
+        static std::vector<Shapes> getSupportedShapes() {
             std::vector<Shapes> supportedShapes{};
             for (int i{}; i < static_cast<int>(Shapes::ENDOFENUM); i++) {
                 supportedShapes.push_back(static_cast<Shapes>(i));

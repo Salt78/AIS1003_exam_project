@@ -2,64 +2,86 @@
 #define SCENERY_HPP
 
 #include "gridManager.hpp"
+#include "shapeColorHandler.hpp"
 #include "threepp/threepp.hpp"
-#include <numbers>
-#include <random>
 
 
 namespace geoGenNS {
     using namespace threepp;
     using namespace gridManagerNS;
-
-    enum class Shape {
-        CUBE,
-        CIRCLE,
-        CYLINDER,
-        CAPSULE
-    };
-
+    using namespace shapeColorHandlerNS;
 
     class GeoGen {
+
     private:
-        //General properties
-        float m_meshSize{};
-        int m_quantity{};
-        Shape m_shape{};
-        Color::ColorName m_color{};
-
-
-        //ThreePP properties
+        Scene &m_scene;
+        GridManager &m_grid;
+        const float m_meshSize{40};
         std::shared_ptr<MeshBasicMaterial> m_material{};
+        int m_quantity{5};
         std::vector<std::shared_ptr<Mesh>> m_geoVec{};
+
+        ShapeColorHandler shapeColorHandler{};
 
 
         template<typename T>
-        void createMesh(GridManager &grid, std::shared_ptr<T> &geometry);
+        void createMesh(std::shared_ptr<T> &geometry);
+
+        void addToScene() {
+            for (const auto &i: m_geoVec) {
+                m_scene.add(i);
+
+                Box3 boundingBox{};//Adds a bounding box to the mesh
+                boundingBox.setFromObject(*i);
+            }
+        }
 
 
-        void addToScene(Scene &scene);
+        void gengen(const ShapeColorHandler::Shapes shape) {
+            switch (shape) {
+                case ShapeColorHandler::Shapes::CUBE: {
+                    std::shared_ptr<BoxGeometry> cubeGeometry{};
+                    cubeGeometry = BoxGeometry::create(m_meshSize, m_meshSize, 0);
+
+                    createMesh(cubeGeometry);
+                    addToScene();
+                    break;
+                }
+                case ShapeColorHandler::Shapes::CIRCLE: {
+                    std::shared_ptr<SphereGeometry> circleGeometry{};
+                    circleGeometry = SphereGeometry::create(m_meshSize / 2, 30, 20);
+
+                    createMesh(circleGeometry);
+                    addToScene();
+                    break;
+                }
+                default:;
+            }
+        }
 
     public:
-        explicit GeoGen(float meshSize = 40, int quantity = 4, geoGenNS::Shape shape = geoGenNS::Shape::CUBE,
-                        Color::ColorName color = Color::red);
+        GeoGen(Scene &scene, GridManager &grid)
+            : m_scene(scene), m_grid(grid) {}
 
 
-        [[nodiscard]] Color::ColorName getColor() const;
+        void generate() {
 
+            for (auto &i: ShapeColorHandler::getSupportedShapes()) {
+                for (auto &j: shapeColorHandler.getSupportedColors()) {
+                    auto material = MeshBasicMaterial::create();
+                    material->color = j;
+                    m_material = material;
 
-        [[nodiscard]] int getQuantity() const;
+                    gengen(i);
 
-
-        [[nodiscard]] std::string getShape() const;
-
-
-        [[nodiscard]] std::vector<std::shared_ptr<Mesh>> getGeoVec() const;
-
-
-        void generate(GridManager &grid, Scene &scene);
+                    m_geoVec.clear();
+                }
+            }
+        }
     };
 }// namespace geoGenNS
 
 #include "createMesh.tpp"
+
 
 #endif//SCENERY_HPP

@@ -1,23 +1,26 @@
 #ifndef CREATEMESH_TPP
 #define CREATEMESH_TPP
 
+#include <numbers>
+#include <random>
+
 namespace geoGenNS {
     template<typename T>
-    void GeoGen::createMesh(GridManager &grid, std::shared_ptr<T> &geometry) {
+    void GeoGen::createMesh(std::shared_ptr<T> &geometry) {
         // Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
         std::random_device rd;
         std::mt19937 mt(rd());
-        std::uniform_int_distribution<int> dist(1, grid.getCoordQuantity());
+        std::uniform_int_distribution<int> dist(1, m_grid.getCoordQuantity());
 
         for (int i{}; i < m_quantity; i++) {
             int randomKey{dist(rd)};
 
-            while (grid.isUsed(randomKey)) {
+            while (m_grid.isUsed(randomKey)) {
                 randomKey = dist(rd);
             }
 
             m_geoVec.push_back(Mesh::create(geometry, m_material));
-            m_geoVec[i]->position.set(grid.getCoords(randomKey).first, grid.getCoords(randomKey).second, 0);
+            m_geoVec[i]->position.set(m_grid.getCoords(randomKey).first, m_grid.getCoords(randomKey).second, 0);
         }
     }
 }// namespace geoGenNS

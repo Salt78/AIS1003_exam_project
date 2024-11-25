@@ -1,6 +1,6 @@
 #include "geoGeneration.hpp"
 
-using namespace geoGenNS;
+/*using namespace geoGenNS;
 
 GeoGen::GeoGen(float meshSize, int quantity, geoGenNS::Shape shape, Color::ColorName color)
     : m_meshSize{meshSize}, m_quantity{quantity}, m_shape{shape}, m_color{color} {
@@ -53,4 +53,4 @@ void GeoGen::generate(GridManager &grid, Scene &scene) {
             break;
         }
     }
-}
+}*/

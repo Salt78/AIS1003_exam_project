@@ -35,8 +35,6 @@ namespace geoDetectionNS {
         ShapeColorHandler m_colorProfiles{};
 
 
-
-
         void setContours(Mat &img, const Color::ColorName &color);
 
     public:
@@ -46,17 +44,20 @@ namespace geoDetectionNS {
 
         void setupVirtualCam(GLRenderer &renderer);
 
-        void imageProcessing(bool showCam);;
+        void imageProcessing(bool showCam);
+        ;
 
         [[nodiscard]] std::vector<DetectedObjects<Rect>> &getDetectedObjects() {
+
             return m_detectedObjects;
         }
+
         void cleanUp() {
             m_detectedObjects.clear();
         }
 
         void previewDetection() {
-           contourDetection();
+            contourDetection();
             cleanUp();
         }
     };

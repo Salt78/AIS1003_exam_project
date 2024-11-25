@@ -66,6 +66,7 @@ void geoDetectionNS::GeoDetection::imageProcessing(const bool showCam) {
 
     if (showCam == true) {
         imshow(m_windowName, m_mainCam);
+    } else {
+        destroyAllWindows();
     }
 }
-

@@ -2,14 +2,18 @@
 #define KEYLISTENER_HPP
 
 #include "geoDetection.hpp"
+#include "geoGeneration.hpp"
+#include "geoManipulator.hpp"
 #include <threepp/threepp.hpp>
 
 using namespace threepp;
 using namespace geoDetectionNS;
+using namespace geoGenNS;
 
 
 class KeyHandler : public KeyListener {
 private:
+    GeoGen &m_generator;
     GeoDetection &m_geoDetection;
     GeoManipulator &m_geoManipulator;
 
@@ -19,7 +23,8 @@ private:
 
 
 public:
-    explicit KeyHandler(GeoDetection &geoDetection, GeoManipulator &geoManipulator) : m_geoDetection(geoDetection), m_geoManipulator(geoManipulator) {}
+    explicit KeyHandler(GeoGen &generator, GeoDetection &geoDetection, GeoManipulator &geoManipulator)
+        : m_generator(generator), m_geoDetection(geoDetection), m_geoManipulator(geoManipulator) {}
 
     void onKeyPressed(KeyEvent evt) override {
         if (evt.key == Key::SPACE) {
@@ -49,10 +54,12 @@ public:
         if (m_spaceBarPressed) {
             m_geoDetection.contourDetection();
             m_geoManipulator.reArrangeMeshes(m_geoDetection.getDetectedObjects());
-            m_geoDetection.cleanUp();
         }
         if (m_rPressed) {
-            m_geoManipulator.reset();
+            m_geoDetection.cleanUp();
+            m_geoManipulator.cleanUp();
+
+            m_generator.generate();
         }
         if (m_xPressed) {
             m_geoDetection.previewDetection();

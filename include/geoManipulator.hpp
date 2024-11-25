@@ -28,12 +28,6 @@ namespace geoManipulatorNS {
 
         // Found a suggestion on Stackoverflow: https://stackoverflow.com/questions/30359830/how-do-i-clear-three-js-scene
         // I tried to write up something similar, but Copilot gave me a solution. Clang tidy also fixed the code some more.
-        void resetScene() {
-            while (!m_scene.children.empty()) {
-                m_scene.remove(*m_scene.children[0]);
-            }
-            m_grid.resetUsedCoords();
-        }
 
 
         static Vector2 getCenterMesh(const DetectedObjects<Rect> &rectObject) {
@@ -41,6 +35,16 @@ namespace geoManipulatorNS {
                     (rectObject.getObject().tl().x + rectObject.getObject().br().x) / 2,
                     800 - ((rectObject.getObject().tl().y + rectObject.getObject().br().y) / 2)};
             return meshCenter;
+        }
+
+        void emptyScene() {
+            while (!m_scene.children.empty()) {
+                m_scene.remove(*m_scene.children[0]);
+            }
+        }
+
+        void resetRunCounter() {
+            m_hasBeenRun = false;
         }
 
         auto convertToMesh(std::vector<DetectedObjects<Rect>> &object3d) {
@@ -84,6 +88,7 @@ namespace geoManipulatorNS {
         auto sortMeshes(std::vector<DetectedObjects<std::shared_ptr<Mesh>>> &meshObjects) {
             std::vector<DetectedObjects<std::shared_ptr<Mesh>>> compSortedVec{};
             for (auto &j: m_shapeColor.getSupportedShapes()) {
+
                 for (auto &i: m_shapeColor.getSupportedColors()) {
                     std::vector<DetectedObjects<std::shared_ptr<Mesh>>> tempVec = sortVector(meshObjects, j, i);
                     compSortedVec.insert(compSortedVec.end(), tempVec.begin(), tempVec.end());
@@ -101,15 +106,13 @@ namespace geoManipulatorNS {
         [[nodiscard]] bool hasBeenRun() const {
             return m_hasBeenRun;
         }
-        void resetRunCounter() {
-            m_hasBeenRun = false;
-        }
+
 
         void reArrangeMeshes(std::vector<DetectedObjects<Rect>> &object3d) {
             if (!m_hasBeenRun) {
                 auto meshes = convertToMesh(object3d);
 
-                resetScene();
+                emptyScene();
 
                 int key{1};
                 std::vector<DetectedObjects<std::shared_ptr<Mesh>>> arrangedMesh = sortMeshes(meshes);
@@ -125,8 +128,10 @@ namespace geoManipulatorNS {
                 m_hasBeenRun = true;
             }
         }
-        void reset() {
-            resetScene();
+        void cleanUp() {
+            emptyScene();
+            m_grid.resetUsedCoords();
+            resetRunCounter();
         }
     };
 }// namespace geoManipulatorNS
