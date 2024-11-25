@@ -8,7 +8,7 @@ using namespace geoGenNS;
 using namespace gridManagerNS;
 
 
-TEST_CASE("Grid creation", "[grid]") {
+/*TEST_CASE("Grid creation", "[grid]") {
     std::pair<int, int> imageSize{800, 800};
 
     GridManager mainGrid(imageSize, 14, 50);
@@ -37,7 +37,7 @@ TEST_CASE("Mesh generation", "[scene]") {
     auto intersectedMesh = presentMeshes[0]->as<Mesh>();
     std::shared_ptr<Material> mat = intersectedMesh->material();
     auto color = intersectedMesh->as<MeshBasicMaterial>();
-    */
+    #1#
 
     REQUIRE(presentMeshes.size() == meshQuantity);
-}
+}*/

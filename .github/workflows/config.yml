@@ -18,8 +18,10 @@ jobs:
           path: |
             ~/.cache/vcpkg
             vcpkg_installed
-          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
           restore-keys: |
+            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
+            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
             ${{ runner.os }}-vcpkg-
 
       - name: Install prerequisites
@@ -71,8 +73,10 @@ jobs:
           path: |
             ~/.cache/vcpkg
             vcpkg_installed
-          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
           restore-keys: |
+            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
+            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
             ${{ runner.os }}-vcpkg-
 
       - name: Install prerequisites
@@ -121,8 +125,10 @@ jobs:
           path: |
             ~/.cache/vcpkg
             vcpkg_installed
-          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
           restore-keys: |
+            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
+            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
             ${{ runner.os }}-vcpkg-
 
       - name: Install glad with vcpkg
@@ -155,8 +161,10 @@ jobs:
           path: |
             ~/.cache/vcpkg
             vcpkg_installed
-          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
           restore-keys: |
+            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
+            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
             ${{ runner.os }}-vcpkg-
 
       - name: Install glad with vcpkg
