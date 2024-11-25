@@ -39,14 +39,15 @@ void geoDetectionNS::GeoDetection::setContours(Mat &img, const Color::ColorName 
 }
 
 
-void geoDetectionNS::GeoDetection::contourDetection(const std::vector<Color::ColorName> &color) {
+void geoDetectionNS::GeoDetection::contourDetection() {
     //Applies HSV color space to the image.
     Mat mainCamHSV{};
     cvtColor(m_mainCam, mainCamHSV, COLOR_BGR2HSV);
 
     //Applies a mask to the image.
     Mat Mask{};
-    for (auto &i: color) {
+    auto colorProfiles = m_colorProfiles.getSupportedColors();
+    for (auto &i: colorProfiles) {
         inRange(mainCamHSV, m_colorProfiles.getColorProfile(i).first, m_colorProfiles.getColorProfile(i).second, Mask);
         setContours(Mask, i);
     }
@@ -61,11 +62,7 @@ geoDetectionNS::GeoDetection::GeoDetection(std::string windowName, std::pair<int
 }
 
 
-void geoDetectionNS::GeoDetection::imageProcessing(GLRenderer &renderer, const bool showCam) {
-    setupVirtualCam(renderer);
-
-    contourDetection(m_colorProfiles.getSupportedColors());
-
+void geoDetectionNS::GeoDetection::imageProcessing(const bool showCam) {
 
     if (showCam == true) {
         imshow(m_windowName, m_mainCam);

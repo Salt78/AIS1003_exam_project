@@ -20,7 +20,6 @@ namespace geoManipulatorNS {
         GridManager &m_grid;
         Scene &m_scene;
         Camera &m_camera;
-        std::vector<DetectedObjects<Rect>> &m_object3d;
         ShapeColorHandler m_shapeColor{};
         //Stores meshes that have been found in the scene
         std::vector<DetectedObjects<Mesh *>> m_meshObjects;
@@ -94,8 +93,8 @@ namespace geoManipulatorNS {
 
 
     public:
-        explicit GeoManipulator(GridManager &grid, Scene &scene, Camera &camera, std::vector<DetectedObjects<Rect>> &object3d)
-            : m_grid(grid), m_scene(scene), m_camera(camera), m_object3d(object3d) {
+        explicit GeoManipulator(GridManager &grid, Scene &scene, Camera &camera)
+            : m_grid(grid), m_scene(scene), m_camera(camera) {
         }
 
         [[nodiscard]] bool hasBeenRun() const {
@@ -105,23 +104,25 @@ namespace geoManipulatorNS {
             m_hasBeenRun = false;
         }
 
-        void reArrangeMeshes() {
-            convertToMesh(m_object3d);
+        void reArrangeMeshes(std::vector<DetectedObjects<Rect>> &object3d) {
+            if (!m_hasBeenRun) {
+                convertToMesh(object3d);
 
-            resetScene();
+                resetScene();
 
-            int key{1};
-            std::vector<DetectedObjects<Mesh *>> arrangedMesh = sortMeshes();
-            for (auto &i: arrangedMesh) {
-                std::pair<float, float> coords = m_grid.getCoords(key);
-                key++;
+                int key{1};
+                std::vector<DetectedObjects<Mesh *>> arrangedMesh = sortMeshes();
+                for (auto &i: arrangedMesh) {
+                    std::pair<float, float> coords = m_grid.getCoords(key);
+                    key++;
 
-                i.getObject()->position.x = coords.first;
-                i.getObject()->position.y = coords.second;
-                i.getObject()->position.z = 0;
-                m_scene.add(std::shared_ptr<Object3D>(i.getObject()));
+                    i.getObject()->position.x = coords.first;
+                    i.getObject()->position.y = coords.second;
+                    i.getObject()->position.z = 0;
+                    m_scene.add(std::shared_ptr<Object3D>(i.getObject()));
+                }
+                m_hasBeenRun = true;
             }
-            m_hasBeenRun = true;
         }
     };
 }// namespace geoManipulatorNS

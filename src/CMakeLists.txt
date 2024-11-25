@@ -4,6 +4,7 @@ add_library(autoShapeSortingLib
         geoDetection.cpp
         geoManipulator.cpp
         shapeColorHandler.cpp
+        keyHandler.cpp
 )
 
 
