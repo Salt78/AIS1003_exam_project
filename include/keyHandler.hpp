@@ -15,6 +15,7 @@ private:
 
     bool m_spaceBarPressed{false};
     bool m_rPressed{false};
+    bool m_xPressed{false};
 
 
 public:
@@ -27,6 +28,9 @@ public:
         if (evt.key == Key::R) {
             m_rPressed = true;
         }
+        if (evt.key == Key::X) {
+            m_xPressed = true;
+        }
     }
 
     void onKeyReleased(KeyEvent evt) override {
@@ -36,16 +40,23 @@ public:
         if (evt.key == Key::R) {
             m_rPressed = false;
         }
+        if (evt.key == Key::X) {
+            m_xPressed = false;
+        }
     }
 
     void update() {
         if (m_spaceBarPressed) {
             m_geoDetection.contourDetection();
             m_geoManipulator.reArrangeMeshes(m_geoDetection.getDetectedObjects());
+            m_geoDetection.cleanUp();
         }
-        /*if (m_rPressed) {
-            m_geoDetection.getDetectedObjects().clear();
-        }*/
+        if (m_rPressed) {
+            m_geoManipulator.reset();
+        }
+        if (m_xPressed) {
+            m_geoDetection.previewDetection();
+        }
     }
 };
 #endif//KEYLISTENER_HPP

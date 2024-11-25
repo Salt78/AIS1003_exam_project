@@ -51,6 +51,14 @@ namespace geoDetectionNS {
         [[nodiscard]] std::vector<DetectedObjects<Rect>> &getDetectedObjects() {
             return m_detectedObjects;
         }
+        void cleanUp() {
+            m_detectedObjects.clear();
+        }
+
+        void previewDetection() {
+           contourDetection();
+            cleanUp();
+        }
     };
 }// namespace geoDetectionNS
 #endif//GEODETECTION_HPP

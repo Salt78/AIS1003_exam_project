@@ -22,7 +22,6 @@ namespace geoManipulatorNS {
         Camera &m_camera;
         ShapeColorHandler m_shapeColor{};
         //Stores meshes that have been found in the scene
-        std::vector<DetectedObjects<Mesh *>> m_meshObjects;
         bool m_hasBeenRun{false};
 
         //NEEDS COMMENT
@@ -44,10 +43,11 @@ namespace geoManipulatorNS {
             return meshCenter;
         }
 
-        void convertToMesh(std::vector<DetectedObjects<Rect>> &object3d) {
+        auto convertToMesh(std::vector<DetectedObjects<Rect>> &object3d) {
 
             //Did use some GPT to help me figure out how to convert from "Intersect" to "Mesh"
             Raycaster raycaster;
+            std::vector<DetectedObjects<std::shared_ptr<Mesh>>> meshObjects{};
             for (const auto &i: object3d) {
                 Vector2 ndc = {
                         (getCenterMesh(i).x / 800.0f) * 2.0f - 1.0f,// X normalized
@@ -62,29 +62,30 @@ namespace geoManipulatorNS {
                     if (objectPtr) {
                         auto intersectedMesh = objectPtr->as<Mesh>();
                         if (intersectedMesh) {
-                            m_meshObjects.emplace_back(intersectedMesh, i.getShape(), i.getColor());
+                            auto newOwner = std::dynamic_pointer_cast<Mesh>(intersectedMesh->clone());
+                            meshObjects.emplace_back(newOwner, i.getShape(), i.getColor());
                         }
                     }
-                    //std::shared_ptr<Mesh> intersectedMesh = intersect[0].object->as<std::shared_ptr<Mesh>()>;
                 }
             }
+            return meshObjects;
         }
 
-        auto sortVector(ShapeColorHandler::Shapes shape, Color color) {
-            std::vector<DetectedObjects<Mesh *>> sortedVec{};
+        auto sortVector(std::vector<DetectedObjects<std::shared_ptr<Mesh>>> &meshObjects, ShapeColorHandler::Shapes shape, Color color) {
+            std::vector<DetectedObjects<std::shared_ptr<Mesh>>> sortedVec{};
 
-            std::copy_if(m_meshObjects.begin(), m_meshObjects.end(), std::back_inserter(sortedVec),
-                         [&](const DetectedObjects<Mesh *> &i) {
+            std::copy_if(meshObjects.begin(), meshObjects.end(), std::back_inserter(sortedVec),
+                         [&](const DetectedObjects<std::shared_ptr<Mesh>> &i) {
                              return i.getShape() == shape && i.getColor() == color;
                          });
             return sortedVec;
         }
 
-        auto sortMeshes() {
-            std::vector<DetectedObjects<Mesh *>> compSortedVec{};
+        auto sortMeshes(std::vector<DetectedObjects<std::shared_ptr<Mesh>>> &meshObjects) {
+            std::vector<DetectedObjects<std::shared_ptr<Mesh>>> compSortedVec{};
             for (auto &j: m_shapeColor.getSupportedShapes()) {
                 for (auto &i: m_shapeColor.getSupportedColors()) {
-                    std::vector<DetectedObjects<Mesh *>> tempVec = sortVector(j, i);
+                    std::vector<DetectedObjects<std::shared_ptr<Mesh>>> tempVec = sortVector(meshObjects, j, i);
                     compSortedVec.insert(compSortedVec.end(), tempVec.begin(), tempVec.end());
                 }
             }
@@ -106,12 +107,12 @@ namespace geoManipulatorNS {
 
         void reArrangeMeshes(std::vector<DetectedObjects<Rect>> &object3d) {
             if (!m_hasBeenRun) {
-                convertToMesh(object3d);
+                auto meshes = convertToMesh(object3d);
 
                 resetScene();
 
                 int key{1};
-                std::vector<DetectedObjects<Mesh *>> arrangedMesh = sortMeshes();
+                std::vector<DetectedObjects<std::shared_ptr<Mesh>>> arrangedMesh = sortMeshes(meshes);
                 for (auto &i: arrangedMesh) {
                     std::pair<float, float> coords = m_grid.getCoords(key);
                     key++;
@@ -123,6 +124,9 @@ namespace geoManipulatorNS {
                 }
                 m_hasBeenRun = true;
             }
+        }
+        void reset() {
+            resetScene();
         }
     };
 }// namespace geoManipulatorNS
