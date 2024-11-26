@@ -1,4 +1,3 @@
-#include "cmake-build-debug/_deps/threepp-src/src/external/glfw/include/GLFW/glfw3.h"
 #include "geoDetection.hpp"
 #include "geoGeneration.hpp"
 #include "gridManager.hpp"
@@ -14,7 +13,7 @@ int main() {
     //Only nXn images are supported
     constexpr std::pair<int, int> imageSize{800, 800};
 
-    Canvas canvas("Geometry Sorting", {{"aa", 4}, {"resizable", false}});
+    Canvas canvas("Geometry Sorting Demo", {{"aa", 4}, {"resizable", false}});
     canvas.setSize({imageSize.first, imageSize.second});
 
     GLRenderer renderer(canvas.size());

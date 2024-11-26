@@ -26,6 +26,10 @@ if (BUILD_TESTS)
             GIT_TAG v3.7.1 # or a later release
     )
     FetchContent_MakeAvailable(Catch2)
+
+    enable_testing()
+
+    file(COPY ${CMAKE_SOURCE_DIR}/data/testing_resources/images DESTINATION ${CMAKE_BINARY_DIR}/tests/data/testing_resources)
 endif ()
 
 add_executable(threeppxopencv main.cpp)
@@ -37,18 +41,3 @@ target_link_libraries(threeppxopencv PRIVATE
 
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
-######### Emscripten #######
-if (DEFINED EMSCRIPTEN)
-
-    set(LINK_FLAGS " --bind -sUSE_GLFW=3 -sGL_DEBUG=1 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 \
-    -sFULL_ES3 -sASSERTIONS -sALLOW_MEMORY_GROWTH -sWASM=1")
-
-    set_target_properties("demo"
-            PROPERTIES SUFFIX ".html"
-            LINK_FLAGS "${LINK_FLAGS}"
-    )
-
-endif ()
-###########################
-
-message(STATUS "Include directories for geoDetectionLib: ${CMAKE_SOURCE_DIR}/include")

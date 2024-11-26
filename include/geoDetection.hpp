@@ -45,7 +45,7 @@ namespace geoDetectionNS {
         void setupVirtualCam(GLRenderer &renderer);
 
         void imageProcessing(bool showCam = false);
-        ;
+
 
         [[nodiscard]] std::vector<DetectedObjects<Rect>> &getDetectedObjects() {
 
@@ -59,6 +59,10 @@ namespace geoDetectionNS {
         void previewDetection() {
             contourDetection();
             cleanUp();
+        }
+        //Only for testing purposes
+        void loadImg(const std::string &path) {
+            m_mainCam = imread(path);
         }
     };
 }// namespace geoDetectionNS

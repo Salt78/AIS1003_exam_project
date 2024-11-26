@@ -1,8 +1,13 @@
+#include "catch2/matchers/catch_matchers.hpp"
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
+#include <catch2/catch_test_macros.hpp>
+
 #include "geoDetection.hpp"
 #include "geoGeneration.hpp"
 #include "gridManager.hpp"
 #include "threepp/threepp.hpp"
-#include <catch2/catch_test_macros.hpp>
+
+#include <opencv2/core.hpp>
 
 
 using namespace geoGenNS;
@@ -54,10 +59,38 @@ TEST_CASE("ShapeHandling"
     REQUIRE(handler.getColorProfile(Color::red) == std::pair<Scalar, Scalar>(Scalar(0, 32, 0), Scalar(0, 255, 255)));
 }
 
-TEST_CASE("Detect and raycast circle", "[detection]") {
+
+TEST_CASE("openCV_redDot", "[detection]") {
+    constexpr std::pair<int, int> imageSize{800, 800};
+    GeoDetection detector("OPENCV test", imageSize);
+
+    Mat img = imread("data/testing_resources/images/redDot.png", IMREAD_COLOR);
+    detector.loadImg("data/testing_resources/images/redDot.png");
+    std::pair<float, float> coordsObject = {155.5, 645.3};//redDot
+
+    detector.contourDetection();
+
+    auto recognizedMesh = detector.getDetectedObjects();
+
+    REQUIRE(recognizedMesh[0].getColor() == Color::red);
+    REQUIRE(recognizedMesh[0].getShape() == ShapeColorHandler::Shapes::CIRCLE);
+
+    Point topLeftCorner = {recognizedMesh[0].getObject().tl()};
+    Point bottomRightCorner = {recognizedMesh[0].getObject().br()};
+
+    std::pair<float, float> centerOfMesh = {(topLeftCorner.x + bottomRightCorner.x) / 2, (topLeftCorner.y + bottomRightCorner.y) / 2};
+
+    REQUIRE_THAT(coordsObject.first,
+                 Catch::Matchers::WithinRel(centerOfMesh.first, 0.1f));
+    REQUIRE_THAT(coordsObject.second,
+                 Catch::Matchers::WithinRel(centerOfMesh.second, 0.1f));
+}
+
+
+TEST_CASE("OPENCV detection with raycasting", "[detection]") {
     constexpr std::pair<int, int> imageSize{800, 800};
 
-    Canvas canvas("Geometry Sorting", {{"aa", 4}, {"resizable", false}, {"headless", true}});
+    Canvas canvas("", {{"headless", true}});
     canvas.setSize({imageSize.first, imageSize.second});
 
     GLRenderer renderer(imageSize);
@@ -78,8 +111,6 @@ TEST_CASE("Detect and raycast circle", "[detection]") {
     material->color = Color::red;
 
     auto geometry = SphereGeometry::create(20, 32, 32);
-    /*geometry->computeBoundingSphere();
-    geometry->computeBoundingBox();*/
 
     constexpr std::pair<float, float> coords = {100, 700};
     auto mesh = Mesh::create(geometry, material);
@@ -107,20 +138,20 @@ TEST_CASE("Detect and raycast circle", "[detection]") {
     raycaster.setFromCamera(ndc, *camera);
 
     std::vector<Intersection> intersect = raycaster.intersectObjects(scene->children, false);
-    DetectedObjects<std::shared_ptr<Mesh>> RetrievedMesh{};
+    Vector3 position{};
     if (!intersect.empty()) {
         auto objectPtr = intersect[0].object;
         if (objectPtr) {
             auto intersectedMesh = objectPtr->as<Mesh>();
             if (intersectedMesh) {
                 auto newOwner = std::dynamic_pointer_cast<Mesh>(intersectedMesh->clone());
+
+                DetectedObjects<std::shared_ptr<Mesh>> RetrievedMesh{};
                 RetrievedMesh = DetectedObjects<std::shared_ptr<Mesh>>(newOwner, recognizedMesh[0].getShape(), recognizedMesh[0].getColor());
+                position = RetrievedMesh.getObject()->position;
             }
         }
     }
-    Vector3 position = RetrievedMesh.getObject()->position;
-
-
     REQUIRE(position.x == coords.first);
     REQUIRE(position.y == coords.second);
 }

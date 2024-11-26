@@ -1,0 +1,4 @@
+RedDot located at: (x: 155.5, y: 645.3)
+GreenDot located at: (x: 350, y: 400)
+OrangeSquare located at: (x: 700, y: 700)
+AquaSquare located at: (x: 634.7, y: 132.32)
