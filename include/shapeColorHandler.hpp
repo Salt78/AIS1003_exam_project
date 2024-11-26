@@ -47,6 +47,12 @@ namespace shapeColorHandlerNS {
             }
             return supportedShapes;
         }
+        Color::ColorName getColorIntBased(int index) {
+            std::vector<std::pair<Color::ColorName, std::pair<Scalar, Scalar>>> mapVector(m_colorProfiles.begin(), m_colorProfiles.end());
+            return mapVector[index].first;
+        }
+
+
     };
 }// namespace shapeColorHandlerNS
 #endif//ENUM_SHAPE_HPP

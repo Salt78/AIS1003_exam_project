@@ -13,7 +13,7 @@ int main() {
     //Only nXn images are supported
     constexpr std::pair<int, int> imageSize{800, 800};
 
-    Canvas canvas("Geometry Sorting", {{"aa", 4}});
+    Canvas canvas("Geometry Sorting", {{"aa", 4}, {"resizable", false}});
     canvas.setSize({imageSize.first, imageSize.second});
 
     GLRenderer renderer(canvas.size());
@@ -29,7 +29,7 @@ int main() {
 
     //GeoGen class for generating geometries at semi random locations.
     GeoGen generator{*scene, grid};
-    generator.generate();
+    generator.generateRND();
 
     GeoDetection detector("OPENCV test", imageSize);
 

@@ -4,6 +4,7 @@
 #include "gridManager.hpp"
 #include "shapeColorHandler.hpp"
 #include "threepp/threepp.hpp"
+#include <random>
 
 
 namespace geoGenNS {
@@ -16,16 +17,35 @@ namespace geoGenNS {
     private:
         Scene &m_scene;
         GridManager &m_grid;
-        const float m_meshSize{40};
-        std::shared_ptr<MeshBasicMaterial> m_material{};
-        int m_quantity{5};
+        float m_meshSize{};
+        int m_quantity{};
         std::vector<std::shared_ptr<Mesh>> m_geoVec{};
 
         ShapeColorHandler shapeColorHandler{};
 
 
         template<typename T>
-        void createMesh(std::shared_ptr<T> &geometry);
+        void createMesh(std::shared_ptr<T> &geometry, std::shared_ptr<MeshBasicMaterial> &material);
+
+        ShapeColorHandler::Shapes randomShape() {
+            // Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
+            std::random_device rd;
+            std::mt19937 mt(rd());
+            std::uniform_int_distribution<int> dist(0, shapeColorHandler.getSupportedShapes().size() - 1);
+
+            return shapeColorHandler.getSupportedShapes()[dist(rd)];
+        }
+
+
+        Color::ColorName randomColor() {
+            // Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
+            std::random_device rd;
+            std::mt19937 mt(rd());
+            std::uniform_int_distribution<int> dist(0, shapeColorHandler.getSupportedColors().size() - 1);
+
+            return shapeColorHandler.getColorIntBased(dist(rd));
+        }
+
 
         void addToScene() {
             for (const auto &i: m_geoVec) {
@@ -37,22 +57,20 @@ namespace geoGenNS {
         }
 
 
-        void gengen(const ShapeColorHandler::Shapes shape) {
+        void processMesh(const ShapeColorHandler::Shapes shape, std::shared_ptr<MeshBasicMaterial> &material) {
             switch (shape) {
                 case ShapeColorHandler::Shapes::CUBE: {
                     std::shared_ptr<BoxGeometry> cubeGeometry{};
                     cubeGeometry = BoxGeometry::create(m_meshSize, m_meshSize, 0);
 
-                    createMesh(cubeGeometry);
-                    addToScene();
+                    createMesh(cubeGeometry, material);
                     break;
                 }
                 case ShapeColorHandler::Shapes::CIRCLE: {
                     std::shared_ptr<SphereGeometry> circleGeometry{};
                     circleGeometry = SphereGeometry::create(m_meshSize / 2, 30, 20);
 
-                    createMesh(circleGeometry);
-                    addToScene();
+                    createMesh(circleGeometry, material);
                     break;
                 }
                 default:;
@@ -60,23 +78,20 @@ namespace geoGenNS {
         }
 
     public:
-        GeoGen(Scene &scene, GridManager &grid)
-            : m_scene(scene), m_grid(grid) {}
+        GeoGen(Scene &scene, GridManager &grid, const float meshSize = 40)
+            : m_scene(scene), m_grid(grid), m_meshSize(meshSize) {}
 
 
-        void generate() {
+        void generateRND(int quantity = 30) {
 
-            for (auto &i: ShapeColorHandler::getSupportedShapes()) {
-                for (auto &j: shapeColorHandler.getSupportedColors()) {
-                    auto material = MeshBasicMaterial::create();
-                    material->color = j;
-                    m_material = material;
+            for (int i{}; i < quantity; i++) {
+                ShapeColorHandler::Shapes shape = randomShape();
+                auto material = MeshBasicMaterial::create({{"color", randomColor()}});
 
-                    gengen(i);
-
-                    m_geoVec.clear();
-                }
+                processMesh(shape, material);
             }
+            addToScene();
+            m_geoVec.clear();
         }
     };
 }// namespace geoGenNS

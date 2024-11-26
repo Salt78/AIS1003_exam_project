@@ -59,7 +59,7 @@ public:
             m_geoDetection.cleanUp();
             m_geoManipulator.cleanUp();
 
-            m_generator.generate();
+            m_generator.generateRND();
         }
         if (m_xPressed) {
             m_geoDetection.previewDetection();
