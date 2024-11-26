@@ -88,6 +88,10 @@ namespace geoGenNS {
                 ShapeColorHandler::Shapes shape = randomShape();
                 auto material = MeshBasicMaterial::create({{"color", randomColor()}});
 
+                if (shape == ShapeColorHandler::Shapes::CIRCLE) {
+                    material->side = Side::Double;
+                }
+
                 processMesh(shape, material);
             }
             addToScene();

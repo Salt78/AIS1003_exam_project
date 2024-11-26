@@ -1,3 +1,4 @@
+#include "cmake-build-debug/_deps/threepp-src/src/external/glfw/include/GLFW/glfw3.h"
 #include "geoDetection.hpp"
 #include "geoGeneration.hpp"
 #include "gridManager.hpp"
@@ -45,6 +46,6 @@ int main() {
 
         keyHandler.update();
 
-        detector.imageProcessing(false);
+        detector.imageProcessing();
     });
 }

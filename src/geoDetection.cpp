@@ -58,7 +58,7 @@ geoDetectionNS::GeoDetection::GeoDetection(std::string windowName, std::pair<int
                                                                                                             std::move(windowName)),
                                                                                                     m_imageSize(imageSize),
                                                                                                     m_pixels(imageSize.first * imageSize.second * 3) {
-    namedWindow(m_windowName, WINDOW_AUTOSIZE);
+    //namedWindow(m_windowName, WINDOW_AUTOSIZE);
 }
 
 
@@ -67,6 +67,6 @@ void geoDetectionNS::GeoDetection::imageProcessing(const bool showCam) {
     if (showCam == true) {
         imshow(m_windowName, m_mainCam);
     } else {
-        destroyAllWindows();
+        //destroyAllWindows();
     }
 }

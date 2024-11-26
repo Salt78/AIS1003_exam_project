@@ -25,6 +25,7 @@ namespace geoDetectionNS {
             : m_object{object}, m_shape{shape},
               m_color{color} {
         }
+        DetectedObjects() = default;
 
         [[nodiscard]] T getObject() const {
             return m_object;

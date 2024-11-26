@@ -44,7 +44,7 @@ namespace geoDetectionNS {
 
         void setupVirtualCam(GLRenderer &renderer);
 
-        void imageProcessing(bool showCam);
+        void imageProcessing(bool showCam = false);
         ;
 
         [[nodiscard]] std::vector<DetectedObjects<Rect>> &getDetectedObjects() {
