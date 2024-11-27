@@ -15,16 +15,7 @@ using namespace gridManagerNS;
 using namespace geoDetectionNS;
 
 
-TEST_CASE("Grid creation", "[grid]") {
-    std::pair<int, int> imageSize{800, 800};
 
-    GridManager mainGrid(imageSize, 14, 50);
-
-    REQUIRE(mainGrid.getCoordQuantity() == 196);
-    REQUIRE(mainGrid.isUsed(1) == false);
-    REQUIRE(mainGrid.getCoords(1) == std::pair<float, float>(50, 50));
-    REQUIRE(mainGrid.isUsed(1) == true);
-}
 
 
 TEST_CASE("Mesh generation", "[scene]") {

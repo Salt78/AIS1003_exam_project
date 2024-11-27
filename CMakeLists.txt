@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(OpenCV CONFIG REQUIRED)
 
 add_subdirectory(src)
-add_subdirectory(tests)
+
 
 include(FetchContent)
 set(THREEPP_BUILD_TESTS OFF)
@@ -18,6 +18,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(threepp)
 
+
 option(BUILD_TESTS "Build tests" ON)
 if (BUILD_TESTS)
     FetchContent_Declare(
@@ -27,8 +28,11 @@ if (BUILD_TESTS)
     )
     FetchContent_MakeAvailable(Catch2)
 
+    enable_testing()
+    add_subdirectory(tests)
     file(COPY ${CMAKE_SOURCE_DIR}/data/testing_resources/images DESTINATION ${CMAKE_BINARY_DIR}/tests/data/testing_resources)
 endif ()
+
 
 add_executable(threeppxopencv main.cpp)
 
