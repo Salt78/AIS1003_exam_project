@@ -46,7 +46,7 @@ jobs:
           Xvfb :99 -screen 0 1920x1080x24 &
 
       - name: Set DISPLAY environment variable
-        run: echo "::set-env name=DISPLAY:: :99"
+        run: echo "DISPLAY=:99" >> $GITHUB_ENV
 
       - name: Install glad with vcpkg
         uses: lukka/run-vcpkg@v10
@@ -109,7 +109,7 @@ jobs:
           Xvfb :99 -screen 0 1920x1080x24 &
 
       - name: Set DISPLAY environment variable
-        run: echo "::set-env name=DISPLAY:: :99"
+        run: echo "DISPLAY=:99" >> $GITHUB_ENV
 
       - name: Install glad with vcpkg
         uses: lukka/run-vcpkg@v10
