@@ -38,7 +38,15 @@ jobs:
           pkg-config \
           libdbus-1-dev \
           libxi-dev \
-          libxtst-dev
+          libxtst-dev \
+          xvfb
+
+      - name: Start Xvfb
+        run: |
+          Xvfb :99 -screen 0 1920x1080x24 &
+
+      - name: Set DISPLAY environment variable
+        run: echo "::set-env name=DISPLAY:: :99"
 
       - name: Install glad with vcpkg
         uses: lukka/run-vcpkg@v10
@@ -93,7 +101,15 @@ jobs:
           pkg-config \
           libdbus-1-dev \
           libxi-dev \
-          libxtst-dev
+          libxtst-dev \
+          xvfb
+
+      - name: Start Xvfb
+        run: |
+          Xvfb :99 -screen 0 1920x1080x24 &
+
+      - name: Set DISPLAY environment variable
+        run: echo "::set-env name=DISPLAY:: :99"
 
       - name: Install glad with vcpkg
         uses: lukka/run-vcpkg@v10
