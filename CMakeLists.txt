@@ -27,8 +27,6 @@ if (BUILD_TESTS)
     )
     FetchContent_MakeAvailable(Catch2)
 
-    enable_testing()
-
     file(COPY ${CMAKE_SOURCE_DIR}/data/testing_resources/images DESTINATION ${CMAKE_BINARY_DIR}/tests/data/testing_resources)
 endif ()
 
