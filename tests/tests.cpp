@@ -22,7 +22,7 @@ TEST_CASE("Mesh generation", "[scene]") {
     std::pair<int, int> imageSize{800, 800};
     const int meshQuantity{45};
 
-    GridManager grid(imageSize, 14, 50);
+    GridManager grid(imageSize, 14);
 
 
     auto scene = Scene::create();
@@ -30,12 +30,6 @@ TEST_CASE("Mesh generation", "[scene]") {
     generator.generateRND(meshQuantity);
 
     std::vector<Object3D *> presentMeshes = scene->children;
-
-
-    /*auto intersectedMesh = presentMeshes[0]->as<Mesh>();
-    std::shared_ptr<Material> mat = intersectedMesh->material();
-    auto color = intersectedMesh->as<MeshBasicMaterial>();
-    */
 
     REQUIRE(presentMeshes.size() == meshQuantity);
 }
@@ -92,7 +86,7 @@ TEST_CASE("OPENCV detection with raycasting", "[detection]") {
     camera->position.z = 10;
 
 
-    GridManager grid(imageSize, 15, 50);
+    GridManager grid(imageSize);
 
     GeoDetection detector("OPENCV test", imageSize);
     GeoManipulator manipulator(grid, *scene, *camera);

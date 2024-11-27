@@ -1,6 +1,7 @@
 #include "geoDetection.hpp"
 #include "geoGeneration.hpp"
 #include "gridManager.hpp"
+
 #include <keyHandler.hpp>
 #include <threepp/threepp.hpp>
 
@@ -24,8 +25,7 @@ int main() {
                                              0, static_cast<float>(imageSize.second), -1000, 1000);
     camera->position.z = 10;
 
-
-    GridManager grid(imageSize, 15, 50);
+    GridManager grid(imageSize, 50);
 
     //GeoGen class for generating geometries at semi random locations.
     GeoGen generator{*scene, grid};

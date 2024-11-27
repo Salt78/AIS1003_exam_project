@@ -9,19 +9,15 @@ void gridManagerNS::GridManager::logUsedCoords(int key) {
 }
 
 void gridManagerNS::GridManager::createGrid() {
-    const float centerImage = static_cast<float>(m_imageSize.first) / 2;
-    const float centerGrid = m_gridSize / 2;
 
-    const std::pair<float, float> startingCoords{
-            centerImage - centerGrid * static_cast<float>(m_spacing),
-            centerImage - centerGrid * static_cast<float>(m_spacing)};
+
     //Did know the pseudo code in detail, but got some small help from GPT
     int key{1};
-    for (int i{}; static_cast<float>(i) < m_gridSize; i++) {
-        for (int z{}; static_cast<float>(z) < m_gridSize; z++) {
+    for (int i{}; i <= calcGrid(); i++) {
+        for (int z{}; z <= calcGrid(); z++) {
             m_gridMap[key] = std::make_pair(
-                    startingCoords.first + static_cast<float>(z) * static_cast<float>(m_spacing),
-                    startingCoords.second + static_cast<float>(i) * static_cast<float>(m_spacing));
+                    static_cast<float>(m_startingCoords.first) + static_cast<float>(z) * static_cast<float>(m_spacing),
+                    static_cast<float>(m_startingCoords.second) + static_cast<float>(i) * static_cast<float>(m_spacing));
 
             key++;
         }
@@ -30,11 +26,11 @@ void gridManagerNS::GridManager::createGrid() {
 
 gridManagerNS::GridManager::GridManager(
         const std::pair<int, int> imageSize,
-        const float gridSize,
-        const int spacing)
+        const int spacing,
+        const std::pair<int, int> startingCoords)
     : m_imageSize(imageSize),
-      m_gridSize(gridSize),
-      m_spacing(spacing) { createGrid(); }
+      m_spacing(spacing),
+      m_startingCoords(startingCoords) { createGrid(); }
 
 
 // Got some help to fix const correctness from GPT (using .at())
