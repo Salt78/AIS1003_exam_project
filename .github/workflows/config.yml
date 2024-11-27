@@ -20,7 +20,6 @@ jobs:
             vcpkg_installed
           key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
           restore-keys: |
-            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
             ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
             ${{ runner.os }}-vcpkg-
 
@@ -38,62 +37,15 @@ jobs:
           pkg-config \
           libdbus-1-dev \
           libxi-dev \
-          libxtst-dev
+          libxtst-dev \
+          xvfb
 
-      - name: Install glad with vcpkg
-        uses: lukka/run-vcpkg@v10
-        with:
-          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-          vcpkgGitCommitId: '4cac260c4b7331538d31886f57739fea0bffa27e'
-          vcpkgJsonGlob: 'vcpkg.json'
-          appendedCacheKey: vcpkginstall
-
-      - name: Configure and build
+      - name: Start Xvfb
         run: |
-          cmake . -B build -G "Ninja" -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE="Release"
-          cmake --build build
+          Xvfb :99 -screen 0 1920x1080x24 &
 
-      - name: Test
-        run: |
-          cd build/tests
-          ctest --output-on-failure
-
-  ubuntu_no_glfw:
-    runs-on: ubuntu-22.04
-    env:
-      CC: gcc-11
-      CXX: g++-11
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Cache vcpkg
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/vcpkg
-            vcpkg_installed
-          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
-          restore-keys: |
-            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
-            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
-            ${{ runner.os }}-vcpkg-
-
-      - name: Install prerequisites
-        run: |
-          sudo apt-get update && sudo apt-get install -y \
-          build-essential \
-          cmake \
-          ninja-build \
-          python3 \
-          libxinerama-dev \
-          libxcursor-dev \
-          xorg-dev \
-          libglu1-mesa-dev \
-          pkg-config \
-          libdbus-1-dev \
-          libxi-dev \
-          libxtst-dev
+      - name: Set DISPLAY environment variable
+        run: echo "DISPLAY=:99" >> $GITHUB_ENV
 
       - name: Install glad with vcpkg
         uses: lukka/run-vcpkg@v10
@@ -127,9 +79,14 @@ jobs:
             vcpkg_installed
           key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
           restore-keys: |
-            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
             ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
             ${{ runner.os }}-vcpkg-
+
+      - name: Install Mesa3D
+        run: |
+          curl -LO https://github.com/pal1000/mesa-dist-win/releases/download/22.1.7/mesa3d-22.1.7-release-msvc.7z
+          7z x mesa3d-22.1.7-release-msvc.7z -oC:\Mesa
+          setx PATH "%PATH%;C:\Mesa\bin"
 
       - name: Install glad with vcpkg
         uses: lukka/run-vcpkg@v10
@@ -163,7 +120,6 @@ jobs:
             vcpkg_installed
           key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
           restore-keys: |
-            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
             ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
             ${{ runner.os }}-vcpkg-
 
