@@ -30,7 +30,7 @@ namespace geoDetectionNS {
         shapeColorNS::ShapeColorHandler m_colorProfiles{};
 
 
-        void setContours(cv::Mat &img, const threepp::Color::ColorName &color);
+        void setContours(const cv::Mat &img, const threepp::Color::ColorName &color);
 
 
     public:

@@ -22,7 +22,7 @@ void GeoDetection::setupVirtualCam(GLRenderer &renderer) {
 }
 
 
-void GeoDetection::setContours(Mat &img, const Color::ColorName &color) {
+void GeoDetection::setContours(const Mat &img, const Color::ColorName &color) {
     std::vector<std::vector<Point>> contours;
     std::vector<Vec4i> hierarchy;
     findContours(img, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
@@ -31,7 +31,7 @@ void GeoDetection::setContours(Mat &img, const Color::ColorName &color) {
     // Watched a tutorial on YT about OpenCV. Lent a lot of openCV code from there in general https://www.youtube.com/watch?v=2FYm3GOonhk&t Chapter 6 and 7
     std::vector<std::vector<Point>> conPoly{contours.size()};
     for (int i{}; i < contours.size(); i++) {
-        double peri = arcLength(contours[i], true);
+        const double peri = arcLength(contours[i], true);
         approxPolyDP(contours[i], conPoly[i], 0.02 * peri, true);
 
         //counts the number of corners in the detected object.
@@ -39,7 +39,7 @@ void GeoDetection::setContours(Mat &img, const Color::ColorName &color) {
         drawContours(m_mainCam, conPoly, i, Scalar(255, 0, 255), 2);
 
         //Chooses the shape of the object based on the number of corners.
-        Rect tempBoundingRect{boundingRect(conPoly[i])};
+        Rect tempBoundingRect = boundingRect(conPoly[i]);
         if (objCor == 4) {
             DetectedObjects currentObject(tempBoundingRect, ShapeColorHandler::Shapes::CUBE, color);
             m_detectedObjects.emplace_back(currentObject);
@@ -51,15 +51,17 @@ void GeoDetection::setContours(Mat &img, const Color::ColorName &color) {
 }
 
 // OpenCV code from https://www.youtube.com/watch?v=2FYm3GOonhk&t Chapter 6 and 7
+
 void GeoDetection::contourDetection() {
     //Applies HSV color space to the image.
     Mat mainCamHSV{};
     cvtColor(m_mainCam, mainCamHSV, COLOR_BGR2HSV);
 
-    //Applies a HSV mask for easier color detection.
+    //Applies specific color mask to the image and detects shapes using setContours().
     Mat Mask{};
     const auto colorProfiles = m_colorProfiles.getSupportedColors();
     for (auto &i: colorProfiles) {
+
         inRange(mainCamHSV, m_colorProfiles.getColorProfile(i).first, m_colorProfiles.getColorProfile(i).second, Mask);
         setContours(Mask, i);
     }

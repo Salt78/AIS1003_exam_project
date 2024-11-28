@@ -23,6 +23,10 @@ void GridManager::checkForExceptions() const {
 }
 
 
+/**
+ * @brief Important that the result of the calculation is an integer.
+ * @return the size of the grid
+ */
 int GridManager::calcGridSize() const {
     const float gridSize = static_cast<float>(m_imageSize.first - 2 * m_startingCoords.first) / static_cast<float>(m_spacing);
 
