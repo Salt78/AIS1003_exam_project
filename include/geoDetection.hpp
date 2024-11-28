@@ -27,7 +27,7 @@ namespace geoDetectionNS {
         std::vector<DetectedObjects<cv::Rect>> m_detectedObjects{};
 
         //Misc
-        shapeColorHandlerNS::ShapeColorHandler m_colorProfiles{};
+        shapeColorNS::ShapeColorHandler m_colorProfiles{};
 
 
         void setContours(cv::Mat &img, const threepp::Color::ColorName &color);
@@ -51,7 +51,7 @@ namespace geoDetectionNS {
         void contourDetection();
 
 
-        [[nodiscard]] std::vector<DetectedObjects<cv::Rect>> getDetectedObjects() const;
+        [[nodiscard]] std::vector<DetectedObjects<cv::Rect>> &getDetectedObjects();
 
 
         /**

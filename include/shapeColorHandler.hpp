@@ -5,7 +5,7 @@
 #include <threepp/math/Color.hpp>
 
 
-namespace shapeColorHandlerNS {
+namespace shapeColorNS {
     /**
      * @brief Class for handling the supported colors and shapes.
      *   Supported colors are:

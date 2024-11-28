@@ -18,11 +18,11 @@ template<typename T>
 class DetectedObjects {
 private:
     T m_object{};
-    shapeColorHandlerNS::ShapeColorHandler::Shapes m_shape{};
+    shapeColorNS::ShapeColorHandler::Shapes m_shape{};
     threepp::Color m_color{};
 
 public:
-    DetectedObjects(const T &object, const shapeColorHandlerNS::ShapeColorHandler::Shapes &shape, const threepp::Color &color)
+    DetectedObjects(const T &object, const shapeColorNS::ShapeColorHandler::Shapes &shape, const threepp::Color &color)
         : m_object{object}, m_shape{shape},
           m_color{color} {
     }
@@ -32,7 +32,7 @@ public:
         return m_object;
     }
 
-    [[nodiscard]] shapeColorHandlerNS::ShapeColorHandler::Shapes getShape() const {
+    [[nodiscard]] shapeColorNS::ShapeColorHandler::Shapes getShape() const {
         return m_shape;
     }
 

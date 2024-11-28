@@ -6,7 +6,7 @@
 using namespace cv;
 using namespace threepp;
 using namespace geoDetectionNS;
-using namespace shapeColorHandlerNS;
+using namespace shapeColorNS;
 
 
 void GeoDetection::setupVirtualCam(GLRenderer &renderer) {
@@ -77,7 +77,7 @@ void GeoDetection::showPreview() const {
 }
 
 
-std::vector<DetectedObjects<cv::Rect>> GeoDetection::getDetectedObjects() const {
+std::vector<DetectedObjects<cv::Rect>> &GeoDetection::getDetectedObjects() {
     return m_detectedObjects;
 }
 

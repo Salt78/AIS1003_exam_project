@@ -2,7 +2,7 @@
 
 using namespace threepp;
 using namespace cv;
-using namespace shapeColorHandlerNS;
+using namespace shapeColorNS;
 
 ShapeColorHandler::ShapeColorHandler() = default;
 
