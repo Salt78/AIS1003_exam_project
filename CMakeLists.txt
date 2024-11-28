@@ -7,7 +7,6 @@ find_package(OpenCV CONFIG REQUIRED)
 
 add_subdirectory(src)
 
-
 include(FetchContent)
 set(THREEPP_BUILD_TESTS OFF)
 set(THREEPP_BUILD_EXAMPLES OFF)

@@ -15,7 +15,7 @@ int main() {
     constexpr std::pair<int, int> imageSize{800, 800};
 
     Canvas canvas("Geometry Sorting Demo", {{"aa", 4}, {"resizable", false}});
-    canvas.setSize({imageSize.first, imageSize.second});
+    canvas.setSize(imageSize);
 
     GLRenderer renderer(canvas.size());
     renderer.setSize(canvas.size());
@@ -25,7 +25,7 @@ int main() {
                                              0, static_cast<float>(imageSize.second), -1000, 1000);
     camera->position.z = 10;
 
-    GridManager grid(imageSize, 50);
+    GridManager grid(imageSize);
 
     //GeoGen class for generating geometries at semi random locations.
     GeoGen generator{*scene, grid};
