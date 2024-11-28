@@ -60,16 +60,18 @@ void GeoGen::processMesh(const ShapeColorHandler::Shapes shape, std::shared_ptr<
 }
 
 
-GeoGen::GeoGen(Scene &scene, GridManager &grid, const float meshSize) : m_scene(scene), m_grid(grid), m_meshSize(meshSize) {}
+GeoGen::GeoGen(Scene &scene, GridManager &grid, int quantity, const float meshSize)
+    : m_scene(scene), m_grid(grid), m_quantity(quantity), m_meshSize(meshSize) {}
 
 
-void GeoGen::generateRND(const int quantity) {
+void GeoGen::generateRND() {
 
-    for (int i{}; i < quantity; i++) {
+    for (int i{}; i < m_quantity; i++) {
         const ShapeColorHandler::Shapes shape = randomShape();
         auto material = MeshBasicMaterial::create({{"color", randomColor()}});
 
         if (shape == ShapeColorHandler::Shapes::CIRCLE) {
+            //GPT suggested this to fix issues with raycasting
             material->side = Side::Double;
         }
 
