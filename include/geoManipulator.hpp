@@ -4,12 +4,13 @@
 #include "gridManager.hpp"
 #include "shapeColorHandler.hpp"
 #include "threepp/threepp.hpp"
+
+#include <geoDetection.hpp>
 #include <vector>
 
 
 namespace geoManipulatorNS {
-
-    using namespace geoDetectionNS;
+    
     using namespace threepp;
     using namespace gridManagerNS;
     using namespace shapeColorHandlerNS;

@@ -17,7 +17,6 @@ namespace geoDetectionNS {
     using namespace cv;
     using namespace threepp;
     using namespace shapeColorHandlerNS;
-    using namespace geoManipulatorNS;
 
     class GeoDetection {
     private:

@@ -9,6 +9,7 @@
 using namespace threepp;
 using namespace geoDetectionNS;
 using namespace geoGenNS;
+using namespace geoManipulatorNS;
 
 
 class KeyHandler : public KeyListener {

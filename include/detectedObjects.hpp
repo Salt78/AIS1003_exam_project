@@ -5,9 +5,6 @@
 #include <opencv2/core.hpp>
 #include <threepp/math/Color.hpp>
 
-
-namespace geoDetectionNS {
-
     using namespace cv;
     using namespace threepp;
     using namespace shapeColorHandlerNS;
@@ -39,5 +36,4 @@ namespace geoDetectionNS {
             return m_color;
         }
     };
-}// namespace geoDetectionNS
 #endif//DETECTEDOBJECTS_HPP
