@@ -19,7 +19,7 @@ namespace gridManagerNS {
 
         void createGrid();
 
-        [[nodiscard]] int calcGrid() const;
+        [[nodiscard]] int calcGridSize() const;
 
     public:
         explicit GridManager(std::pair<int, int> imageSize, int spacing = 50, std::pair<int, int> startingCoords = {25, 25});

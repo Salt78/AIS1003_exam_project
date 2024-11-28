@@ -13,6 +13,7 @@
 using namespace geoGenNS;
 using namespace gridManagerNS;
 using namespace geoDetectionNS;
+using namespace geoManipulatorNS;
 
 
 
@@ -22,7 +23,7 @@ TEST_CASE("Mesh generation", "[scene]") {
     std::pair<int, int> imageSize{800, 800};
     const int meshQuantity{45};
 
-    GridManager grid(imageSize, 14);
+    GridManager grid(imageSize);
 
 
     auto scene = Scene::create();

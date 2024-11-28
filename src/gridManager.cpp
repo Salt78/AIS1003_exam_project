@@ -1,10 +1,13 @@
 #include "gridManager.hpp"
 
 #include <algorithm>
-#include <stdexcept>
 #include <cmath>
+#include <stdexcept>
 
-void gridManagerNS::GridManager::checkForExceptions() const {
+using namespace gridManagerNS;
+
+void GridManager::checkForExceptions() const {
+    //When i first started writing this exception i did get help from GTP, because I didn't know how to throw exceptions.
     if (m_imageSize.first != m_imageSize.second) {
         throw std::invalid_argument("Only nXn images are supported");
     }
@@ -20,7 +23,7 @@ void gridManagerNS::GridManager::checkForExceptions() const {
 }
 
 
-int gridManagerNS::GridManager::calcGrid() const {
+int GridManager::calcGridSize() const {
     const float gridSize = static_cast<float>(m_imageSize.first - 2 * m_startingCoords.first) / static_cast<float>(m_spacing);
 
     //GPT helped me with this part. I was unsure how to check if the value is float or int.
@@ -31,7 +34,7 @@ int gridManagerNS::GridManager::calcGrid() const {
 }
 
 
-void gridManagerNS::GridManager::resetUsedCoords() {
+void GridManager::resetUsedCoords() {
     m_usedCoords.clear();
 }
 //Googled to figure out what I could use in the standard library to sort a vector. https://www.digitalocean.com/community/tutorials/sorting-a-vector-in-c-plus-plus
@@ -42,11 +45,11 @@ void gridManagerNS::GridManager::logUsedCoords(const int key) {
 }
 
 
-void gridManagerNS::GridManager::createGrid() {
-    //Did know the pseudo code in detail, but got start help from GPT
+void GridManager::createGrid() {
+    //Did know the pseudo code in detail, but got start help from GPT.
     int key{1};
-    for (int i{}; i <= calcGrid(); i++) {
-        for (int z{}; z <= calcGrid(); z++) {
+    for (int i{}; i <= calcGridSize(); i++) {
+        for (int z{}; z <= calcGridSize(); z++) {
             m_gridMap[key] = std::make_pair(
                     static_cast<float>(m_startingCoords.first) + static_cast<float>(z) * static_cast<float>(m_spacing),
                     static_cast<float>(m_startingCoords.second) + static_cast<float>(i) * static_cast<float>(m_spacing));
@@ -57,7 +60,7 @@ void gridManagerNS::GridManager::createGrid() {
 }
 
 
-gridManagerNS::GridManager::GridManager(
+GridManager::GridManager(
         const std::pair<int, int> imageSize,
         const int spacing,
         const std::pair<int, int> startingCoords)
@@ -71,7 +74,7 @@ gridManagerNS::GridManager::GridManager(
 
 
 // Got some help to fix const correctness from GPT (using .at())
-std::pair<float, float> gridManagerNS::GridManager::getCoords(const int key) {
+std::pair<float, float> GridManager::getCoords(const int key) {
     if (key == 0 || key > getCoordQuantity()) {
         throw std::invalid_argument("Key is out of bounds");
     }
@@ -83,11 +86,11 @@ std::pair<float, float> gridManagerNS::GridManager::getCoords(const int key) {
 
 //I originally was recommended to use std::find https://stackoverflow.com/questions/571394/how-to-find-out-if-an-item-is-present-in-a-stdvector
 //But the second most popular answer recommended std::binary_search instead, and it returns a boolean value so it is clean.
-bool gridManagerNS::GridManager::isUsed(const int key) {
+bool GridManager::isUsed(const int key) {
     return std::ranges::binary_search(m_usedCoords.begin(), m_usedCoords.end(), key);
 }
 
 
-int gridManagerNS::GridManager::getCoordQuantity() const {
+int GridManager::getCoordQuantity() const {
     return static_cast<int>(m_gridMap.size());
 }
