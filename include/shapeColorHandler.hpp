@@ -1,23 +1,31 @@
 #ifndef ENUM_SHAPE_HPP
 #define ENUM_SHAPE_HPP
 #include <map>
-#include <opencv2/core.hpp>
+#include <opencv2/core/types.hpp>
 #include <threepp/math/Color.hpp>
 
 
 namespace shapeColorHandlerNS {
-
-    using namespace threepp;
-    using namespace cv;
-
+    /**
+     * @brief Class for handling the supported colors and shapes.
+     *   Supported colors are:
+     *                      - green
+     *                      - aqua
+     *                      - orange
+     *                      - red
+     *
+     *   Supported shapes are:
+     *                      - CUBE
+     *                      - CIRCLE
+     */
     class ShapeColorHandler {
-
     private:
-        const std::map<Color::ColorName, std::pair<Scalar, Scalar>> m_colorProfiles = {
-                {Color::green, std::pair<Scalar, Scalar>(Scalar(46, 0, 0), Scalar(68, 255, 255))},
-                {Color::aqua, std::pair<Scalar, Scalar>(Scalar(76, 0, 0), Scalar(90, 255, 255))},
-                {Color::orange, std::pair<Scalar, Scalar>(Scalar(13, 0, 0), Scalar(32, 255, 255))},
-                {Color::red, std::pair<Scalar, Scalar>(Scalar(0, 32, 0), Scalar(0, 255, 255))}};
+        const std::map<threepp::Color::ColorName, std::pair<cv::Scalar, cv::Scalar>> m_colorProfiles = {
+                {threepp::Color::green, std::pair<cv::Scalar, cv::Scalar>(cv::Scalar(46, 0, 0), cv::Scalar(68, 255, 255))},
+                {threepp::Color::aqua, std::pair<cv::Scalar, cv::Scalar>(cv::Scalar(76, 0, 0), cv::Scalar(90, 255, 255))},
+                {threepp::Color::orange, std::pair<cv::Scalar, cv::Scalar>(cv::Scalar(13, 0, 0), cv::Scalar(32, 255, 255))},
+                {threepp::Color::red, std::pair<cv::Scalar, cv::Scalar>(cv::Scalar(0, 32, 0), cv::Scalar(0, 255, 255))}};
+
 
     public:
         enum class Shapes {
@@ -26,33 +34,24 @@ namespace shapeColorHandlerNS {
             ENDOFENUM
         };
 
-        ShapeColorHandler() = default;
 
-        [[nodiscard]] std::pair<Scalar, Scalar> getColorProfile(const Color::ColorName &color) const {
-            return m_colorProfiles.at(color);
-        };
-
-        [[nodiscard]] std::vector<Color::ColorName> getSupportedColors() const {
-            std::vector<Color::ColorName> supportedColors{};
-            for (const auto &i: m_colorProfiles) {
-                supportedColors.push_back(i.first);
-            }
-            return supportedColors;
-        }
-
-        static std::vector<Shapes> getSupportedShapes() {
-            std::vector<Shapes> supportedShapes{};
-            for (int i{}; i < static_cast<int>(Shapes::ENDOFENUM); i++) {
-                supportedShapes.push_back(static_cast<Shapes>(i));
-            }
-            return supportedShapes;
-        }
-        Color::ColorName getColorIntBased(int index) {
-            std::vector<std::pair<Color::ColorName, std::pair<Scalar, Scalar>>> mapVector(m_colorProfiles.begin(), m_colorProfiles.end());
-            return mapVector[index].first;
-        }
+        ShapeColorHandler();
 
 
+        [[nodiscard]] std::pair<cv::Scalar, cv::Scalar> getColorProfile(const threepp::Color::ColorName &color) const;
+
+
+        [[nodiscard]] std::vector<threepp::Color::ColorName> getSupportedColors() const;
+
+
+        [[nodiscard]] static std::vector<Shapes> getSupportedShapes();
+
+
+        /**
+         * @brief This function makes it possible to get a color based on an integer.
+         *         It was made to make it easier to choose a random color.
+         */
+        [[nodiscard]] threepp::Color::ColorName getColorIntBased(int index) const;
     };
 }// namespace shapeColorHandlerNS
 #endif//ENUM_SHAPE_HPP

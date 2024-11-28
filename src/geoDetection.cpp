@@ -18,7 +18,7 @@ void geoDetectionNS::GeoDetection::setContours(Mat &img, const Color::ColorName 
     findContours(img, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
 
-    // Wached a tutorial on YT about OpenCV. Lent a lot of code from there in general https://www.youtube.com/watch?v=2FYm3GOonhk&t
+    // Wached a tutorial on YT about OpenCV. Lent a lot of openCV code from there in general https://www.youtube.com/watch?v=2FYm3GOonhk&t
     std::vector<std::vector<Point>> conPoly{contours.size()};
     for (int i{}; i < contours.size(); i++) {
         double peri = arcLength(contours[i], true);

@@ -2,38 +2,42 @@
 #define DETECTEDOBJECTS_HPP
 
 #include "shapeColorHandler.hpp"
-#include <opencv2/core.hpp>
+
+#include <opencv2/core/types.hpp>
 #include <threepp/math/Color.hpp>
 
-    using namespace cv;
-    using namespace threepp;
-    using namespace shapeColorHandlerNS;
 
+/**
+ * @brief Class for storing detected objects.
+ * It's made to make the job of assigning a color and a shape to an object easier.
+ * @tparam T The type of the object.
+ *                     - cv::Rect
+ *                     - std::shared_ptr<threepp::Mesh>
+ */
+template<typename T>
+class DetectedObjects {
+private:
+    T m_object{};
+    shapeColorHandlerNS::ShapeColorHandler::Shapes m_shape{};
+    threepp::Color m_color{};
 
-    template<typename T>
-    class DetectedObjects {
-    private:
-        T m_object{};
-        ShapeColorHandler::Shapes m_shape{};
-        Color m_color{};
+public:
+    DetectedObjects(const T &object, const shapeColorHandlerNS::ShapeColorHandler::Shapes &shape, const threepp::Color &color)
+        : m_object{object}, m_shape{shape},
+          m_color{color} {
+    }
+    DetectedObjects() = default;
 
-    public:
-        DetectedObjects(T &object, const ShapeColorHandler::Shapes &shape, const Color &color)
-            : m_object{object}, m_shape{shape},
-              m_color{color} {
-        }
-        DetectedObjects() = default;
+    [[nodiscard]] T getObject() const {
+        return m_object;
+    }
 
-        [[nodiscard]] T getObject() const {
-            return m_object;
-        }
+    [[nodiscard]] shapeColorHandlerNS::ShapeColorHandler::Shapes getShape() const {
+        return m_shape;
+    }
 
-        [[nodiscard]] ShapeColorHandler::Shapes getShape() const {
-            return m_shape;
-        }
-
-        [[nodiscard]] Color getColor() const {
-            return m_color;
-        }
-    };
+    [[nodiscard]] threepp::Color getColor() const {
+        return m_color;
+    }
+};
 #endif//DETECTEDOBJECTS_HPP

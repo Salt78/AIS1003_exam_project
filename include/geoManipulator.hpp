@@ -10,10 +10,11 @@
 
 
 namespace geoManipulatorNS {
-    
+
     using namespace threepp;
     using namespace gridManagerNS;
     using namespace shapeColorHandlerNS;
+    using namespace cv;
 
 
     class GeoManipulator {
