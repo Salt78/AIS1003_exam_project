@@ -14,16 +14,14 @@ int main() {
     //Only nXn images are supported
     constexpr std::pair<int, int> imageSize{800, 800};
 
-    Canvas canvas("Geometry Sorting Demo", {{"aa", 4}, {"resizable", false}});
+    Canvas canvas("Geometry Sorting Demo", {{"resizable", false}});
     canvas.setSize(imageSize);
 
     GLRenderer renderer(canvas.size());
     renderer.setSize(canvas.size());
 
     auto scene = Scene::create();
-    auto camera = OrthographicCamera::create(0, static_cast<float>(imageSize.first),
-                                             0, static_cast<float>(imageSize.second), -1000, 1000);
-    camera->position.z = 10;
+    auto camera = OrthographicCamera::create(0, imageSize.first,0, imageSize.second, -1000, 1000);
 
     GridManager grid(imageSize);
 
@@ -42,9 +40,8 @@ int main() {
         renderer.render(*scene, *camera);
 
         detector.setupVirtualCam(renderer);
-
         keyHandler.update();
 
-        detector.imageProcessing();
+        //detector.showPreview(); //Uncomment to see the detection preview
     });
 }
