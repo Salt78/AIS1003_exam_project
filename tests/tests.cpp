@@ -56,7 +56,7 @@ TEST_CASE("openCV_redDot", "[detection]") {
         detector.loadImg("data/testing_resources/images/redDot.png");
         std::pair<float, float> coordsObject = {155.5, 645.3};//redDot
 
-        detector.contourDetection();
+        detector.evalColorShape();
 
         auto recognizedMesh = detector.getDetectedObjects();
 
@@ -79,7 +79,7 @@ TEST_CASE("openCV_redDot", "[detection]") {
         detector.loadImg("data/testing_resources/images/greenDot.png");
         std::pair<float, float> coordsObject = {350, 400};//greenDot
 
-        detector.contourDetection();
+        detector.evalColorShape();
 
         auto recognizedMesh = detector.getDetectedObjects();
 
@@ -102,7 +102,7 @@ TEST_CASE("openCV_redDot", "[detection]") {
         detector.loadImg("data/testing_resources/images/aquaSquare.png");
         std::pair<float, float> coordsObject = {634.7, 132.32};//aquaSquare
 
-        detector.contourDetection();
+        detector.evalColorShape();
 
         auto recognizedMesh = detector.getDetectedObjects();
 
@@ -125,7 +125,7 @@ TEST_CASE("openCV_redDot", "[detection]") {
         detector.loadImg("data/testing_resources/images/orangeSquare.png");
         std::pair<float, float> coordsObject = {700, 700};//orangeSquare
 
-        detector.contourDetection();
+        detector.evalColorShape();
 
         auto recognizedMesh = detector.getDetectedObjects();
 
@@ -178,7 +178,7 @@ TEST_CASE("OPENCV detection with raycasting", "[detection]") {
     renderer.render(*scene, *camera);
 
     detector.setupVirtualCam(renderer);
-    detector.contourDetection();
+    detector.evalColorShape();
 
     auto recognizedMesh = detector.getDetectedObjects();
 

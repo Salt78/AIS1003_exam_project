@@ -7,6 +7,9 @@ find_package(OpenCV CONFIG REQUIRED)
 
 add_subdirectory(src)
 
+#Enabling/Diabling tests
+set(BUILD_TESTS ON)
+
 include(FetchContent)
 set(THREEPP_BUILD_TESTS OFF)
 set(THREEPP_BUILD_EXAMPLES OFF)
