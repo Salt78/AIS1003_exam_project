@@ -41,7 +41,7 @@ namespace geoGenNS {
 
 
     public:
-        GeoGen(threepp::Scene &scene, gridManagerNS::GridManager &grid, int quantity = 20, float meshSize = 40);
+        GeoGen(threepp::Scene &scene, gridManagerNS::GridManager &grid, int quantity = 40, float meshSize = 40);
 
 
         /**

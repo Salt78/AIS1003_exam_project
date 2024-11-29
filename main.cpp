@@ -7,6 +7,7 @@
 
 using namespace geoDetectionNS;
 using namespace gridManagerNS;
+using namespace geoManipulatorNS;
 using namespace geoGenNS;
 using namespace threepp;
 

@@ -40,6 +40,12 @@ void GeoDetection::setContours(const Mat &img, const Color::ColorName &color) {
 
         //Chooses the shape of the object based on the number of corners.
         Rect tempBoundingRect = boundingRect(conPoly[i]);
+
+        //Filters out small objects.
+        if (tempBoundingRect.width < 10) {
+            continue;
+        }
+
         if (objCor == 4) {
             DetectedObjects currentObject(tempBoundingRect, ShapeColorHandler::Shapes::CUBE, color);
             m_detectedObjects.emplace_back(currentObject);
@@ -68,10 +74,10 @@ void GeoDetection::contourDetection() {
 }
 
 
-GeoDetection::GeoDetection(std::string windowName, std::pair<int, int> imageSize) : m_windowName(
-                                                                                            std::move(windowName)),
-                                                                                    m_imageSize(imageSize),
-                                                                                    m_pixels(imageSize.first * imageSize.second * 3) {}
+GeoDetection::GeoDetection(std::string windowName, const std::pair<int, int> imageSize) : m_windowName(
+                                                                                                  std::move(windowName)),
+                                                                                          m_imageSize(imageSize),
+                                                                                          m_pixels(imageSize.first * imageSize.second * 3) {}
 
 
 void GeoDetection::showPreview() const {
@@ -96,5 +102,5 @@ void GeoDetection::previewDetection() {
 
 
 void GeoDetection::loadImg(const std::string &path) {
-    m_mainCam = cv::imread(path);
+    m_mainCam = cv::imread(path, IMREAD_COLOR);
 }
