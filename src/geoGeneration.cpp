@@ -60,14 +60,24 @@ void GeoGen::processMesh(const ShapeColorHandler::Shapes shape, std::shared_ptr<
 }
 
 
-GeoGen::GeoGen(Scene &scene, GridManager &grid, int quantity, const float meshSize)
-    : m_scene(scene), m_grid(grid), m_quantity(quantity), m_meshSize(meshSize) {}
-
-
-void GeoGen::generateRND() {
+void GeoGen::cleanUp() {
+    for (auto &i: m_geoVec) {
+        m_scene.remove(*i);
+    }
     m_scene.children.clear();
     m_geoVec.clear();
     m_grid.resetUsedCoords();
+}
+
+
+GeoGen::GeoGen(Scene &scene, GridManager &grid, int quantity, const float meshSize)
+    : m_scene(scene), m_grid(grid), m_quantity(quantity), m_meshSize(meshSize) {
+    generateRND();
+}
+
+
+void GeoGen::generateRND() {
+    cleanUp();
 
     for (int i{}; i < m_quantity; i++) {
         const ShapeColorHandler::Shapes shape = randomShape();

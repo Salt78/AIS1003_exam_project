@@ -130,7 +130,6 @@ void GeoManipulator::reArrangeMeshes(const std::vector<DetectedObjects<Rect>> &o
             i.getObject()->position.x = coords.first;
             i.getObject()->position.y = coords.second;
             i.getObject()->position.z = 0;
-            m_scene.add(std::shared_ptr<Object3D>(i.getObject()));
         }
         m_hasBeenRun = true;
     }

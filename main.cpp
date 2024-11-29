@@ -28,7 +28,6 @@ int main() {
 
     //GeoGen class for generating geometries at semi random locations.
     GeoGen generator{*scene, grid};
-    generator.generateRND();
 
     GeoDetection detector("OPENCV test", imageSize);
 
