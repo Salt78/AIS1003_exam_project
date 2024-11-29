@@ -2,11 +2,17 @@
 #define GEODETECTION_HPP
 
 #include "detectedObjects.hpp"
+#include "opencv2/core.hpp"
+
+#include <iostream>
 #include <opencv2/core/mat.hpp>
+#include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <string>
 #include <threepp/threepp.hpp>
 #include <vector>
+
+#include <opencv2/videoio.hpp>
 
 
 namespace geoDetectionNS {
@@ -28,6 +34,7 @@ namespace geoDetectionNS {
 
         //Misc
         shapeColorNS::ShapeColorHandler m_colorProfiles{};
+        bool m_previewEnabled{false};
 
 
         void setContours(const cv::Mat &img, const threepp::Color::ColorName &color);
@@ -55,6 +62,12 @@ namespace geoDetectionNS {
 
 
         /**
+         * @brief Readies the object for a new detection process.
+         */
+        void cleanUp();
+
+
+        /**
          * @brief Used to show a preview of the detection process in a OpenCV window.
          *             The method showPreview() must be called in the animation loop to display the window.
          */
@@ -62,15 +75,9 @@ namespace geoDetectionNS {
 
 
         /**
-         * @brief Shows a preview of the detection process.
+         * @brief Shows a OPENCV window with the detection process.
          */
-        void showPreview() const;
-
-
-        /**
-         * @brief Readies the object for a new detection process.
-         */
-        void cleanUp();
+        void enablePreview();
 
 
         /**
@@ -78,6 +85,8 @@ namespace geoDetectionNS {
          * @param path The path to the image file.
          */
         void loadImg(const std::string &path);
+
+        static void specialFunction();
     };
 }// namespace geoDetectionNS
 #endif//GEODETECTION_HPP

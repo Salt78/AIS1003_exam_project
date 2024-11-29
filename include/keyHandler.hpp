@@ -18,6 +18,8 @@ private:
     bool m_spaceBarPressed{false};
     bool m_rPressed{false};
     bool m_xPressed{false};
+    bool m_bSpacePressed{false};
+    bool m_tabPressed{false};
 
     void onKeyPressed(threepp::KeyEvent evt) override;
 

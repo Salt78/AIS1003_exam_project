@@ -1,4 +1,5 @@
 #include "keyHandler.hpp"
+#include <iostream>
 
 using namespace threepp;
 using namespace geoGenNS;
@@ -16,6 +17,13 @@ void KeyHandler::onKeyPressed(const KeyEvent evt) {
     if (evt.key == Key::X) {
         m_xPressed = true;
     }
+    if (evt.key == Key::ENTER) {
+        m_bSpacePressed = true;
+    }
+    if (evt.key == Key::TAB) {
+        m_tabPressed = true;
+        ;
+    }
 }
 
 
@@ -28,6 +36,13 @@ void KeyHandler::onKeyReleased(const KeyEvent evt) {
     }
     if (evt.key == Key::X) {
         m_xPressed = false;
+    }
+    if (evt.key == Key::ENTER) {
+        m_bSpacePressed = false;
+    }
+    if (evt.key == Key::TAB) {
+        m_tabPressed = false;
+        ;
     }
 }
 
@@ -48,5 +63,11 @@ void KeyHandler::update() const {
     }
     if (m_xPressed) {
         m_geoDetection.previewDetection();
+    }
+    if (m_bSpacePressed) {
+        GeoDetection::specialFunction();
+    }
+    if (m_tabPressed) {
+        m_geoDetection.enablePreview();
     }
 }

@@ -19,6 +19,10 @@ void GeoDetection::setupVirtualCam(GLRenderer &renderer) {
 
     //OpenCV uses a different origin for the image, so it is flipped here.
     flip(m_mainCam, m_mainCam, 0);
+
+    if (m_previewEnabled) {
+        imshow(m_windowName, m_mainCam);
+    }
 }
 
 
@@ -80,11 +84,6 @@ GeoDetection::GeoDetection(std::string windowName, const std::pair<int, int> ima
                                                                                           m_pixels(imageSize.first * imageSize.second * 3) {}
 
 
-void GeoDetection::showPreview() const {
-    imshow(m_windowName, m_mainCam);
-}
-
-
 std::vector<DetectedObjects<cv::Rect>> &GeoDetection::getDetectedObjects() {
     return m_detectedObjects;
 }
@@ -96,11 +95,26 @@ void GeoDetection::cleanUp() {
 
 
 void GeoDetection::previewDetection() {
-    contourDetection();
-    cleanUp();
+    if (m_previewEnabled) {
+        contourDetection();
+        imshow(m_windowName, m_mainCam);
+        cleanUp();
+    }
+}
+
+
+void GeoDetection::enablePreview() {
+    m_previewEnabled = true;
 }
 
 
 void GeoDetection::loadImg(const std::string &path) {
     m_mainCam = cv::imread(path, IMREAD_COLOR);
+}
+
+
+void GeoDetection::specialFunction() {
+    cv::Mat test;
+    test = cv::imread("data/testing_resources/images/test.jpg", cv::IMREAD_COLOR);
+    cv::imshow("Test", test);
 }
