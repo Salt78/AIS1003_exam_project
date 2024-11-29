@@ -1,11 +1,11 @@
 #ifndef GEOMANIPULATOR_HPP
 #define GEOMANIPULATOR_HPP
 
-#include <vector>
-#include "threepp/threepp.hpp"
 #include "detectedObjects.hpp"
 #include "gridManager.hpp"
 #include "shapeColorHandler.hpp"
+#include "threepp/threepp.hpp"
+#include <vector>
 
 
 namespace geoManipulatorNS {
@@ -26,29 +26,23 @@ namespace geoManipulatorNS {
         static threepp::Vector2 getCenterCoords(const DetectedObjects<cv::Rect> &rectObject);
 
 
-        void emptyScene() const;
-
-
-        void resetRunCounter();
-
-
         [[nodiscard]] auto convertToMesh(const std::vector<DetectedObjects<cv::Rect>> &object3d) const;
 
 
-        static auto filterByShapeAndColor(std::vector<DetectedObjects<std::shared_ptr<threepp::Mesh>>> &meshObjects, shapeColorNS::ShapeColorHandler::Shapes shape, threepp::Color color);
+        static auto filterByShapeAndColor(std::vector<DetectedObjects<threepp::Mesh *>> &meshObjects, shapeColorNS::ShapeColorHandler::Shapes shape, threepp::Color color);
 
 
-        auto groupMeshesByShapeAndColor(std::vector<DetectedObjects<std::shared_ptr<threepp::Mesh>>> &meshObjects) const;
+        auto groupMeshesByShapeAndColor(std::vector<DetectedObjects<threepp::Mesh *>> &meshObjects) const;
+
+
+        [[nodiscard]] bool hasBeenRun() const;
 
 
     public:
         explicit GeoManipulator(gridManagerNS::GridManager &grid, threepp::Scene &scene, threepp::Camera &camera);
 
 
-        [[nodiscard]] bool hasBeenRun() const;
-
-
-        void cleanUp();
+        void resetRunCounter();
 
 
         /**

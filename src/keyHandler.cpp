@@ -43,9 +43,8 @@ void KeyHandler::update() const {
     }
     if (m_rPressed) {
         m_geoDetection.cleanUp();
-        m_geoManipulator.cleanUp();
-
         m_generator.generateRND();
+        m_geoManipulator.resetRunCounter();
     }
     if (m_xPressed) {
         m_geoDetection.previewDetection();

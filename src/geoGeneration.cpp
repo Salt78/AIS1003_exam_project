@@ -65,6 +65,9 @@ GeoGen::GeoGen(Scene &scene, GridManager &grid, int quantity, const float meshSi
 
 
 void GeoGen::generateRND() {
+    m_scene.children.clear();
+    m_geoVec.clear();
+    m_grid.resetUsedCoords();
 
     for (int i{}; i < m_quantity; i++) {
         const ShapeColorHandler::Shapes shape = randomShape();
@@ -78,5 +81,4 @@ void GeoGen::generateRND() {
         processMesh(shape, material);
     }
     addToScene();
-    m_geoVec.clear();
 }

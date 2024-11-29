@@ -1,6 +1,6 @@
 #include "catch2/matchers/catch_matchers.hpp"
-#include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 #include "geoDetection.hpp"
 #include "geoGeneration.hpp"
@@ -18,9 +18,6 @@ using namespace geoManipulatorNS;
 using namespace shapeColorNS;
 using namespace threepp;
 using namespace cv;
-
-
-
 
 
 TEST_CASE("Mesh generation", "[scene]") {
@@ -56,7 +53,6 @@ TEST_CASE("openCV_redDot", "[detection]") {
     GeoDetection detector("OPENCV test", imageSize);
 
     SECTION("redDot.png") {
-        Mat img = imread("data/testing_resources/images/redDot.png", IMREAD_COLOR);
         detector.loadImg("data/testing_resources/images/redDot.png");
         std::pair<float, float> coordsObject = {155.5, 645.3};//redDot
 
@@ -201,19 +197,18 @@ TEST_CASE("OPENCV detection with raycasting", "[detection]") {
 
     std::vector<Intersection> intersect = raycaster.intersectObjects(scene->children, false);
     Vector3 position{};
-    if (!intersect.empty()) {
-        auto objectPtr = intersect[0].object;
-        if (objectPtr) {
-            auto intersectedMesh = objectPtr->as<Mesh>();
-            if (intersectedMesh) {
-                auto newOwner = std::dynamic_pointer_cast<Mesh>(intersectedMesh->clone());
 
-                DetectedObjects<std::shared_ptr<Mesh>> RetrievedMesh{};
-                RetrievedMesh = DetectedObjects<std::shared_ptr<Mesh>>(newOwner, recognizedMesh[0].getShape(), recognizedMesh[0].getColor());
-                position = RetrievedMesh.getObject()->position;
-            }
-        }
-    }
+    auto objectPtr = intersect[0].object;
+
+    auto intersectedMesh = objectPtr->as<Mesh>();
+
+    auto newOwner = std::dynamic_pointer_cast<Mesh>(intersectedMesh->clone());
+
+    DetectedObjects<std::shared_ptr<Mesh>> RetrievedMesh{};
+    RetrievedMesh = DetectedObjects<std::shared_ptr<Mesh>>(newOwner, recognizedMesh[0].getShape(), recognizedMesh[0].getColor());
+    position = RetrievedMesh.getObject()->position;
+
+
     REQUIRE(position.x == coords.first);
     REQUIRE(position.y == coords.second);
 }

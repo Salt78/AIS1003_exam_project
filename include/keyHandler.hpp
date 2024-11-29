@@ -19,10 +19,10 @@ private:
     bool m_rPressed{false};
     bool m_xPressed{false};
 
-  void onKeyPressed(threepp::KeyEvent evt) override;
+    void onKeyPressed(threepp::KeyEvent evt) override;
 
 
-  void onKeyReleased(threepp::KeyEvent evt) override;
+    void onKeyReleased(threepp::KeyEvent evt) override;
 
 
 public:

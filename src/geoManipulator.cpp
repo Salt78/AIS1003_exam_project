@@ -20,14 +20,6 @@ Vector2 GeoManipulator::getCenterCoords(const DetectedObjects<Rect> &rectObject)
     return meshCenter;
 }
 
-// Found a suggestion on Stackoverflow: https://stackoverflow.com/questions/30359830/how-do-i-clear-three-js-scene
-// I tried to write up something similar, but Copilot gave me a solution.
-void GeoManipulator::emptyScene() const {
-    while (!m_scene.children.empty()) {
-        m_scene.remove(*m_scene.children[0]);
-    }
-}
-
 
 void GeoManipulator::resetRunCounter() {
     m_hasBeenRun = false;
@@ -43,7 +35,7 @@ auto GeoManipulator::convertToMesh(const std::vector<DetectedObjects<Rect>> &obj
 
     //Did use some GPT to help me figure out how to convert from "Intersect" to "Mesh"
     Raycaster raycaster;
-    std::vector<DetectedObjects<std::shared_ptr<Mesh>>> meshObjects{};
+    std::vector<DetectedObjects<Mesh *>> meshObjects{};
     for (const auto &i: object3d) {
         //GPT told me that I needed to normalize the coordinates.
         Vector2 ndc = {
@@ -67,8 +59,7 @@ auto GeoManipulator::convertToMesh(const std::vector<DetectedObjects<Rect>> &obj
             throw std::logic_error("No Mesh found");
         }
         //GPT code for cloning the raw Mesh object into a std::shared_ptr<Mesh>
-        auto newOwner = std::dynamic_pointer_cast<Mesh>(intersectedMesh->clone());
-        meshObjects.emplace_back(newOwner, i.getShape(), i.getColor());
+        meshObjects.emplace_back(intersectedMesh, i.getShape(), i.getColor());
     }
     return meshObjects;
 }
@@ -81,12 +72,12 @@ auto GeoManipulator::convertToMesh(const std::vector<DetectedObjects<Rect>> &obj
  * @param color Desired color
  * @return Vector of Mesh objects that match the desired shape and color
  */
-auto GeoManipulator::filterByShapeAndColor(std::vector<DetectedObjects<std::shared_ptr<Mesh>>> &meshObjects, const ShapeColorHandler::Shapes shape, const Color color) {
-    std::vector<DetectedObjects<std::shared_ptr<Mesh>>> sortedVec{};
+auto GeoManipulator::filterByShapeAndColor(std::vector<DetectedObjects<Mesh *>> &meshObjects, const ShapeColorHandler::Shapes shape, const Color color) {
+    std::vector<DetectedObjects<Mesh *>> sortedVec{};
 
     //Used a GPT to help me figure out how to sort the vector based on shape and color.
     std::ranges::copy_if(meshObjects, std::back_inserter(sortedVec),
-                         [&](const DetectedObjects<std::shared_ptr<Mesh>> &i) {
+                         [&](const DetectedObjects<Mesh *> &i) {
                              return i.getShape() == shape && i.getColor() == color;
                          });
     return sortedVec;
@@ -98,12 +89,12 @@ auto GeoManipulator::filterByShapeAndColor(std::vector<DetectedObjects<std::shar
  * @param meshObjects Vector of Mesh objects
  * @return Vector of Mesh objects grouped by shape and color
  */
-auto GeoManipulator::groupMeshesByShapeAndColor(std::vector<DetectedObjects<std::shared_ptr<Mesh>>> &meshObjects) const {
-    std::vector<DetectedObjects<std::shared_ptr<Mesh>>> compSortedVec{};
+auto GeoManipulator::groupMeshesByShapeAndColor(std::vector<DetectedObjects<Mesh *>> &meshObjects) const {
+    std::vector<DetectedObjects<Mesh *>> compSortedVec{};
 
     for (auto &j: ShapeColorHandler::getSupportedShapes()) {
         for (auto &i: m_shapeColor.getSupportedColors()) {
-            std::vector<DetectedObjects<std::shared_ptr<Mesh>>> tempVec = filterByShapeAndColor(meshObjects, j, i);
+            std::vector<DetectedObjects<Mesh *>> tempVec = filterByShapeAndColor(meshObjects, j, i);
             compSortedVec.insert(compSortedVec.end(), tempVec.begin(), tempVec.end());
         }
     }
@@ -123,17 +114,15 @@ bool GeoManipulator::hasBeenRun() const {
 
 void GeoManipulator::reArrangeMeshes(const std::vector<DetectedObjects<Rect>> &object3d) {
     if (!m_hasBeenRun) {
-        std::vector<DetectedObjects<std::shared_ptr<Mesh>>> meshes{};
+        std::vector<DetectedObjects<Mesh*>> meshObjects{};
         try {
-            meshes = convertToMesh(object3d);
+            meshObjects = convertToMesh(object3d);
         } catch (const std::logic_error &) {
             return;
         }
 
-        emptyScene();
-
         int key{1};
-        const std::vector<DetectedObjects<std::shared_ptr<Mesh>>> arrangedMesh = groupMeshesByShapeAndColor(meshes);
+        const std::vector<DetectedObjects<Mesh *>> arrangedMesh = groupMeshesByShapeAndColor(meshObjects);
         for (auto &i: arrangedMesh) {
             const std::pair<float, float> coords = m_grid.getCoords(key);
             key++;
@@ -145,11 +134,4 @@ void GeoManipulator::reArrangeMeshes(const std::vector<DetectedObjects<Rect>> &o
         }
         m_hasBeenRun = true;
     }
-}
-
-
-void GeoManipulator::cleanUp() {
-    emptyScene();
-    m_grid.resetUsedCoords();
-    resetRunCounter();
 }

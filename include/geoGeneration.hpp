@@ -16,7 +16,7 @@ namespace geoGenNS {
     private:
         threepp::Scene &m_scene;
         gridManagerNS::GridManager &m_grid;
-      int m_quantity{};
+        int m_quantity{};
         float m_meshSize{};
 
         std::vector<std::shared_ptr<threepp::Mesh>> m_geoVec{};
@@ -38,6 +38,9 @@ namespace geoGenNS {
 
 
         void processMesh(shapeColorNS::ShapeColorHandler::Shapes shape, std::shared_ptr<threepp::MeshBasicMaterial> &material);
+
+
+        void cleanUp();
 
 
     public:
