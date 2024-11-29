@@ -49,9 +49,9 @@ namespace shapeColorNS {
 
         /**
          * @brief This function makes it possible to get a color based on an integer.
-         *         It was made to make it easier to choose a random color.
+         *
          */
         [[nodiscard]] threepp::Color::ColorName getColorIntBased(int index) const;
     };
-}// namespace shapeColorHandlerNS
+}// namespace shapeColorNS
 #endif//ENUM_SHAPE_HPP

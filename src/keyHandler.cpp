@@ -8,41 +8,48 @@ using namespace geoManipulatorNS;
 
 
 void KeyHandler::onKeyPressed(const KeyEvent evt) {
-    if (evt.key == Key::SPACE) {
-        m_spaceBarPressed = true;
-    }
-    if (evt.key == Key::R) {
-        m_rPressed = true;
-    }
-    if (evt.key == Key::X) {
-        m_xPressed = true;
-    }
-    if (evt.key == Key::ENTER) {
-        m_bSpacePressed = true;
-    }
-    if (evt.key == Key::TAB) {
-        m_tabPressed = true;
-        ;
+
+    switch (evt.key) {
+        case Key::SPACE:
+            m_spaceBarPressed = true;
+            break;
+        case Key::R:
+            m_rPressed = true;
+            break;
+        case Key::X:
+            m_xPressed = true;
+            break;
+        case Key::ENTER:
+            m_bSpacePressed = true;
+            break;
+        case Key::TAB:
+            m_tabPressed = true;
+            break;
+        default:
+            break;
     }
 }
 
 
 void KeyHandler::onKeyReleased(const KeyEvent evt) {
-    if (evt.key == Key::SPACE) {
-        m_spaceBarPressed = false;
-    }
-    if (evt.key == Key::R) {
-        m_rPressed = false;
-    }
-    if (evt.key == Key::X) {
-        m_xPressed = false;
-    }
-    if (evt.key == Key::ENTER) {
-        m_bSpacePressed = false;
-    }
-    if (evt.key == Key::TAB) {
-        m_tabPressed = false;
-        ;
+    switch (evt.key) {
+        case Key::SPACE:
+            m_spaceBarPressed = false;
+            break;
+        case Key::R:
+            m_rPressed = false;
+            break;
+        case Key::X:
+            m_xPressed = false;
+            break;
+        case Key::ENTER:
+            m_bSpacePressed = false;
+            break;
+        case Key::TAB:
+            m_tabPressed = false;
+            break;
+        default:
+            break;
     }
 }
 
@@ -53,7 +60,7 @@ KeyHandler::KeyHandler(GeoGen &generator, GeoDetection &geoDetection, GeoManipul
 
 void KeyHandler::update() const {
     if (m_spaceBarPressed) {
-        m_geoDetection.contourDetection();
+        m_geoDetection.evalColorShape();
         m_geoManipulator.reArrangeMeshes(m_geoDetection.getDetectedObjects());
     }
     if (m_rPressed) {

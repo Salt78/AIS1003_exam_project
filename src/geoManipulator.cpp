@@ -9,7 +9,7 @@ using namespace cv;
 
 
 /**
- *
+ *Nb: also flips the y-axis to accommodate the different coordinate system used by OpenCV.
  * @param rectObject Rect object
  * @return Returns the center of the object
  */
@@ -29,19 +29,16 @@ void GeoManipulator::resetRunCounter() {
 /**
  * @brief Uses a threepp::Raycaster to convert the Rect objects to Mesh objects.
  * @param object3d Vector of Rect objects
- * @return Vector of Mesh objects
+ * @return Vector of Mesh* objects
  */
 auto GeoManipulator::convertToMesh(const std::vector<DetectedObjects<Rect>> &object3d) const {
-
-    //Did use some GPT to help me figure out how to convert from "Intersect" to "Mesh"
     Raycaster raycaster;
     std::vector<DetectedObjects<Mesh *>> meshObjects{};
     for (const auto &i: object3d) {
         //GPT told me that I needed to normalize the coordinates.
         Vector2 ndc = {
-                (getCenterCoords(i).x / 800.0f) * 2.0f - 1.0f,// X normalized
-                (getCenterCoords(i).y / 800.0f) * 2.0f - 1.0f // Y normalized (already inverted in getCenterMesh)
-        };
+                (getCenterCoords(i).x / 800.0f) * 2.0f - 1.0f,
+                (getCenterCoords(i).y / 800.0f) * 2.0f - 1.0f};
 
         raycaster.setFromCamera(ndc, m_camera);
 
@@ -70,7 +67,7 @@ auto GeoManipulator::convertToMesh(const std::vector<DetectedObjects<Rect>> &obj
  * @param meshObjects Vector of Mesh objects
  * @param shape Desired shape
  * @param color Desired color
- * @return Vector of Mesh objects that match the desired shape and color
+ * @return Vector of Mesh* objects that match the desired shape and color
  */
 auto GeoManipulator::filterByShapeAndColor(std::vector<DetectedObjects<Mesh *>> &meshObjects, const ShapeColorHandler::Shapes shape, const Color color) {
     std::vector<DetectedObjects<Mesh *>> sortedVec{};
@@ -87,13 +84,13 @@ auto GeoManipulator::filterByShapeAndColor(std::vector<DetectedObjects<Mesh *>> 
 /**
  * @brief Final step in the rearrangement process. Groups the Mesh objects by shape and color.
  * @param meshObjects Vector of Mesh objects
- * @return Vector of Mesh objects grouped by shape and color
+ * @return Vector of Mesh* objects grouped by shape and color
  */
 auto GeoManipulator::groupMeshesByShapeAndColor(std::vector<DetectedObjects<Mesh *>> &meshObjects) const {
     std::vector<DetectedObjects<Mesh *>> compSortedVec{};
 
-    for (auto &j: ShapeColorHandler::getSupportedShapes()) {
-        for (auto &i: m_shapeColor.getSupportedColors()) {
+    for (auto &i: m_shapeColor.getSupportedColors()) {
+        for (auto &j: ShapeColorHandler::getSupportedShapes()) {
             std::vector<DetectedObjects<Mesh *>> tempVec = filterByShapeAndColor(meshObjects, j, i);
             compSortedVec.insert(compSortedVec.end(), tempVec.begin(), tempVec.end());
         }
@@ -114,7 +111,7 @@ bool GeoManipulator::hasBeenRun() const {
 
 void GeoManipulator::reArrangeMeshes(const std::vector<DetectedObjects<Rect>> &object3d) {
     if (!m_hasBeenRun) {
-        std::vector<DetectedObjects<Mesh*>> meshObjects{};
+        std::vector<DetectedObjects<Mesh *>> meshObjects{};
         try {
             meshObjects = convertToMesh(object3d);
         } catch (const std::logic_error &) {

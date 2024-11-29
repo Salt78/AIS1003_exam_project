@@ -8,8 +8,8 @@
 
 
 /**
- * @brief Class for storing detected objects.
- * It's made to make the job of assigning a color and a shape to an object easier.
+ * @brief Stores detected objects.
+ * Makes the  job of assigning a color and a shape to an object easier.
  * @tparam T The type of the object.
  *                     - cv::Rect
  *                     - std::shared_ptr<threepp::Mesh>

@@ -70,14 +70,18 @@ void GeoGen::cleanUp() {
 }
 
 
-GeoGen::GeoGen(Scene &scene, GridManager &grid, int quantity, const float meshSize)
-    : m_scene(scene), m_grid(grid), m_quantity(quantity), m_meshSize(meshSize) {
+GeoGen::GeoGen(Scene &scene, GridManager &grid, const int quantity)
+    : m_scene(scene), m_grid(grid), m_quantity(quantity) {
     generateRND();
 }
 
 
 void GeoGen::generateRND() {
     cleanUp();
+
+    if (m_quantity > m_grid.getCoordQuantity()) {
+        m_quantity = m_grid.getCoordQuantity();
+    }
 
     for (int i{}; i < m_quantity; i++) {
         const ShapeColorHandler::Shapes shape = randomShape();

@@ -14,7 +14,7 @@ void GeoDetection::setupVirtualCam(GLRenderer &renderer) {
     renderer.readPixels({0, 0}, m_imageSize, Format::RGB, m_pixels.data());
 
     //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
-    Mat mainCam_RGB = Mat(m_imageSize.second, m_imageSize.first, CV_8UC3, m_pixels.data());
+    const Mat mainCam_RGB = Mat(m_imageSize.second, m_imageSize.first, CV_8UC3, m_pixels.data());
     cvtColor(mainCam_RGB, m_mainCam, COLOR_RGB2BGR);
 
     //OpenCV uses a different origin for the image, so it is flipped here.
@@ -26,6 +26,11 @@ void GeoDetection::setupVirtualCam(GLRenderer &renderer) {
 }
 
 
+/**
+ * @brief Detects the contours of the objects in the image.
+ * @param img Input image
+ * @param color Color profile being used
+ */
 void GeoDetection::setContours(const Mat &img, const Color::ColorName &color) {
     std::vector<std::vector<Point>> contours;
     std::vector<Vec4i> hierarchy;
@@ -62,7 +67,7 @@ void GeoDetection::setContours(const Mat &img, const Color::ColorName &color) {
 
 // OpenCV code from https://www.youtube.com/watch?v=2FYm3GOonhk&t Chapter 6 and 7
 
-void GeoDetection::contourDetection() {
+void GeoDetection::evalColorShape() {
     //Applies HSV color space to the image.
     Mat mainCamHSV{};
     cvtColor(m_mainCam, mainCamHSV, COLOR_BGR2HSV);
@@ -96,7 +101,7 @@ void GeoDetection::cleanUp() {
 
 void GeoDetection::previewDetection() {
     if (m_previewEnabled) {
-        contourDetection();
+        evalColorShape();
         imshow(m_windowName, m_mainCam);
         cleanUp();
     }
@@ -112,9 +117,11 @@ void GeoDetection::loadImg(const std::string &path) {
     m_mainCam = cv::imread(path, IMREAD_COLOR);
 }
 
-
+// Documentation https://www.youtube.com/watch?v=xvFZjo5PgG0
 void GeoDetection::specialFunction() {
-    cv::Mat test;
+    cv::Mat test;//
     test = cv::imread("data/testing_resources/images/test.jpg", cv::IMREAD_COLOR);
-    cv::imshow("Test", test);
+    if (!test.empty()) {
+        cv::imshow("Test", test);
+    }
 }

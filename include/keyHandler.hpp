@@ -32,7 +32,7 @@ public:
 
 
     /**
-     * @brief Checks for key presses and updates the scene accordingly.
+     * @brief Updates the scene according to the key events.
      */
     void update() const;
 };

@@ -4,7 +4,6 @@
 #include <random>
 
 
-
 namespace geoGenNS {
     template<typename T>
     void GeoGen::createMesh(std::shared_ptr<T> &geometry, std::shared_ptr<threepp::MeshBasicMaterial> &material) {

@@ -9,7 +9,7 @@
 namespace geoGenNS {
 
     /**
-     * @brief Class for generating random shapes and colors for a threepp::Scene with a GridManager.
+     * @brief Generates random shapes and colors for a threepp::Scene with a GridManager.
      */
     class GeoGen {
 
@@ -17,8 +17,9 @@ namespace geoGenNS {
         threepp::Scene &m_scene;
         gridManagerNS::GridManager &m_grid;
         int m_quantity{};
-        float m_meshSize{};
+        float m_meshSize{40};
 
+        //Stores the generated geometries.
         std::vector<std::shared_ptr<threepp::Mesh>> m_geoVec{};
 
         shapeColorNS::ShapeColorHandler shapeColorHandler{};
@@ -44,12 +45,12 @@ namespace geoGenNS {
 
 
     public:
-        GeoGen(threepp::Scene &scene, gridManagerNS::GridManager &grid, int quantity = 40, float meshSize = 40);
+        GeoGen(threepp::Scene &scene, gridManagerNS::GridManager &grid, int quantity = 40);
 
 
         /**
          * @brief Generates random shapes with random colors and adds them to the scene.
-         * @param quantity number of shapes to generate.
+         *
          */
         void generateRND();
     };

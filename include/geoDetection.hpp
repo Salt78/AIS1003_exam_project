@@ -3,11 +3,7 @@
 
 #include "detectedObjects.hpp"
 #include "opencv2/core.hpp"
-
-#include <iostream>
 #include <opencv2/core/mat.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgcodecs.hpp>
 #include <string>
 #include <threepp/threepp.hpp>
 #include <vector>
@@ -18,7 +14,7 @@
 namespace geoDetectionNS {
 
     /**
-     * @brief The GeoDetection class is responsible for detecting shapes and colors in a given image.
+     * @brief Responsible for detecting shapes and colors in a given image.
                     The image can be extracted from a threepp::GLRenderer object or loaded from a file (testing purposes).
      */
     class GeoDetection {
@@ -55,7 +51,7 @@ namespace geoDetectionNS {
          * @brief Detects contours and colors of shapes in the image.
          *             The detected objects are stored and can be accessed with getDetectedObjects().
          */
-        void contourDetection();
+        void evalColorShape();
 
 
         [[nodiscard]] std::vector<DetectedObjects<cv::Rect>> &getDetectedObjects();
@@ -69,13 +65,13 @@ namespace geoDetectionNS {
 
         /**
          * @brief Used to show a preview of the detection process in a OpenCV window.
-         *             The method showPreview() must be called in the animation loop to display the window.
+         *
          */
         void previewDetection();
 
 
         /**
-         * @brief Shows a OPENCV window with the detection process.
+         * @brief Enables preview window.
          */
         void enablePreview();
 
