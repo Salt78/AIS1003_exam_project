@@ -20,7 +20,7 @@ jobs:
           name: Install dependencies
           command: |
             apt-get update
-            apt-get install -y build-essential cmake ninja-build xvfb curl zip unzip tar bison
+            apt-get install -y build-essential cmake ninja-build xvfb curl zip unzip tar bison git
 
       - run:
           name: Run Xvfb
@@ -51,28 +51,6 @@ jobs:
             choco install cmake --installargs '"ADD_CMAKE_TO_PATH=System"' -y
             choco install ninja -y
             choco install git -y
-
-      - run:
-          name: Install Mesa3D
-          shell: powershell
-          command: |
-            # Download Mesa3D
-            Invoke-WebRequest -Uri "https://github.com/pal1000/mesa-dist-win/releases/download/22.1.7/mesa3d-22.1.7-release-msvc.7z" -OutFile "mesa3d.7z"
-
-            # Extract Mesa3D archive
-            7z x mesa3d.7z -oC:\Mesa
-
-            # Update PATH for the current session
-            $env:PATH = "C:\Mesa\bin;" + $env:PATH
-
-      - run:
-          name: Verify OpenGL with Mesa3D
-          command: |
-            echo Checking OpenGL version with Mesa3D...
-            set MESA_GL_VERSION_OVERRIDE=4.5
-            set MESA_GLSL_VERSION_OVERRIDE=450
-            set LIBGL_ALWAYS_SOFTWARE=true
-            C:\Mesa\bin\oglinfo.exe | findstr "OpenGL"
 
       - run:
           name: Install vcpkg
