@@ -4,10 +4,12 @@ executors:
   ubuntu-cmake-executor:
     docker:
       - image: ubuntu:20.04
+    environment:
+      DEBIAN_FRONTEND: noninteractive
     working_directory: ~/project
 
 orbs:
-    win: circleci/windows@5.0
+  win: circleci/windows@5.0
 
 jobs:
   setup-ubuntu:
@@ -52,10 +54,16 @@ jobs:
 
       - run:
           name: Install Mesa3D
+          shell: powershell
           command: |
-            curl -LO https://github.com/pal1000/mesa-dist-win/releases/download/22.1.7/mesa3d-22.1.7-release-msvc.7z
-            7z x mesa3d-22.1.7-release-msvc.7z -oC:\Mesa
-            set PATH=C:\Mesa\bin;%PATH%  # Update PATH for current session
+            # Download Mesa3D
+            Invoke-WebRequest -Uri "https://github.com/pal1000/mesa-dist-win/releases/download/22.1.7/mesa3d-22.1.7-release-msvc.7z" -OutFile "mesa3d.7z"
+
+            # Extract Mesa3D archive
+            7z x mesa3d.7z -oC:\Mesa
+
+            # Update PATH for the current session
+            $env:PATH = "C:\Mesa\bin;" + $env:PATH
 
       - run:
           name: Verify OpenGL with Mesa3D
@@ -118,12 +126,12 @@ workflows:
     jobs:
       - setup-ubuntu
       - build-ubuntu:
-            requires:
-                - setup-ubuntu
+          requires:
+            - setup-ubuntu
 
   Windows-2022:
     jobs:
       - setup-windows
       - build-windows:
-            requires:
-                - setup-windows
+          requires:
+            - setup-windows
