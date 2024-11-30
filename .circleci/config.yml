@@ -3,7 +3,7 @@ version: 2.1
 executors:
   cmake-executor:
     docker:
-      - image: circleci/gcc:7.5.0 # Corrected image name for GCC 7
+      - image: circleci/gcc:latest
     working_directory: ~/project
 
 jobs:
