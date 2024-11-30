@@ -119,7 +119,7 @@ void GeoDetection::loadImg(const std::string &path) {
 // Documentation https://www.youtube.com/watch?v=xvFZjo5PgG0
 void GeoDetection::specialFunction() {
     cv::Mat test;//
-    test = cv::imread("data/testing_resources/images/test.jpg", cv::IMREAD_COLOR);
+    test = cv::imread("tests/data/testing_resources/images/test.jpg", cv::IMREAD_COLOR);
     if (!test.empty()) {
         cv::imshow("Test", test);
     }

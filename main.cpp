@@ -11,7 +11,7 @@ using namespace geoGenNS;
 using namespace threepp;
 
 int main() {
-    //Only nXn images are supported
+    //Only 800x800 images are supported
     constexpr std::pair<int, int> imageSize{800, 800};
 
     Canvas canvas("Geometry Sorting Demo", {{"resizable", false}});

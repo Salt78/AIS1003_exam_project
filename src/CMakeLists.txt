@@ -11,7 +11,5 @@ target_include_directories(autoShapeSortingLib PUBLIC ${CMAKE_SOURCE_DIR}/includ
 
 target_link_libraries(autoShapeSortingLib PRIVATE
         threepp::threepp
-        opencv_core
-        opencv_imgproc
-        opencv_highgui)
+        ${OpenCV_LIBS})
 

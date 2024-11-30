@@ -32,7 +32,7 @@ if (BUILD_TESTS)
     add_subdirectory(tests)
 
     #GPT helped me with this one
-    file(COPY ${CMAKE_SOURCE_DIR}/data/testing_resources/images DESTINATION ${CMAKE_BINARY_DIR}/data/testing_resources)
+    file(COPY ${CMAKE_SOURCE_DIR}/data/testing_resources/images DESTINATION ${CMAKE_BINARY_DIR}/tests/data/testing_resources)
 endif ()
 
 add_subdirectory(src)
@@ -42,7 +42,5 @@ add_executable(AutoSortingShapes main.cpp)
 target_link_libraries(AutoSortingShapes PRIVATE
         autoShapeSortingLib
         threepp::threepp
-        opencv_core
-        opencv_imgproc
-        opencv_highgui
+        ${OpenCV_LIBS}
 )
