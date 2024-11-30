@@ -42,7 +42,7 @@ jobs:
             - ~/vcpkg/installed
 
   setup-windows:
-    executor: windows-cmake-executor
+    executor: win/server-2022
     steps:
       - checkout
       - run:
@@ -101,7 +101,7 @@ jobs:
             ctest --output-on-failure
 
   build-windows:
-    executor: windows-cmake-executor
+    executor: win/server-2022
     steps:
       - checkout
       - restore_cache:
