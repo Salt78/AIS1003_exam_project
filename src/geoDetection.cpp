@@ -83,10 +83,9 @@ void GeoDetection::evalColorShape() {
 }
 
 
-GeoDetection::GeoDetection(std::string windowName, const std::pair<int, int> imageSize) : m_windowName(
-                                                                                                  std::move(windowName)),
-                                                                                          m_imageSize(imageSize),
-                                                                                          m_pixels(imageSize.first * imageSize.second * 3) {}
+GeoDetection::GeoDetection(const std::pair<int, int> imageSize)
+    : m_imageSize(imageSize),
+      m_pixels(imageSize.first * imageSize.second * 3) {}
 
 
 std::vector<DetectedObjects<cv::Rect>> &GeoDetection::getDetectedObjects() {

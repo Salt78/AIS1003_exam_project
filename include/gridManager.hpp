@@ -50,6 +50,8 @@ namespace gridManagerNS {
         bool isUsed(int key);
 
         void resetUsedCoords();
+
+        [[nodiscard]] std::pair<int, int> getImgSize() const;
     };
 }// namespace gridManagerNS
 

@@ -98,3 +98,8 @@ bool GridManager::isUsed(const int key) {
 int GridManager::getCoordQuantity() const {
     return static_cast<int>(m_gridMap.size());
 }
+
+
+std::pair<int, int> GridManager::getImgSize() const {
+    return m_imageSize;
+}

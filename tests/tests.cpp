@@ -50,7 +50,7 @@ TEST_CASE("ShapeHandling"
 
 TEST_CASE("openCV_redDot", "[detection]") {
     constexpr std::pair<int, int> imageSize{800, 800};
-    GeoDetection detector("OPENCV test", imageSize);
+    GeoDetection detector(imageSize);
 
     SECTION("redDot.png") {
         detector.loadImg("data/testing_resources/images/redDot.png");

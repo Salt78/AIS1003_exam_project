@@ -20,7 +20,7 @@ namespace geoDetectionNS {
     class GeoDetection {
     private:
         //Constructor properties
-        const std::string m_windowName{};
+        const std::string m_windowName{"Detection Preview"};
         const std::pair<int, int> m_imageSize{};
 
         //For detection logic
@@ -37,7 +37,7 @@ namespace geoDetectionNS {
 
 
     public:
-        GeoDetection(std::string windowName, std::pair<int, int> imageSize);
+        GeoDetection(std::pair<int, int> imageSize);
 
 
         /**

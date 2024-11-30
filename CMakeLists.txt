@@ -1,13 +1,11 @@
 cmake_minimum_required(VERSION 3.19)
-project(threeppxopencv)
+project(AutoSortingShapes)
 
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(OpenCV CONFIG REQUIRED)
 
-add_subdirectory(src)
-
-#Enabling/Diabling tests
+#Enabling/Disable tests
 set(BUILD_TESTS ON)
 
 include(FetchContent)
@@ -32,16 +30,19 @@ if (BUILD_TESTS)
 
     enable_testing()
     add_subdirectory(tests)
-    file(COPY ${CMAKE_SOURCE_DIR}/data/testing_resources/images DESTINATION ${CMAKE_BINARY_DIR}/tests/data/testing_resources)
+
+    #GPT helped me with this one
+    file(COPY ${CMAKE_SOURCE_DIR}/data/testing_resources/images DESTINATION ${CMAKE_BINARY_DIR}/data/testing_resources)
 endif ()
 
+add_subdirectory(src)
 
-add_executable(threeppxopencv main.cpp)
+add_executable(AutoSortingShapes main.cpp)
 
-target_link_libraries(threeppxopencv PRIVATE
+target_link_libraries(AutoSortingShapes PRIVATE
+        autoShapeSortingLib
         threepp::threepp
-        ${OpenCV_LIBS}
-        autoShapeSortingLib)
-
-option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
-
+        opencv_core
+        opencv_imgproc
+        opencv_highgui
+)

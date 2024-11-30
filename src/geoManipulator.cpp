@@ -13,10 +13,10 @@ using namespace cv;
  * @param rectObject Rect object
  * @return Returns the center of the object
  */
-Vector2 GeoManipulator::getCenterCoords(const DetectedObjects<Rect> &rectObject) {
+Vector2 GeoManipulator::getCenterCoords(const DetectedObjects<Rect> &rectObject) const {
     const Vector2 meshCenter{
             (rectObject.getObject().tl().x + rectObject.getObject().br().x) / 2,
-            800 - ((rectObject.getObject().tl().y + rectObject.getObject().br().y) / 2)};
+            m_grid.getImgSize().first - ((rectObject.getObject().tl().y + rectObject.getObject().br().y) / 2)};
     return meshCenter;
 }
 
@@ -35,7 +35,7 @@ auto GeoManipulator::convertToMesh(const std::vector<DetectedObjects<Rect>> &obj
     Raycaster raycaster;
     std::vector<DetectedObjects<Mesh *>> meshObjects{};
     for (const auto &i: object3d) {
-        //GPT told me that I needed to normalize the coordinates.
+        //GPT helped me with NDC conversion.
         Vector2 ndc = {
                 (getCenterCoords(i).x / 800.0f) * 2.0f - 1.0f,
                 (getCenterCoords(i).y / 800.0f) * 2.0f - 1.0f};

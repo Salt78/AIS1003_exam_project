@@ -23,7 +23,7 @@ namespace geoManipulatorNS {
         bool m_hasBeenRun{false};
 
 
-        static threepp::Vector2 getCenterCoords(const DetectedObjects<cv::Rect> &rectObject);
+        [[nodiscard]] threepp::Vector2 getCenterCoords(const DetectedObjects<cv::Rect> &rectObject) const;
 
 
         [[nodiscard]] auto convertToMesh(const std::vector<DetectedObjects<cv::Rect>> &object3d) const;

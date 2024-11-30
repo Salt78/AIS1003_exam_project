@@ -7,10 +7,11 @@ add_library(autoShapeSortingLib
         keyHandler.cpp
 )
 
-
 target_include_directories(autoShapeSortingLib PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 target_link_libraries(autoShapeSortingLib PRIVATE
         threepp::threepp
-        ${OpenCV_LIBS})
+        opencv_core
+        opencv_imgproc
+        opencv_highgui)
 

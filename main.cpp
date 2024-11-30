@@ -1,7 +1,6 @@
 #include "geoDetection.hpp"
 #include "geoGeneration.hpp"
 #include "gridManager.hpp"
-
 #include <keyHandler.hpp>
 #include <threepp/threepp.hpp>
 
@@ -26,10 +25,9 @@ int main() {
 
     GridManager grid(imageSize);
 
-    //GeoGen class for generating geometries at semi random locations.
     GeoGen generator{*scene, grid};
 
-    GeoDetection detector("OPENCV test", imageSize);
+    GeoDetection detector(imageSize);
 
     GeoManipulator manipulator(grid, *scene, *camera);
 
@@ -41,7 +39,5 @@ int main() {
 
         detector.setupVirtualCam(renderer);
         keyHandler.update();
-
-        //detector.showPreview(); //Uncomment to see the detection preview
     });
 }
