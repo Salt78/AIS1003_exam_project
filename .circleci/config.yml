@@ -6,10 +6,8 @@ executors:
       - image: ubuntu:20.04
     working_directory: ~/project
 
-  windows-cmake-executor:
-    machine:
-      image: windows-server-2019
-    working_directory: C:\project
+orbs:
+    win: circleci/windows@5.0
 
 jobs:
   setup-ubuntu:
