@@ -8,7 +8,7 @@ executors:
 
   windows-cmake-executor:
     machine:
-      image: windows-server-2022-standard
+      image: windows-server-2022
     working_directory: C:\project
 
 jobs:
@@ -119,9 +119,13 @@ workflows:
   Ubuntu-20.04:
     jobs:
       - setup-ubuntu
-      - build-ubuntu
+      - build-ubuntu:
+            requires:
+                - setup-ubuntu
 
   Windows-2022:
     jobs:
       - setup-windows
-      - build-windows
+      - build-windows:
+            requires:
+                - setup-windows
