@@ -8,7 +8,7 @@ executors:
 
   windows-cmake-executor:
     machine:
-      image: windows-server-2022
+      image: windows-server-2019
     working_directory: C:\project
 
 jobs:
