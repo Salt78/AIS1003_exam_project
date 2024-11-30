@@ -3,7 +3,7 @@ version: 2.1
 executors:
   cmake-executor:
     docker:
-      - image: circleci/gcc:latest
+      - image: gcc:latest
     working_directory: ~/project
 
 jobs:
