@@ -41,80 +41,78 @@ jobs:
           paths:
             - ~/vcpkg/installed
 
+  setup-windows:
+    executor: windows-cmake-executor
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            choco install cmake --installargs '"ADD_CMAKE_TO_PATH=System"' -y
+            choco install ninja -y
+            choco install git -y
 
-    setup-windows:
-      executor: windows-cmake-executor
-      steps:
-        - checkout
-        - run:
-            name: Install dependencies
-            command: |
-              choco install cmake --installargs '"ADD_CMAKE_TO_PATH=System"' -y
-              choco install ninja -y
-              choco install git -y
-
-        - run:
+      - run:
           name: Install Mesa3D
           command: |
             curl -LO https://github.com/pal1000/mesa-dist-win/releases/download/22.1.7/mesa3d-22.1.7-release-msvc.7z
             7z x mesa3d-22.1.7-release-msvc.7z -oC:\Mesa
             set PATH=C:\Mesa\bin;%PATH%  # Update PATH for current session
 
-        - run:
-            name: Verify OpenGL with Mesa3D
-            command: |
-              echo Checking OpenGL version with Mesa3D...
-              set MESA_GL_VERSION_OVERRIDE=4.5
-              set MESA_GLSL_VERSION_OVERRIDE=450
-              set LIBGL_ALWAYS_SOFTWARE=true
-              C:\Mesa\bin\oglinfo.exe | findstr "OpenGL"
+      - run:
+          name: Verify OpenGL with Mesa3D
+          command: |
+            echo Checking OpenGL version with Mesa3D...
+            set MESA_GL_VERSION_OVERRIDE=4.5
+            set MESA_GLSL_VERSION_OVERRIDE=450
+            set LIBGL_ALWAYS_SOFTWARE=true
+            C:\Mesa\bin\oglinfo.exe | findstr "OpenGL"
 
-        - run:
-            name: Install vcpkg
-              git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
-              cd C:\vcpkg
-              .\bootstrap-vcpkg.bat
+      - run:
+          name: Install vcpkg
+          command: |
+            git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+            cd C:\vcpkg
+            .\bootstrap-vcpkg.bat
 
-        - save_cache:
-            key: vcpkg-cache-windows
-            paths:
-              - C:\vcpkg\installed
+      - save_cache:
+          key: vcpkg-cache-windows
+          paths:
+            - C:\vcpkg\installed
 
+  build-ubuntu:
+    executor: ubuntu-cmake-executor
+    steps:
+      - checkout
+      - restore_cache:
+          key: vcpkg-cache-ubuntu
+      - run:
+          name: Build
+          command: |
+            mkdir -p build
+            cd build
+            cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
+            ninja
 
-    build-ubuntu:
-      executor: ubuntu-cmake-executor
-      steps:
-        - checkout
-        - restore_cache:
-            key: vcpkg-cache-windows
-        - run:
-            name: Build
-            command: |
-              mkdir -p build
-              cd build
-              cmake .. -G Ninja =DCMAKE_BUILDTYPE=Release -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
-              ninja
-
-        - run:
+      - run:
           name: Test
           command: |
             cd build
             ctest --output-on-failure
 
-    build-windows:
-      executor: windows-cmake-executor
-      steps:
-        - checkout
-        - restore_cache:
-            key: vcpkg-cache-windows
-        - run:
-            name: Build
-            command: |
-              mkdir build
-              cd build
-              cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
-              ninja
-
+  build-windows:
+    executor: windows-cmake-executor
+    steps:
+      - checkout
+      - restore_cache:
+          key: vcpkg-cache-windows
+      - run:
+          name: Build
+          command: |
+            mkdir build
+            cd build
+            cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake
+            ninja
 
 workflows:
   version: 2
