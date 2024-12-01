@@ -2,8 +2,6 @@
 #define DETECTEDOBJECTS_HPP
 
 #include "shapeColorHandler.hpp"
-
-#include <opencv2/core/types.hpp>
 #include <threepp/math/Color.hpp>
 
 

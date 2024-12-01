@@ -3,7 +3,7 @@
 
 #include "detectedObjects.hpp"
 #include "gridManager.hpp"
-#include "shapeColorHandler.hpp"
+//#include "shapeColorHandler.hpp"
 #include "threepp/threepp.hpp"
 #include <vector>
 

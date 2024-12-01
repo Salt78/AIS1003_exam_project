@@ -67,7 +67,7 @@ void GeoDetection::setContours(const Mat &img, const Color::ColorName &color) {
 
 // OpenCV code from https://www.youtube.com/watch?v=2FYm3GOonhk&t Chapter 6 and 7
 
-void GeoDetection::evalColorShape() {
+void GeoDetection::runDetection() {
     //Applies HSV color space to the image.
     Mat mainCamHSV{};
     cvtColor(m_mainCam, mainCamHSV, COLOR_BGR2HSV);
@@ -100,7 +100,7 @@ void GeoDetection::cleanUp() {
 
 void GeoDetection::previewDetection() {
     if (m_previewEnabled) {
-        evalColorShape();
+        runDetection();
         imshow(m_windowName, m_mainCam);
         cleanUp();
     }

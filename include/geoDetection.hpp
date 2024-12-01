@@ -8,8 +8,6 @@
 #include <threepp/threepp.hpp>
 #include <vector>
 
-#include <opencv2/videoio.hpp>
-
 
 namespace geoDetectionNS {
 
@@ -51,7 +49,7 @@ namespace geoDetectionNS {
          * @brief Detects contours and colors of shapes in the image.
          *             The detected objects are stored and can be accessed with getDetectedObjects().
          */
-        void evalColorShape();
+        void runDetection();
 
 
         [[nodiscard]] std::vector<DetectedObjects<cv::Rect>> &getDetectedObjects();

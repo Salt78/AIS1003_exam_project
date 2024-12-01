@@ -60,7 +60,7 @@ KeyHandler::KeyHandler(GeoGen &generator, GeoDetection &geoDetection, GeoManipul
 
 void KeyHandler::update() const {
     if (m_spaceBarPressed) {
-        m_geoDetection.evalColorShape();
+        m_geoDetection.runDetection();
         m_geoManipulator.reArrangeMeshes(m_geoDetection.getDetectedObjects());
     }
     if (m_rPressed) {

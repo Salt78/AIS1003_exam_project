@@ -52,7 +52,7 @@ TEST_CASE("OPENCV detection with raycasting", "[detection]") {
     renderer.render(*scene, *camera);
 
     detector.setupVirtualCam(renderer);
-    detector.evalColorShape();
+    detector.runDetection();
 
     auto recognizedMesh = detector.getDetectedObjects();
 

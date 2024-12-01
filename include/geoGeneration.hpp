@@ -2,7 +2,6 @@
 #define SCENERY_HPP
 
 #include "gridManager.hpp"
-#include "shapeColorHandler.hpp"
 #include "threepp/threepp.hpp"
 
 
@@ -22,24 +21,22 @@ namespace geoGenNS {
         //Stores the generated geometries.
         std::vector<std::shared_ptr<threepp::Mesh>> m_geoVec{};
 
-        shapeColorNS::ShapeColorHandler shapeColorHandler{};
+        enum class Shape {
+            CUBE,
+            CIRCLE
+        };
 
 
         template<typename T>
         void createMesh(std::shared_ptr<T> &geometry, std::shared_ptr<threepp::MeshBasicMaterial> &material);
 
+        static Shape randomShape();
 
-        static shapeColorNS::ShapeColorHandler::Shapes randomShape();
-
-
-        [[nodiscard]] threepp::Color::ColorName randomColor() const;
-
+        [[nodiscard]] static threepp::Color::ColorName randomColor();
 
         void addToScene() const;
 
-
-        void processMesh(shapeColorNS::ShapeColorHandler::Shapes shape, std::shared_ptr<threepp::MeshBasicMaterial> &material);
-
+        void processMesh(Shape shape, std::shared_ptr<threepp::MeshBasicMaterial> &material);
 
         void cleanUp();
 
