@@ -20,12 +20,6 @@ Vector2 GeoManipulator::getCenterCoords(const DetectedObjects<Rect> &rectObject)
     return meshCenter;
 }
 
-
-void GeoManipulator::resetRunCounter() {
-    m_hasBeenRun = false;
-}
-
-
 /**
  * @brief Uses a threepp::Raycaster to convert the Rect objects to Mesh objects.
  * @param object3d Vector of Rect objects
@@ -104,30 +98,22 @@ GeoManipulator::GeoManipulator(GridManager &grid, Scene &scene, Camera &camera)
 }
 
 
-bool GeoManipulator::hasBeenRun() const {
-    return m_hasBeenRun;
-}
-
-
 void GeoManipulator::reArrangeMeshes(const std::vector<DetectedObjects<Rect>> &object3d) {
-    if (!m_hasBeenRun) {
-        std::vector<DetectedObjects<Mesh *>> meshObjects{};
-        try {
-            meshObjects = convertToMesh(object3d);
-        } catch (const std::logic_error &) {
-            return;
-        }
+    std::vector<DetectedObjects<Mesh *>> meshObjects{};
+    try {
+        meshObjects = convertToMesh(object3d);
+    } catch (const std::logic_error &) {
+        return;
+    }
 
-        int key{1};
-        const std::vector<DetectedObjects<Mesh *>> arrangedMesh = groupMeshesByShapeAndColor(meshObjects);
-        for (auto &i: arrangedMesh) {
-            const std::pair<float, float> coords = m_grid.getCoords(key);
-            key++;
+    int key{1};
+    const std::vector<DetectedObjects<Mesh *>> arrangedMesh = groupMeshesByShapeAndColor(meshObjects);
+    for (auto &i: arrangedMesh) {
+        const std::pair<float, float> coords = m_grid.getCoords(key);
+        key++;
 
-            i.getObject()->position.x = coords.first;
-            i.getObject()->position.y = coords.second;
-            i.getObject()->position.z = 0;
-        }
-        m_hasBeenRun = true;
+        i.getObject()->position.x = coords.first;
+        i.getObject()->position.y = coords.second;
+        i.getObject()->position.z = 0;
     }
 }

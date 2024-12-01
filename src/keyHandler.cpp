@@ -60,13 +60,10 @@ KeyHandler::KeyHandler(GeoGen &generator, GeoDetection &geoDetection, GeoManipul
 
 void KeyHandler::update() const {
     if (m_spaceBarPressed) {
-        m_geoDetection.runDetection();
-        m_geoManipulator.reArrangeMeshes(m_geoDetection.getDetectedObjects());
+        m_geoManipulator.reArrangeMeshes(m_geoDetection.runDetection());
     }
     if (m_rPressed) {
-        m_geoDetection.cleanUp();
         m_generator.generateRND();
-        m_geoManipulator.resetRunCounter();
     }
     if (m_xPressed) {
         m_geoDetection.previewDetection();

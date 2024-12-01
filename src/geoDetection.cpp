@@ -67,7 +67,11 @@ void GeoDetection::setContours(const Mat &img, const Color::ColorName &color) {
 
 // OpenCV code from https://www.youtube.com/watch?v=2FYm3GOonhk&t Chapter 6 and 7
 
-void GeoDetection::runDetection() {
+std::vector<DetectedObjects<cv::Rect>> GeoDetection::runDetection() {
+if(!m_detectedObjects.empty()) {
+    m_detectedObjects.clear();
+}
+
     //Applies HSV color space to the image.
     Mat mainCamHSV{};
     cvtColor(m_mainCam, mainCamHSV, COLOR_BGR2HSV);
@@ -80,6 +84,7 @@ void GeoDetection::runDetection() {
         inRange(mainCamHSV, m_colorProfiles.getColorProfile(i).first, m_colorProfiles.getColorProfile(i).second, Mask);
         setContours(Mask, i);
     }
+    return m_detectedObjects;
 }
 
 

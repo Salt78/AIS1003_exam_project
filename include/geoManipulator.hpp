@@ -20,7 +20,6 @@ namespace geoManipulatorNS {
         threepp::Scene &m_scene;
         threepp::Camera &m_camera;
         shapeColorNS::ShapeColorHandler m_shapeColor{};
-        bool m_hasBeenRun{false};
 
 
         [[nodiscard]] threepp::Vector2 getCenterCoords(const DetectedObjects<cv::Rect> &rectObject) const;
@@ -34,16 +33,8 @@ namespace geoManipulatorNS {
 
         auto groupMeshesByShapeAndColor(std::vector<DetectedObjects<threepp::Mesh *>> &meshObjects) const;
 
-
-        [[nodiscard]] bool hasBeenRun() const;
-
-
     public:
         explicit GeoManipulator(gridManagerNS::GridManager &grid, threepp::Scene &scene, threepp::Camera &camera);
-
-
-        void resetRunCounter();
-
 
         /**
          * Rearranges the given objects in the scene.

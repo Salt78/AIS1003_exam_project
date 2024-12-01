@@ -35,7 +35,7 @@ namespace geoDetectionNS {
 
 
     public:
-        GeoDetection(std::pair<int, int> imageSize);
+        explicit GeoDetection(std::pair<int, int> imageSize);
 
 
         /**
@@ -49,7 +49,7 @@ namespace geoDetectionNS {
          * @brief Detects contours and colors of shapes in the image.
          *             The detected objects are stored and can be accessed with getDetectedObjects().
          */
-        void runDetection();
+        std::vector<DetectedObjects<cv::Rect>> runDetection();
 
 
         [[nodiscard]] std::vector<DetectedObjects<cv::Rect>> &getDetectedObjects();
