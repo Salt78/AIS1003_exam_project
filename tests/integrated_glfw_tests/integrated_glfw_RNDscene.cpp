@@ -8,14 +8,11 @@
 
 #include "threepp/threepp.hpp"
 #include <opencv2/core.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc.hpp>
 
 using namespace geoGenNS;
 using namespace gridManagerNS;
 using namespace geoDetectionNS;
 using namespace geoManipulatorNS;
-using namespace shapeColorNS;
 using namespace threepp;
 using namespace cv;
 

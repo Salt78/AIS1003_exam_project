@@ -1,7 +1,7 @@
 #include "catch2/matchers/catch_matchers.hpp"
 #include <catch2/catch_test_macros.hpp>
-
 #include "catch2/matchers/catch_matchers_floating_point.hpp"
+
 #include "geoDetection.hpp"
 #include "geoGeneration.hpp"
 #include "geoManipulator.hpp"
@@ -9,14 +9,11 @@
 
 #include "threepp/threepp.hpp"
 #include <opencv2/core.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc.hpp>
 
 using namespace geoGenNS;
 using namespace gridManagerNS;
 using namespace geoDetectionNS;
 using namespace geoManipulatorNS;
-using namespace shapeColorNS;
 using namespace threepp;
 using namespace cv;
 

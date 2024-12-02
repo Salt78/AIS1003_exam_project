@@ -1,5 +1,4 @@
 #include "geoGeneration.hpp"
-#include <random>
 
 
 using namespace threepp;
@@ -7,7 +6,6 @@ using namespace gridManagerNS;
 using namespace geoGenNS;
 
 
-// Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
 GeoGen::Shape GeoGen::randomShape() {
     static const std::vector<Shape> supportedShapes = {Shape::CUBE, Shape::CIRCLE};
     const int randNum = threepp::math::randInt(0, static_cast<int>(supportedShapes.size() - 1));
@@ -15,7 +13,6 @@ GeoGen::Shape GeoGen::randomShape() {
     return supportedShapes[randNum];
 }
 
-// Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
 Color::ColorName GeoGen::randomColor() {
     const std::vector<Color::ColorName> supportedColors = {Color::red, Color::green, Color::aqua, Color::orange};
     const int randNum = threepp::math::randInt(0, static_cast<int>(supportedColors.size() - 1));

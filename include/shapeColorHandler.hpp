@@ -1,6 +1,6 @@
 #ifndef ENUM_SHAPE_HPP
 #define ENUM_SHAPE_HPP
-#include <map>
+
 #include <opencv2/core/types.hpp>
 #include <threepp/math/Color.hpp>
 #include <unordered_map>

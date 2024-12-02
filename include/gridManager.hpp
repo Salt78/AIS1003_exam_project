@@ -38,7 +38,7 @@ namespace gridManagerNS {
         /**
          * @brief Get the coordinates for a given key.
          * The first key is for the smallest set of coordinates and the last key is for the largest set of coordinates.
-         * NB: It also logs the key as used internally
+         * NB: It also logs the key as used internally.
          *
          * @param key Each coordinate has a key, which is used to get the coordinates.
          * @return Coordinates for given key.

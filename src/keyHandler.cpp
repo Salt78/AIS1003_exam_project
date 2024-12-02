@@ -1,5 +1,4 @@
 #include "keyHandler.hpp"
-#include <iostream>
 
 using namespace threepp;
 using namespace geoGenNS;

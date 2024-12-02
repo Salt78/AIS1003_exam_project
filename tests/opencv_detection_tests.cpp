@@ -15,7 +15,6 @@ using namespace gridManagerNS;
 using namespace geoDetectionNS;
 using namespace geoManipulatorNS;
 using namespace shapeColorNS;
-
 using namespace cv;
 
 
