@@ -30,7 +30,7 @@ namespace geoGenNS {
         template<typename T>
         void createMesh(std::shared_ptr<T> &geometry, std::shared_ptr<threepp::MeshBasicMaterial> &material);
 
-        static Shape randomShape() ;
+        static Shape randomShape();
 
         [[nodiscard]] static threepp::Color::ColorName randomColor();
 
@@ -43,7 +43,6 @@ namespace geoGenNS {
 
     public:
         GeoGen(threepp::Scene &scene, gridManagerNS::GridManager &grid, int quantity = 40);
-
 
         /**
          * @brief Generates random shapes with random colors and adds them to the scene.

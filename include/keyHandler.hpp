@@ -19,13 +19,10 @@ private:
 
     void onKeyPressed(threepp::KeyEvent evt) override;
 
-
     void onKeyReleased(threepp::KeyEvent evt) override;
-
 
 public:
     KeyHandler();
-
 
     /**
      * @brief Updates the scene according to the key events.

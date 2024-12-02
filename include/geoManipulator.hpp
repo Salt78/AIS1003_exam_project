@@ -29,16 +29,12 @@ namespace geoManipulatorNS {
 
         [[nodiscard]] threepp::Vector2 getCenterCoords(const DetectedObjects<cv::Rect> &rectObject) const;
 
-
         [[nodiscard]] threepp::Vector2 getNDC(threepp::Vector2 coords) const;
-
 
         void convertToMesh(const std::vector<DetectedObjects<cv::Rect>> &rectObjects);
 
-
         static std::vector<DetectedObjects<threepp::Mesh *>>
         filterByShapeAndColor(std::vector<DetectedObjects<threepp::Mesh *>> &meshObjects, shapeColorNS::ShapeColorHandler::Shapes shape, threepp::Color color);
-
 
         void groupMeshesByShapeAndColor();
 
@@ -50,7 +46,6 @@ namespace geoManipulatorNS {
          * @param rectObjects Objects that are to be rearranged in the scene.
          */
         void reArrangeMeshes(const std::vector<DetectedObjects<cv::Rect>> &rectObjects);
-        ;
     };
 }// namespace geoManipulatorNS
 

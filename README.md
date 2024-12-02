@@ -35,6 +35,8 @@ If you use MinGW, you'll also have to add these lines into your cmake config:
 
 ## Media
 
+[comment]: <> (GPT helped me with the html. I couldn't use the markdown format becuase the images became to big.)
+
 <div style="display: flex; justify-content: space-around; align-items: center;">
   <div style="text-align: center; margin: 10px;">
     <img src="imagesReadme/detection.png" style="width: 250px; height: 250px;" />

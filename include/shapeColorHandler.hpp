@@ -38,15 +38,11 @@ namespace shapeColorNS {
 
         ShapeColorHandler();
 
-
         [[nodiscard]] std::pair<cv::Scalar, cv::Scalar> getColorProfile(const threepp::Color::ColorName &color) const;
-
 
         [[nodiscard]] std::vector<threepp::Color::ColorName> getSupportedColors() const;
 
-
         [[nodiscard]] static std::vector<Shapes> getSupportedShapes();
-
 
         /**
          * @brief This function makes it possible to get a color based on an integer.

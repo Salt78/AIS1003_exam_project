@@ -1,6 +1,6 @@
 #ifndef GRIDMANAGER_HPP
 #define GRIDMANAGER_HPP
-#include <map>
+
 #include <unordered_map>
 #include <vector>
 
@@ -45,7 +45,6 @@ namespace gridManagerNS {
          * @return Coordinates for given key.
          */
         [[nodiscard]] std::pair<float, float> getCoords(int key);
-
 
         [[nodiscard]] int getCoordQuantity() const;
 

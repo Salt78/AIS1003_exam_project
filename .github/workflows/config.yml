@@ -1,3 +1,9 @@
+#This workflow is originally based on the one from ThreePP's repo, but I've modified it to support virtual framebuffering (only on ubuntu).
+#I partially used GPT and the result is kinda cluttered.
+#I was planning to streamline it and get virtual framebuffering working on windows and mac, but sadly i ran out of workflow minutes.
+#It is to be said that compilation worked on all platforms and tests also ran successfully (exception for tests with Canvas class on windows and mac).
+
+
 name: Build
 
 on: [push, workflow_dispatch]
@@ -82,21 +88,7 @@ jobs:
             ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
             ${{ runner.os }}-vcpkg-
 
-      - name: Install Mesa3D
-        run: |
-          curl -LO https://github.com/pal1000/mesa-dist-win/releases/download/22.1.7/mesa3d-22.1.7-release-msvc.7z
-          7z x mesa3d-22.1.7-release-msvc.7z -oC:\Mesa
-          setx PATH "%PATH%;C:\Mesa\bin"
-
-      - name: Verify OpenGL with Mesa3D
-        run: |
-          echo Checking OpenGL version with Mesa3D...
-          set MESA_GL_VERSION_OVERRIDE=4.5  # Enforce OpenGL version compatibility
-          set MESA_GLSL_VERSION_OVERRIDE=450
-          set LIBGL_ALWAYS_SOFTWARE=true
-          C:\Mesa\bin\glxinfo.exe | findstr "OpenGL"
-
-      - name: Install glad with vcpkg
+      - name: Install Vcpkg
         uses: lukka/run-vcpkg@v10
         with:
           vcpkgDirectory: '${{ github.workspace }}/vcpkg'
@@ -136,15 +128,7 @@ jobs:
         run: |
           brew install cmake ninja
 
-      - name: Set up off-screen OpenGL rendering
-        run: |
-          echo "Setting up environment for headless OpenGL rendering on macOS"
-          export LIBGL_ALWAYS_SOFTWARE=1
-          export MESA_GL_VERSION_OVERRIDE=4.5
-          export MESA_GLSL_VERSION_OVERRIDE=450
-          export DISPLAY=:0
-
-      - name: Install glad with vcpkg
+      - name: Install vcpkg
         uses: lukka/run-vcpkg@v10
         with:
           vcpkgDirectory: '${{ github.workspace }}/vcpkg'

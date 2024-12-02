@@ -10,5 +10,3 @@ endfunction()
 add_test_executable(detection_tests)
 add_test_executable(grid_tests)
 add_test_executable(glfw_required_tests)
-
-#opencv_core opencv_imgproc opencv_highgu

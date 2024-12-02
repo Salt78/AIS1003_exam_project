@@ -9,9 +9,9 @@ using namespace threepp;
 namespace geoGenNS {
     template<typename T>
     void GeoGen::createMesh(std::shared_ptr<T> &geometry, std::shared_ptr<MeshBasicMaterial> &material) {
-        int randomKey{threepp::math::randInt(1, static_cast<int>(m_grid.getCoordQuantity()))};
+        int randomKey{threepp::math::randInt(1, m_grid.getCoordQuantity())};
         while (m_grid.isUsed(randomKey)) {
-            randomKey = threepp::math::randInt(1, static_cast<int>(m_grid.getCoordQuantity()));
+            randomKey = threepp::math::randInt(1, m_grid.getCoordQuantity());
         }
 
         m_geoVec.push_back(Mesh::create(geometry, material));

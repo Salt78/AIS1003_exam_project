@@ -2,7 +2,6 @@
 #define GEODETECTION_HPP
 
 #include "detectedObjects.hpp"
-#include "opencv2/core.hpp"
 #include <opencv2/core/mat.hpp>
 #include <string>
 #include <threepp/threepp.hpp>
@@ -26,21 +25,20 @@ namespace geoDetectionNS {
         cv::Mat m_mainCam{};
         std::vector<DetectedObjects<cv::Rect>> m_detectedObjects{};
 
-        //Misc
-        shapeColorNS::ShapeColorHandler m_colorProfiles{};
-        bool m_previewEnabled{false};
-
+        //OpenCV contour detection variables
         std::vector<std::vector<cv::Point>> m_contours;
         std::vector<cv::Vec4i> m_hierarchy;
         std::vector<std::vector<cv::Point>> m_conPoly;
 
+        //Misc
+        shapeColorNS::ShapeColorHandler m_colorProfiles{};
+        bool m_previewEnabled{false};
+
 
         void setContours(const cv::Mat &img, const threepp::Color::ColorName &color);
 
-
     public:
         explicit GeoDetection(std::pair<int, int> imageSize);
-
 
         /**
          * @brief Reads the pixels from a threepp::GLRenderer object and stores them.
@@ -48,16 +46,13 @@ namespace geoDetectionNS {
          */
         void setupVirtualCam(threepp::GLRenderer &renderer);
 
-
         /**
          * @brief Detects contours and colors of shapes in the image.
          *             The detected objects are stored and can be accessed with getDetectedObjects().
          */
         std::vector<DetectedObjects<cv::Rect>> runDetection();
 
-
         [[nodiscard]] std::vector<DetectedObjects<cv::Rect>> &getDetectedObjects();
-
 
         /**
          * @brief Used to show a preview of the detection process in a OpenCV window.
@@ -65,12 +60,10 @@ namespace geoDetectionNS {
          */
         void previewDetection();
 
-
         /**
          * @brief Enables preview window.
          */
         void enablePreview();
-
 
         /**
          * @brief Makes it possible to load images manually for testing purposes.

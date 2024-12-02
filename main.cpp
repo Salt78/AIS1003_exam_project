@@ -1,8 +1,8 @@
 #include "geoDetection.hpp"
 #include "geoGeneration.hpp"
 #include "gridManager.hpp"
-
 #include <keyHandler.hpp>
+
 #include <threepp/threepp.hpp>
 
 using namespace geoDetectionNS;
@@ -11,14 +11,9 @@ using namespace geoManipulatorNS;
 using namespace geoGenNS;
 using namespace threepp;
 
-using coolVector = std::vector<DetectedObjects<Mesh *>>;
-
 int main() {
     //Only 800x800 images are supported
     constexpr std::pair<int, int> imageSize{800, 800};
-
-    coolVector coolVec{};
-    coolVec.emplace_back();
 
     Canvas canvas("Geometry Sorting Demo", {{"resizable", false}});
     canvas.setSize(imageSize);
@@ -27,11 +22,12 @@ int main() {
     renderer.setSize(canvas.size());
 
     auto scene = Scene::create();
-    auto camera = OrthographicCamera::create(0, imageSize.first,0, imageSize.second, -1000, 1000);
+    auto camera = OrthographicCamera::create(0, imageSize.first, 0, imageSize.second, -1000, 1000);
 
     GridManager grid(imageSize);
 
-    GeoGen generator{*scene, grid, 500};
+    //Quantity of meshes can be changed here.
+    GeoGen generator{*scene, grid, 50};
 
     GeoDetection detector(imageSize);
 
