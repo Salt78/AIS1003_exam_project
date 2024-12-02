@@ -1,37 +1,45 @@
-#include <opencv2/opencv.hpp>
-#include <iostream>
+#include "geoDetection.hpp"
+#include "geoGeneration.hpp"
+#include "gridManager.hpp"
+#include <keyHandler.hpp>
 
+#include <threepp/threepp.hpp>
 
-int main(int argc, char **argv) {
-    cv::VideoCapture cap(0);
+using namespace geoDetectionNS;
+using namespace gridManagerNS;
+using namespace geoManipulatorNS;
+using namespace geoGenNS;
+using namespace threepp;
 
-    if (cap.isOpened() == false) {
-        std::cout << "Unable to open camera\n";
-        std::cin.get();
-        return -1;
-    }
+int main() {
+    //Only 800x800 images are supported
+    constexpr std::pair<int, int> imageSize{800, 800};
 
-    double dWidth{cap.get(cv::CAP_PROP_FRAME_WIDTH)};
-    double dHeight{cap.get(cv::CAP_PROP_FRAME_HEIGHT)};
+    Canvas canvas("Geometry Sorting Demo", {{"resizable", false}});
+    canvas.setSize(imageSize);
 
-    std::cout << "The resolution is:" << dWidth << "x" << dHeight << std::endl;
+    GLRenderer renderer(canvas.size());
+    renderer.setSize(canvas.size());
 
-    cv::namedWindow("Video Capture", cv::WINDOW_AUTOSIZE);
+    auto scene = Scene::create();
+    auto camera = OrthographicCamera::create(0, imageSize.first, 0, imageSize.second, -1000, 1000);
 
-    while (true) {
-        cv::Mat frame;
-        bool bSuccess = cap.read(frame);
+    GridManager grid(imageSize);
 
-        if (bSuccess == false) {
-            std::cout << "Camera got disconnected\n";
-            std::cin.get();
-            return -1;
-        }
-        cv::imshow("Video Capture", frame);
-        const auto key = cv::waitKey(1);
-        if (key == 'q') {
-            break;
-        }
-    }
-    return 0;
+    //Quantity of meshes can be changed here.
+    GeoGen generator{*scene, grid, 50};
+
+    GeoDetection detector(imageSize);
+
+    GeoManipulator manipulator(grid, *scene, *camera);
+
+    KeyHandler keyHandler{};
+    canvas.addKeyListener(keyHandler);
+
+    canvas.animate([&]() {
+        renderer.render(*scene, *camera);
+
+        detector.setupVirtualCam(renderer);
+        keyHandler.update(generator, detector, manipulator);
+    });
 }

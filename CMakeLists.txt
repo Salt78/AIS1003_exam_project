@@ -1,36 +1,48 @@
 cmake_minimum_required(VERSION 3.19)
-project(threeppxopencv)
+project(AutoSortingShapes)
 
 set(CMAKE_CXX_STANDARD 20)
 
-include(FetchContent)
+find_package(OpenCV CONFIG REQUIRED)
 
+#Enabling/Disable tests
+set(BUILD_TESTS ON)
+
+include(FetchContent)
 set(THREEPP_BUILD_TESTS OFF)
 set(THREEPP_BUILD_EXAMPLES OFF)
 FetchContent_Declare(
         threepp
         GIT_REPOSITORY https://github.com/markaren/threepp.git
-        GIT_TAG 3f509a0df61cd3be88e4f71785cfea24a9c688fb
+        GIT_TAG 1263fb25e57924ff2d3785b5f6d2b6d4fe4af6a7
 )
 FetchContent_MakeAvailable(threepp)
 
-add_executable(threeppxopencv main.cpp)
-target_link_libraries(threeppxopencv PRIVATE threepp::threepp)
 
-find_package(OpenCV CONFIG REQUIRED)
-target_link_libraries(threeppxopencv PRIVATE ${OpenCV_LIBS})
-
-
-######### Emscripten #######
-if (DEFINED EMSCRIPTEN)
-
-    set(LINK_FLAGS " --bind -sUSE_GLFW=3 -sGL_DEBUG=1 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 \
-    -sFULL_ES3 -sASSERTIONS -sALLOW_MEMORY_GROWTH -sWASM=1")
-
-    set_target_properties("demo"
-            PROPERTIES SUFFIX ".html"
-            LINK_FLAGS "${LINK_FLAGS}"
+option(BUILD_TESTS "Build tests" ON)
+if (BUILD_TESTS)
+    FetchContent_Declare(
+            Catch2
+            GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+            GIT_TAG v3.7.1 # or a later release
     )
+    FetchContent_MakeAvailable(Catch2)
 
+    enable_testing()
+    add_subdirectory(tests)
+
+    #GPT helped me with this one
+    file(COPY ${CMAKE_SOURCE_DIR}/data/testing_resources/images DESTINATION ${CMAKE_BINARY_DIR}/tests/data/testing_resources)
 endif ()
-###########################
+
+add_subdirectory(src)
+
+add_executable(AutoSortingShapes main.cpp)
+
+target_link_libraries(AutoSortingShapes PRIVATE
+        autoShapeSortingLib
+        threepp::threepp
+        opencv_core
+        opencv_highgui
+        opencv_imgproc
+)

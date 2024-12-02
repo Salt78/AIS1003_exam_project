@@ -1,0 +1,147 @@
+#This workflow is originally based on the one from ThreePP's repo, but I've modified it to support virtual framebuffering (only on ubuntu).
+#I partially used GPT and the result is kinda cluttered.
+#I was planning to streamline it and get virtual framebuffering working on windows and mac, but sadly i ran out of workflow minutes.
+#It is to be said that compilation worked on all platforms and tests also ran successfully (exception for tests with Canvas class on windows and mac).
+
+
+name: Build
+
+on: [push, workflow_dispatch]
+
+jobs:
+  linux:
+    runs-on: ubuntu-22.04
+    env:
+      CC: gcc-11
+      CXX: g++-11
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache vcpkg
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/vcpkg
+            vcpkg_installed
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+            ${{ runner.os }}-vcpkg-
+
+      - name: Install prerequisites
+        run: |
+          sudo apt-get update && sudo apt-get install -y \
+          build-essential \
+          cmake \
+          ninja-build \
+          python3 \
+          libxinerama-dev \
+          libxcursor-dev \
+          xorg-dev \
+          libglu1-mesa-dev \
+          pkg-config \
+          libdbus-1-dev \
+          libxi-dev \
+          libxtst-dev \
+          xvfb
+
+      - name: Start Xvfb
+        run: |
+          Xvfb :99 -screen 0 1920x1080x24 &
+
+      - name: Set DISPLAY environment variable
+        run: echo "DISPLAY=:99" >> $GITHUB_ENV
+
+      - name: Install glad with vcpkg
+        uses: lukka/run-vcpkg@v10
+        with:
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          vcpkgGitCommitId: '4cac260c4b7331538d31886f57739fea0bffa27e'
+          vcpkgJsonGlob: 'vcpkg.json'
+          appendedCacheKey: vcpkginstall
+
+      - name: Configure and build
+        run: |
+          cmake . -B build -G "Ninja" -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE="Release"
+          cmake --build build
+
+      - name: Test
+        run: |
+          cd build/tests
+          ctest --output-on-failure
+
+  windows:
+    runs-on: windows-2022
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache vcpkg
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/vcpkg
+            vcpkg_installed
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+            ${{ runner.os }}-vcpkg-
+
+      - name: Install Vcpkg
+        uses: lukka/run-vcpkg@v10
+        with:
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          vcpkgGitCommitId: '4cac260c4b7331538d31886f57739fea0bffa27e'
+          vcpkgJsonGlob: 'vcpkg.json'
+          appendedCacheKey: vcpkginstall
+
+      - name: Configure and build
+        run: |
+          cmake . -A x64 -B build -DTHREEPP_TREAT_WARNINGS_AS_ERRORS=ON -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE="Release"
+          cmake --build build --config Release
+
+      - name: Test
+        run: |
+          set PATH=C:\Mesa\bin;%PATH%
+          cd build/tests
+          ctest -C Release --output-on-failure
+
+  darwin:
+    runs-on: macos-13
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache vcpkg
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/vcpkg
+            vcpkg_installed
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '**/*.hpp', 'src/**/*.cpp', 'tests/tests.cpp', 'tests/CMakeLists.txt', 'CMakeLists.txt', '**/*.cmake') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+            ${{ runner.os }}-vcpkg-
+
+      - name: Install prerequisites
+        run: |
+          brew install cmake ninja
+
+      - name: Install vcpkg
+        uses: lukka/run-vcpkg@v10
+        with:
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          vcpkgGitCommitId: '4cac260c4b7331538d31886f57739fea0bffa27e'
+          vcpkgJsonGlob: 'vcpkg.json'
+          appendedCacheKey: vcpkginstall
+
+      - name: Configure and build
+        run: |
+          cmake . -B build -DTHREEPP_BUILD_EXAMPLES=OFF -DTHREEPP_BUILD_TESTS=OFF -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE="Release"
+          cmake --build build
+
+      - name: Test
+        run: |
+          cd build/tests
+          ctest --output-on-failure

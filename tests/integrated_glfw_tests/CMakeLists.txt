@@ -1,0 +1,3 @@
+add_test_executable(integrated_glfw_square)
+add_test_executable(integrated_glfw_circle)
+add_test_executable(integrated_glfw_RNDscene)
