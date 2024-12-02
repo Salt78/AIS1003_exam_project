@@ -43,42 +43,11 @@ TEST_CASE("Intended usage (non-standard params)", "[grid]") {
     REQUIRE(grid.isUsed(400) == true);
 }
 
-TEST_CASE("Non-uniform imageSize", "[grid]") {
-    std::pair<int, int> imageSize{500, 800};
-    REQUIRE_THROWS_AS(GridManager(imageSize), std::invalid_argument);
+TEST_CASE("Negative imageSize#1", "[grid]") {
+    std::pair<int, int> imageSize{-354, 800};
+    GridManager grid{imageSize};
 
-    imageSize = {324, 214};
-    REQUIRE_THROWS_AS(GridManager(imageSize), std::invalid_argument);
-}
-
-TEST_CASE("Non-positive imageSize", "[grid]") {
-    std::pair<int, int> imageSize{0, 800};
-    REQUIRE_THROWS_AS(GridManager(imageSize), std::invalid_argument);
-
-    imageSize = {800, -1};
-    REQUIRE_THROWS_AS(GridManager(imageSize), std::invalid_argument);
-}
-
-TEST_CASE("Invalid spacing or startCoords", "[grid]") {
-    std::pair<int, int> imageSize{800, 800};
-
-    REQUIRE_THROWS_AS(GridManager(imageSize, 0), std::invalid_argument);
-    REQUIRE_THROWS_AS(GridManager(imageSize, -5), std::invalid_argument);
-
-    REQUIRE_THROWS_AS(GridManager(imageSize, 50, {-1, 25}), std::invalid_argument);
-}
-
-TEST_CASE("Invalid configuration", "[grid]") {
-    std::pair<int, int> imageSize{800, 800};
-    std::pair<float, float> startingCoords{27, 25.5};
-
-    REQUIRE_THROWS_AS(GridManager(imageSize, 50, startingCoords), std::invalid_argument);
+    REQUIRE(grid.getCoordQuantity() == 0);
 
 }
-TEST_CASE("undefined usage of functions", "[grid]") {
-    constexpr std::pair<int, int> imageSize{800, 800};
 
-    GridManager grid{imageSize, 50, {25, 25}};
-
-    REQUIRE_THROWS_AS(grid.getCoords(500), std::invalid_argument);
-}

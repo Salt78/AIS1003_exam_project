@@ -16,6 +16,7 @@ void GeoDetection::setupVirtualCam(GLRenderer &renderer) {
     //Creates an OPENCV Mat object for the pixels. (https://stackoverflow.com/questions/38489423/c-convert-rgb-1-d-array-to-opencv-mat-image)
     const Mat mainCam_RGB = Mat(m_imageSize.second, m_imageSize.first, CV_8UC3, m_pixels.data());
     cvtColor(mainCam_RGB, m_mainCam, COLOR_RGB2BGR);
+    ;
 
     //OpenCV uses a different origin for the image, so it is flipped here.
     flip(m_mainCam, m_mainCam, 0);
@@ -32,23 +33,21 @@ void GeoDetection::setupVirtualCam(GLRenderer &renderer) {
  * @param color Color profile being used
  */
 void GeoDetection::setContours(const Mat &img, const Color::ColorName &color) {
-    std::vector<std::vector<Point>> contours;
-    std::vector<Vec4i> hierarchy;
-    findContours(img, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+    findContours(img, m_contours, m_hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
 
     // Watched a tutorial on YT about OpenCV. Lent a lot of openCV code from there in general https://www.youtube.com/watch?v=2FYm3GOonhk&t Chapter 6 and 7
-    std::vector<std::vector<Point>> conPoly{contours.size()};
-    for (int i{}; i < contours.size(); i++) {
-        const double peri = arcLength(contours[i], true);
-        approxPolyDP(contours[i], conPoly[i], 0.02 * peri, true);
+    m_conPoly.resize(m_contours.size());
+    for (int i{}; i < m_contours.size(); i++) {
+        const double peri = arcLength(m_contours[i], true);
+        approxPolyDP(m_contours[i], m_conPoly[i], 0.02 * peri, true);
 
         //counts the number of corners in the detected object.
-        const int objCor = static_cast<int>(conPoly[i].size());
-        drawContours(m_mainCam, conPoly, i, Scalar(255, 0, 255), 2);
+        const int objCor = static_cast<int>(m_conPoly[i].size());
+        drawContours(m_mainCam, m_conPoly, i, Scalar(255, 0, 255), 2);
 
         //Chooses the shape of the object based on the number of corners.
-        Rect tempBoundingRect = boundingRect(conPoly[i]);
+        const Rect tempBoundingRect = boundingRect(m_conPoly[i]);
 
         //Filters out small objects.
         if (tempBoundingRect.width < 10) {
@@ -56,10 +55,10 @@ void GeoDetection::setContours(const Mat &img, const Color::ColorName &color) {
         }
 
         if (objCor == 4) {
-            DetectedObjects currentObject(tempBoundingRect, ShapeColorHandler::Shapes::CUBE, color);
+            const DetectedObjects currentObject(tempBoundingRect, ShapeColorHandler::Shapes::CUBE, color);
             m_detectedObjects.emplace_back(currentObject);
         } else {
-            DetectedObjects currentObject(tempBoundingRect, ShapeColorHandler::Shapes::CIRCLE, color);
+            const DetectedObjects currentObject(tempBoundingRect, ShapeColorHandler::Shapes::CIRCLE, color);
             m_detectedObjects.emplace_back(currentObject);
         }
     }
@@ -67,7 +66,11 @@ void GeoDetection::setContours(const Mat &img, const Color::ColorName &color) {
 
 // OpenCV code from https://www.youtube.com/watch?v=2FYm3GOonhk&t Chapter 6 and 7
 
-void GeoDetection::evalColorShape() {
+std::vector<DetectedObjects<cv::Rect>> GeoDetection::runDetection() {
+    if (!m_detectedObjects.empty()) {
+        m_detectedObjects.clear();
+    }
+
     //Applies HSV color space to the image.
     Mat mainCamHSV{};
     cvtColor(m_mainCam, mainCamHSV, COLOR_BGR2HSV);
@@ -80,6 +83,7 @@ void GeoDetection::evalColorShape() {
         inRange(mainCamHSV, m_colorProfiles.getColorProfile(i).first, m_colorProfiles.getColorProfile(i).second, Mask);
         setContours(Mask, i);
     }
+    return m_detectedObjects;
 }
 
 
@@ -93,16 +97,10 @@ std::vector<DetectedObjects<cv::Rect>> &GeoDetection::getDetectedObjects() {
 }
 
 
-void GeoDetection::cleanUp() {
-    m_detectedObjects.clear();
-}
-
-
 void GeoDetection::previewDetection() {
     if (m_previewEnabled) {
-        evalColorShape();
+        runDetection();
         imshow(m_windowName, m_mainCam);
-        cleanUp();
     }
 }
 

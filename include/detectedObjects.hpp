@@ -2,8 +2,6 @@
 #define DETECTEDOBJECTS_HPP
 
 #include "shapeColorHandler.hpp"
-
-#include <opencv2/core/types.hpp>
 #include <threepp/math/Color.hpp>
 
 
@@ -17,9 +15,10 @@
 template<typename T>
 class DetectedObjects {
 private:
-    T m_object{};
-    shapeColorNS::ShapeColorHandler::Shapes m_shape{};
-    threepp::Color m_color{};
+    T m_object;
+    shapeColorNS::ShapeColorHandler::Shapes m_shape;
+    threepp::Color m_color;
+
 
 public:
     DetectedObjects(const T &object, const shapeColorNS::ShapeColorHandler::Shapes &shape, const threepp::Color &color)

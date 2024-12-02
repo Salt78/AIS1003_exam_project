@@ -3,52 +3,44 @@
 
 
 using namespace threepp;
-using namespace shapeColorNS;
 using namespace gridManagerNS;
 using namespace geoGenNS;
 
 
 // Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
-ShapeColorHandler::Shapes GeoGen::randomShape() {
-    std::random_device rd;
-    std::mt19937 mt(rd());
-    std::uniform_int_distribution<std::vector<ShapeColorHandler::Shapes>::size_type> dist(0, ShapeColorHandler::getSupportedShapes().size() - 1);
+GeoGen::Shape GeoGen::randomShape() {
+    static const std::vector<Shape> supportedShapes = {Shape::CUBE, Shape::CIRCLE};
+    const int randNum = threepp::math::randInt(0, static_cast<int>(supportedShapes.size() - 1));
 
-    return ShapeColorHandler::getSupportedShapes()[dist(rd)];
+    return supportedShapes[randNum];
 }
 
+// Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
+Color::ColorName GeoGen::randomColor() {
+    const std::vector<Color::ColorName> supportedColors = {Color::red, Color::green, Color::aqua, Color::orange};
+    const int randNum = threepp::math::randInt(0, static_cast<int>(supportedColors.size() - 1));
 
-Color::ColorName GeoGen::randomColor() const {
-    // Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
-    std::random_device rd;
-    std::mt19937 mt(rd());
-    std::uniform_int_distribution<std::vector<Color::ColorName>::size_type> dist(0, shapeColorHandler.getSupportedColors().size() - 1);
-
-    return shapeColorHandler.getColorIntBased(static_cast<int>(dist(rd)));
+    return supportedColors[randNum];
 }
 
 
 void GeoGen::addToScene() const {
-    for (const auto &i: m_geoVec) {
-        m_scene.add(i);
-
-        //Optimises the raycasting process. (Tip from teacher)
-        Box3 boundingBox{};//Adds a bounding box to the mesh.
-        boundingBox.setFromObject(*i);
+    for (const auto &mesh: m_geoVec) {
+        m_scene.add(mesh);
     }
 }
 
 
-void GeoGen::processMesh(const ShapeColorHandler::Shapes shape, std::shared_ptr<MeshBasicMaterial> &material) {
+void GeoGen::processMesh(const Shape shape, std::shared_ptr<MeshBasicMaterial> &material) {
     switch (shape) {
-        case ShapeColorHandler::Shapes::CUBE: {
+        case Shape::CUBE: {
             std::shared_ptr<BoxGeometry> cubeGeometry{};
             cubeGeometry = BoxGeometry::create(m_meshSize, m_meshSize, 0);
 
             createMesh(cubeGeometry, material);
             break;
         }
-        case ShapeColorHandler::Shapes::CIRCLE: {
+        case Shape::CIRCLE: {
             std::shared_ptr<SphereGeometry> circleGeometry{};
             circleGeometry = SphereGeometry::create(m_meshSize / 2, 30, 20);
 
@@ -61,10 +53,9 @@ void GeoGen::processMesh(const ShapeColorHandler::Shapes shape, std::shared_ptr<
 
 
 void GeoGen::cleanUp() {
-    for (auto &i: m_geoVec) {
-        m_scene.remove(*i);
+    for (auto &mesh: m_geoVec) {
+        m_scene.remove(*mesh);
     }
-    m_scene.children.clear();
     m_geoVec.clear();
     m_grid.resetUsedCoords();
 }
@@ -84,10 +75,10 @@ void GeoGen::generateRND() {
     }
 
     for (int i{}; i < m_quantity; i++) {
-        const ShapeColorHandler::Shapes shape = randomShape();
+        const Shape shape = randomShape();
         auto material = MeshBasicMaterial::create({{"color", randomColor()}});
 
-        if (shape == ShapeColorHandler::Shapes::CIRCLE) {
+        if (shape == Shape::CIRCLE) {
             //GPT suggested this to fix issues with raycasting
             material->side = Side::Double;
         }

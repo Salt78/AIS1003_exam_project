@@ -1,6 +1,7 @@
 #ifndef GRIDMANAGER_HPP
 #define GRIDMANAGER_HPP
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 namespace gridManagerNS {
@@ -16,10 +17,10 @@ namespace gridManagerNS {
         const std::pair<int, int> m_imageSize;
         const int m_spacing;
         const std::pair<int, int> m_startingCoords;
-        std::map<int, std::pair<float, float>> m_gridMap{};
-        std::vector<int> m_usedCoords{};
+        std::unordered_map<int, std::pair<float, float>> m_gridMap;
+        std::vector<int> m_usedCoords;
 
-        void checkForExceptions() const;
+        void sanityChecks() const;
 
         void logUsedCoords(int key);
 
@@ -38,6 +39,7 @@ namespace gridManagerNS {
         /**
          * @brief Get the coordinates for a given key.
          * The first key is for the smallest set of coordinates and the last key is for the largest set of coordinates.
+         * NB: It also logs the key as used internally
          *
          * @param key Each coordinate has a key, which is used to get the coordinates.
          * @return Coordinates for given key.
@@ -47,7 +49,7 @@ namespace gridManagerNS {
 
         [[nodiscard]] int getCoordQuantity() const;
 
-        bool isUsed(int key);
+        [[nodiscard]] bool isUsed(int key) const;
 
         void resetUsedCoords();
 

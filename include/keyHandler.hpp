@@ -11,10 +11,6 @@
  */
 class KeyHandler final : public threepp::KeyListener {
 private:
-    geoGenNS::GeoGen &m_generator;
-    geoDetectionNS::GeoDetection &m_geoDetection;
-    geoManipulatorNS::GeoManipulator &m_geoManipulator;
-
     bool m_spaceBarPressed{false};
     bool m_rPressed{false};
     bool m_xPressed{false};
@@ -28,12 +24,15 @@ private:
 
 
 public:
-    explicit KeyHandler(geoGenNS::GeoGen &generator, geoDetectionNS::GeoDetection &geoDetection, geoManipulatorNS::GeoManipulator &geoManipulator);
+    KeyHandler();
 
 
     /**
      * @brief Updates the scene according to the key events.
      */
-    void update() const;
+    void update(
+            geoGenNS::GeoGen &generator,
+            geoDetectionNS::GeoDetection &detector,
+            geoManipulatorNS::GeoManipulator &manipulator) const;
 };
 #endif//KEYLISTENER_HPP

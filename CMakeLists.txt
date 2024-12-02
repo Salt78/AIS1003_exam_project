@@ -42,5 +42,7 @@ add_executable(AutoSortingShapes main.cpp)
 target_link_libraries(AutoSortingShapes PRIVATE
         autoShapeSortingLib
         threepp::threepp
-        ${OpenCV_LIBS}
+        opencv_core
+        opencv_highgui
+        opencv_imgproc
 )
