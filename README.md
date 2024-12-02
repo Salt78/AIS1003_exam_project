@@ -2,9 +2,14 @@ Kandidatnr:
 
 # Automatic shape sorting in ThreePP
 
-This is a demo showing of OpenCV in conjunction with ThreePP.
-The project's main goal was to achieve scene generation in ThreePP
-and then to use OpenCV to recognize, and move the objects.
+This is a demo showcasing the use of OpenCV in conjunction with ThreePP.
+The main goal of the project is to achieve scene generation in ThreePP and then use OpenCV to recognize and move objects within the scene.
+
+The process is quite simple. First, a scene is generated using ThreePP. 
+Then, OpenCV is used to obtain the coordinates, colors, and shapes of the objects. 
+Once these details are identified, a raycaster is used to find specific "meshes" in the scene based on the coordinates provided by OpenCV.
+
+After each detected object is linked to a mesh, the process of moving the objects can begin.
 
 <img src="imagesReadme/gifs/generateRND.gif" width="250" height="250"/>
 
