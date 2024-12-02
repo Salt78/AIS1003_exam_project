@@ -27,7 +27,7 @@ int main() {
     GridManager grid(imageSize);
 
     //Quantity of meshes can be changed here.
-    GeoGen generator{*scene, grid, 50};
+    GeoGen generator{*scene, grid, 100};
 
     GeoDetection detector(imageSize);
 
