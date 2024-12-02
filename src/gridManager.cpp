@@ -7,19 +7,6 @@
 
 using namespace gridManagerNS;
 
-void GridManager::sanityChecks() const {
-    // Using assert to sanity check runtime values
-    /*assert(m_imageSize.first == m_imageSize.second);
-
-    assert(m_imageSize.first > 0);
-    assert(m_imageSize.second > 0);
-
-    assert(m_spacing > 0);
-
-    assert(m_startingCoords.first >= 0);
-    assert(m_startingCoords.second >= 0);*/
-}
-
 
 /**
  * @brief Important that the result of the calculation is an integer.
@@ -67,7 +54,6 @@ GridManager::GridManager(
       m_spacing(spacing),
       m_startingCoords(startingCoords) {
 
-    sanityChecks();
     createGrid();
 }
 

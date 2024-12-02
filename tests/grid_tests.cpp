@@ -1,13 +1,16 @@
-#include "catch2/matchers/catch_matchers.hpp"
+#include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/catch_test_macros.hpp>
-
+#include <threepp/threepp.hpp>
 
 #include "gridManager.hpp"
 
+#include <geoGeneration.hpp>
 #include <stdexcept>
 
 
 using namespace gridManagerNS;
+using namespace geoGenNS;
+using namespace threepp;
 
 TEST_CASE("Intended usage", "[grid]") {
     constexpr std::pair<int, int> imageSize{800, 800};
@@ -51,3 +54,19 @@ TEST_CASE("Negative imageSize#1", "[grid]") {
 
 }
 
+TEST_CASE("Mesh generation", "[scene]") {
+    const std::pair<int, int> imageSize{800, 800};
+    constexpr int meshQuantity{45};
+
+    GridManager grid(imageSize);
+
+
+    auto scene = Scene::create();
+    GeoGen generator(*scene, grid, meshQuantity);
+    generator.generateRND();
+
+    //Help from GPT
+    std::vector<Object3D *> presentMeshes = scene->children;
+
+    REQUIRE(presentMeshes.size() == meshQuantity);
+}

@@ -42,7 +42,7 @@ void GeoGen::processMesh(const Shape shape, std::shared_ptr<MeshBasicMaterial> &
         }
         case Shape::CIRCLE: {
             std::shared_ptr<SphereGeometry> circleGeometry{};
-            circleGeometry = SphereGeometry::create(m_meshSize / 2, 30, 20);
+            circleGeometry = SphereGeometry::create(m_meshSize / 2, 6, 6);
 
             createMesh(circleGeometry, material);
             break;

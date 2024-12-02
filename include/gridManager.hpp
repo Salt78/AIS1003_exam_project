@@ -20,7 +20,6 @@ namespace gridManagerNS {
         std::unordered_map<int, std::pair<float, float>> m_gridMap;
         std::vector<int> m_usedCoords;
 
-        void sanityChecks() const;
 
         void logUsedCoords(int key);
 

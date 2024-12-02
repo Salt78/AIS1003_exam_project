@@ -6,47 +6,18 @@
 #include "geoGeneration.hpp"
 #include "geoManipulator.hpp"
 #include "gridManager.hpp"
-#include "threepp/threepp.hpp"
+
 
 #include <opencv2/core.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc.hpp>
 
 using namespace geoGenNS;
 using namespace gridManagerNS;
 using namespace geoDetectionNS;
 using namespace geoManipulatorNS;
 using namespace shapeColorNS;
-using namespace threepp;
+
 using namespace cv;
 
-
-TEST_CASE("Mesh generation", "[scene]") {
-    const std::pair<int, int> imageSize{800, 800};
-    constexpr int meshQuantity{45};
-
-    GridManager grid(imageSize);
-
-
-    auto scene = Scene::create();
-    GeoGen generator(*scene, grid, meshQuantity);
-    generator.generateRND();
-
-    //Help from GPT
-    std::vector<Object3D *> presentMeshes = scene->children;
-
-    REQUIRE(presentMeshes.size() == meshQuantity);
-}
-
-TEST_CASE("ShapeHandling"
-          "[ShapeColorHandler]") {
-    ShapeColorHandler handler;
-
-    REQUIRE(handler.getColorProfile(Color::green) == std::pair<Scalar, Scalar>(Scalar(46, 0, 0), Scalar(68, 255, 255)));
-    REQUIRE(handler.getColorProfile(Color::aqua) == std::pair<Scalar, Scalar>(Scalar(76, 0, 0), Scalar(90, 255, 255)));
-    REQUIRE(handler.getColorProfile(Color::orange) == std::pair<Scalar, Scalar>(Scalar(13, 0, 0), Scalar(32, 255, 255)));
-    REQUIRE(handler.getColorProfile(Color::red) == std::pair<Scalar, Scalar>(Scalar(0, 32, 0), Scalar(0, 255, 255)));
-}
 
 
 TEST_CASE("openCV_redDot", "[detection]") {

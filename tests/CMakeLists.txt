@@ -6,7 +6,10 @@ function(add_test_executable name)
     add_test(NAME ${name} COMMAND ${name})
 endfunction()
 
+add_subdirectory(integrated_glfw_tests)
 
-add_test_executable(detection_tests)
+
+add_test_executable(opencv_detection_tests)
 add_test_executable(grid_tests)
-add_test_executable(glfw_required_tests)
+
+
