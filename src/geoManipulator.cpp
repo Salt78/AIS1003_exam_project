@@ -7,6 +7,8 @@ using namespace gridManagerNS;
 using namespace threepp;
 using namespace cv;
 
+using rawMeshVec = std::vector<DetectedObjects<threepp::Mesh *>>;
+
 
 /**
  *Nb: also flips the y-axis to accommodate the different coordinate system used by OpenCV.
@@ -20,21 +22,32 @@ Vector2 GeoManipulator::getCenterCoords(const DetectedObjects<Rect> &rectObject)
     return meshCenter;
 }
 
+
+/**
+ * 
+ * @param coords Cartesian coords
+ * @return normalized device coordinates
+ */ //GPT helped me with NDC conversion.
+Vector2 GeoManipulator::getNDC(const Vector2 coords) const {
+    const std::pair<int, int> imageSize = m_grid.getImgSize();
+    const Vector2 ndc = {
+            (coords.x / static_cast<float>(imageSize.first)) * 2.0f - 1.0f,
+            (coords.y / static_cast<float>(imageSize.second)) * 2.0f - 1.0f};
+
+    return ndc;
+}
+
 /**
  * @brief Uses a threepp::Raycaster to convert the Rect objects to Mesh objects.
  * @param rectObjects Vector of Rect objects
  * @return Vector of Mesh* objects
  */
-auto GeoManipulator::convertToMesh(const std::vector<DetectedObjects<Rect>> &rectObjects) const {
+ rawMeshVec GeoManipulator::convertToMesh(const std::vector<DetectedObjects<Rect>> &rectObjects) const {
     Raycaster raycaster;
-    std::vector<DetectedObjects<Mesh *>> meshObjects{};
+    rawMeshVec meshObjects{};
     for (const auto &rect: rectObjects) {
-        //GPT helped me with NDC conversion.
-        Vector2 const centerCoords = getCenterCoords(rect);
-        std::pair<int, int> const imageSize = m_grid.getImgSize();
-        Vector2 ndc = {
-                (centerCoords.x / static_cast<float>(imageSize.first)) * 2.0f - 1.0f,
-                (centerCoords.y / static_cast<float>(imageSize.second)) * 2.0f - 1.0f};
+        const Vector2 centerCoords = getCenterCoords(rect);
+        const Vector2 ndc = getNDC(centerCoords);
 
         raycaster.setFromCamera(ndc, m_camera);
 
@@ -64,7 +77,7 @@ auto GeoManipulator::convertToMesh(const std::vector<DetectedObjects<Rect>> &rec
  * @param color Desired color
  * @return Vector of Mesh* objects that match the desired shape and color
  */
-auto GeoManipulator::filterByShapeAndColor(std::vector<DetectedObjects<Mesh *>> &meshObjects, const ShapeColorHandler::Shapes shape, const Color color) {
+rawMeshVec GeoManipulator::filterByShapeAndColor(std::vector<DetectedObjects<Mesh *>> &meshObjects, const ShapeColorHandler::Shapes shape, const Color color) {
     std::vector<DetectedObjects<Mesh *>> sortedVec{};
 
     //Used a GPT to help me figure out how to sort the vector based on shape and color.
@@ -81,12 +94,12 @@ auto GeoManipulator::filterByShapeAndColor(std::vector<DetectedObjects<Mesh *>> 
  * @param meshObjects Vector of Mesh objects
  * @return Vector of Mesh* objects grouped by shape and color
  */
-auto GeoManipulator::groupMeshesByShapeAndColor(std::vector<DetectedObjects<Mesh *>> &meshObjects) const {
+rawMeshVec GeoManipulator::groupMeshesByShapeAndColor(rawMeshVec &meshObjects) const {
     std::vector<DetectedObjects<Mesh *>> compSortedVec{};
 
     for (auto &color: m_shapeColor.getSupportedColors()) {
         for (auto &shape: ShapeColorHandler::getSupportedShapes()) {
-            std::vector<DetectedObjects<Mesh *>> tempVec = filterByShapeAndColor(meshObjects, shape, color);
+            rawMeshVec tempVec = filterByShapeAndColor(meshObjects, shape, color);
             compSortedVec.insert(compSortedVec.end(), tempVec.begin(), tempVec.end());
         }
     }
@@ -100,7 +113,7 @@ GeoManipulator::GeoManipulator(GridManager &grid, Scene &scene, Camera &camera)
 
 
 void GeoManipulator::reArrangeMeshes(const std::vector<DetectedObjects<Rect>> &rectObjects) const {
-    std::vector<DetectedObjects<Mesh *>> meshObjects{};
+    rawMeshVec meshObjects{};
     try {
         meshObjects = convertToMesh(rectObjects);
     } catch (const std::logic_error &) {
@@ -108,7 +121,7 @@ void GeoManipulator::reArrangeMeshes(const std::vector<DetectedObjects<Rect>> &r
     }
 
     int key{1};
-    const std::vector<DetectedObjects<Mesh *>> arrangedMesh = groupMeshesByShapeAndColor(meshObjects);
+    const rawMeshVec arrangedMesh = groupMeshesByShapeAndColor(meshObjects);
     for (auto &mesh: arrangedMesh) {
         const std::pair<float, float> coords = m_grid.getCoords(key);
         key++;

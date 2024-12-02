@@ -42,7 +42,6 @@ int main() {
 
     canvas.animate([&]() {
         renderer.render(*scene, *camera);
-        c++;
 
         detector.setupVirtualCam(renderer);
         keyHandler.update(generator, detector, manipulator);
