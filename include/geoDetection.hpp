@@ -30,6 +30,10 @@ namespace geoDetectionNS {
         shapeColorNS::ShapeColorHandler m_colorProfiles{};
         bool m_previewEnabled{false};
 
+        std::vector<std::vector<cv::Point>> m_contours;
+        std::vector<cv::Vec4i> m_hierarchy;
+        std::vector<std::vector<cv::Point>> m_conPoly;
+
 
         void setContours(const cv::Mat &img, const threepp::Color::ColorName &color);
 
@@ -53,12 +57,6 @@ namespace geoDetectionNS {
 
 
         [[nodiscard]] std::vector<DetectedObjects<cv::Rect>> &getDetectedObjects();
-
-
-        /**
-         * @brief Readies the object for a new detection process.
-         */
-        void cleanUp();
 
 
         /**

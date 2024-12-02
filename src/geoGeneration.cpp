@@ -9,32 +9,24 @@ using namespace geoGenNS;
 
 // Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
 GeoGen::Shape GeoGen::randomShape() {
-    const std::vector<Shape> supportedShapes = {Shape::CUBE, Shape::CIRCLE};
-    std::random_device rd;
-    std::mt19937 mt(rd());
-    std::uniform_int_distribution<std::vector<Shape>::size_type> dist(0, supportedShapes.size() - 1);
+    static const std::vector<Shape> supportedShapes = {Shape::CUBE, Shape::CIRCLE};
+    const int randNum = threepp::math::randInt(0, static_cast<int>(supportedShapes.size() - 1));
 
-    return supportedShapes[dist(mt)];
+    return supportedShapes[randNum];
 }
 
 // Random number generator https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
 Color::ColorName GeoGen::randomColor() {
     const std::vector<Color::ColorName> supportedColors = {Color::red, Color::green, Color::aqua, Color::orange};
-    std::random_device rd;
-    std::mt19937 mt(rd());
-    std::uniform_int_distribution<std::vector<Color::ColorName>::size_type> dist(0, supportedColors.size() - 1);
+    const int randNum = threepp::math::randInt(0, static_cast<int>(supportedColors.size() - 1));
 
-    return supportedColors[dist(mt)];
+    return supportedColors[randNum];
 }
 
 
 void GeoGen::addToScene() const {
-    for (const auto &i: m_geoVec) {
-        m_scene.add(i);
-
-        //Optimises the raycasting process. (Tip from teacher)
-        Box3 boundingBox{};//Adds a bounding box to the mesh.
-        boundingBox.setFromObject(*i);
+    for (const auto &mesh: m_geoVec) {
+        m_scene.add(mesh);
     }
 }
 
@@ -61,10 +53,9 @@ void GeoGen::processMesh(const Shape shape, std::shared_ptr<MeshBasicMaterial> &
 
 
 void GeoGen::cleanUp() {
-    for (auto &i: m_geoVec) {
-        m_scene.remove(*i);
+    for (auto &mesh: m_geoVec) {
+        m_scene.remove(*mesh);
     }
-    m_scene.children.clear();
     m_geoVec.clear();
     m_grid.resetUsedCoords();
 }

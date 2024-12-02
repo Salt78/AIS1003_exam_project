@@ -15,7 +15,7 @@ namespace geoGenNS {
     private:
         threepp::Scene &m_scene;
         gridManagerNS::GridManager &m_grid;
-        int m_quantity{};
+        int m_quantity;
         float m_meshSize{40};
 
         //Stores the generated geometries.
@@ -30,7 +30,7 @@ namespace geoGenNS {
         template<typename T>
         void createMesh(std::shared_ptr<T> &geometry, std::shared_ptr<threepp::MeshBasicMaterial> &material);
 
-        static Shape randomShape();
+        static Shape randomShape() ;
 
         [[nodiscard]] static threepp::Color::ColorName randomColor();
 

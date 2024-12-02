@@ -54,24 +54,27 @@ void KeyHandler::onKeyReleased(const KeyEvent evt) {
 }
 
 
-KeyHandler::KeyHandler(GeoGen &generator, GeoDetection &geoDetection, GeoManipulator &geoManipulator)
-    : m_generator(generator), m_geoDetection(geoDetection), m_geoManipulator(geoManipulator) {}
+KeyHandler::KeyHandler() = default;
 
 
-void KeyHandler::update() const {
+void KeyHandler::update(
+        GeoGen &generator,
+        GeoDetection &detector,
+        GeoManipulator &manipulator) const {
+
     if (m_spaceBarPressed) {
-        m_geoManipulator.reArrangeMeshes(m_geoDetection.runDetection());
+        manipulator.reArrangeMeshes(detector.runDetection());
     }
     if (m_rPressed) {
-        m_generator.generateRND();
+        generator.generateRND();
     }
     if (m_xPressed) {
-        m_geoDetection.previewDetection();
+        detector.previewDetection();
     }
     if (m_bSpacePressed) {
         GeoDetection::specialFunction();
     }
     if (m_tabPressed) {
-        m_geoDetection.enablePreview();
+        detector.enablePreview();
     }
 }

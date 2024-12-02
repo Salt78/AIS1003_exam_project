@@ -3,6 +3,7 @@
 #include <map>
 #include <opencv2/core/types.hpp>
 #include <threepp/math/Color.hpp>
+#include <unordered_map>
 
 
 namespace shapeColorNS {
@@ -20,7 +21,7 @@ namespace shapeColorNS {
      */
     class ShapeColorHandler {
     private:
-        const std::map<threepp::Color::ColorName, std::pair<cv::Scalar, cv::Scalar>> m_colorProfiles = {
+        const std::unordered_map<threepp::Color::ColorName, std::pair<cv::Scalar, cv::Scalar>> m_colorProfiles = {
                 {threepp::Color::green, std::pair<cv::Scalar, cv::Scalar>(cv::Scalar(46, 0, 0), cv::Scalar(68, 255, 255))},
                 {threepp::Color::aqua, std::pair<cv::Scalar, cv::Scalar>(cv::Scalar(76, 0, 0), cv::Scalar(90, 255, 255))},
                 {threepp::Color::orange, std::pair<cv::Scalar, cv::Scalar>(cv::Scalar(13, 0, 0), cv::Scalar(32, 255, 255))},

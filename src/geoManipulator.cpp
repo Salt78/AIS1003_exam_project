@@ -22,17 +22,19 @@ Vector2 GeoManipulator::getCenterCoords(const DetectedObjects<Rect> &rectObject)
 
 /**
  * @brief Uses a threepp::Raycaster to convert the Rect objects to Mesh objects.
- * @param object3d Vector of Rect objects
+ * @param rectObjects Vector of Rect objects
  * @return Vector of Mesh* objects
  */
-auto GeoManipulator::convertToMesh(const std::vector<DetectedObjects<Rect>> &object3d) const {
+auto GeoManipulator::convertToMesh(const std::vector<DetectedObjects<Rect>> &rectObjects) const {
     Raycaster raycaster;
     std::vector<DetectedObjects<Mesh *>> meshObjects{};
-    for (const auto &i: object3d) {
+    for (const auto &rect: rectObjects) {
         //GPT helped me with NDC conversion.
+        Vector2 const centerCoords = getCenterCoords(rect);
+        std::pair<int, int> const imageSize = m_grid.getImgSize();
         Vector2 ndc = {
-                (getCenterCoords(i).x / 800.0f) * 2.0f - 1.0f,
-                (getCenterCoords(i).y / 800.0f) * 2.0f - 1.0f};
+                (centerCoords.x / static_cast<float>(imageSize.first)) * 2.0f - 1.0f,
+                (centerCoords.y / static_cast<float>(imageSize.second)) * 2.0f - 1.0f};
 
         raycaster.setFromCamera(ndc, m_camera);
 
@@ -41,16 +43,15 @@ auto GeoManipulator::convertToMesh(const std::vector<DetectedObjects<Rect>> &obj
         if (intersect.empty()) {
             throw std::logic_error("No intersection found");
         }
-        const auto objectPtr = intersect[0].object;
+        auto *const objectPtr = intersect[0].object;
         if (!objectPtr) {
-            throw std::logic_error("No Object3D found");
+            throw std::logic_error("No object found");
         }
-        const auto intersectedMesh = objectPtr->as<Mesh>();
+        auto *const intersectedMesh = objectPtr->as<Mesh>();
         if (!intersectedMesh) {
-            throw std::logic_error("No Mesh found");
+            throw std::logic_error("No mesh found");
         }
-        //GPT code for cloning the raw Mesh object into a std::shared_ptr<Mesh>
-        meshObjects.emplace_back(intersectedMesh, i.getShape(), i.getColor());
+        meshObjects.emplace_back(intersectedMesh, rect.getShape(), rect.getColor());
     }
     return meshObjects;
 }
@@ -68,8 +69,8 @@ auto GeoManipulator::filterByShapeAndColor(std::vector<DetectedObjects<Mesh *>> 
 
     //Used a GPT to help me figure out how to sort the vector based on shape and color.
     std::ranges::copy_if(meshObjects, std::back_inserter(sortedVec),
-                         [&](const DetectedObjects<Mesh *> &i) {
-                             return i.getShape() == shape && i.getColor() == color;
+                         [&](const DetectedObjects<Mesh *> &mesh) {
+                             return mesh.getShape() == shape && mesh.getColor() == color;
                          });
     return sortedVec;
 }
@@ -83,9 +84,9 @@ auto GeoManipulator::filterByShapeAndColor(std::vector<DetectedObjects<Mesh *>> 
 auto GeoManipulator::groupMeshesByShapeAndColor(std::vector<DetectedObjects<Mesh *>> &meshObjects) const {
     std::vector<DetectedObjects<Mesh *>> compSortedVec{};
 
-    for (auto &i: m_shapeColor.getSupportedColors()) {
-        for (auto &j: ShapeColorHandler::getSupportedShapes()) {
-            std::vector<DetectedObjects<Mesh *>> tempVec = filterByShapeAndColor(meshObjects, j, i);
+    for (auto &color: m_shapeColor.getSupportedColors()) {
+        for (auto &shape: ShapeColorHandler::getSupportedShapes()) {
+            std::vector<DetectedObjects<Mesh *>> tempVec = filterByShapeAndColor(meshObjects, shape, color);
             compSortedVec.insert(compSortedVec.end(), tempVec.begin(), tempVec.end());
         }
     }
@@ -98,22 +99,22 @@ GeoManipulator::GeoManipulator(GridManager &grid, Scene &scene, Camera &camera)
 }
 
 
-void GeoManipulator::reArrangeMeshes(const std::vector<DetectedObjects<Rect>> &object3d) {
+void GeoManipulator::reArrangeMeshes(const std::vector<DetectedObjects<Rect>> &rectObjects) const {
     std::vector<DetectedObjects<Mesh *>> meshObjects{};
     try {
-        meshObjects = convertToMesh(object3d);
+        meshObjects = convertToMesh(rectObjects);
     } catch (const std::logic_error &) {
         return;
     }
 
     int key{1};
     const std::vector<DetectedObjects<Mesh *>> arrangedMesh = groupMeshesByShapeAndColor(meshObjects);
-    for (auto &i: arrangedMesh) {
+    for (auto &mesh: arrangedMesh) {
         const std::pair<float, float> coords = m_grid.getCoords(key);
         key++;
 
-        i.getObject()->position.x = coords.first;
-        i.getObject()->position.y = coords.second;
-        i.getObject()->position.z = 0;
+        mesh.getObject()->position.x = coords.first;
+        mesh.getObject()->position.y = coords.second;
+        mesh.getObject()->position.z = 0;
     }
 }

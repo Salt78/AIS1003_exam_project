@@ -76,11 +76,7 @@ TEST_CASE("OPENCV detection with raycasting", "[detection]") {
 
     auto intersectedMesh = objectPtr->as<Mesh>();
 
-    auto newOwner = std::dynamic_pointer_cast<Mesh>(intersectedMesh->clone());
-
-    DetectedObjects<std::shared_ptr<Mesh>> RetrievedMesh{};
-    RetrievedMesh = DetectedObjects<std::shared_ptr<Mesh>>(newOwner, recognizedMesh[0].getShape(), recognizedMesh[0].getColor());
-    position = RetrievedMesh.getObject()->position;
+    position = intersectedMesh->position;
 
 
     REQUIRE(position.x == coords.first);
