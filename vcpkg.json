@@ -1,5 +1,11 @@
 {
   "dependencies": [
-    "opencv"
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "highgui"
+      ]
+    }
   ]
 }
