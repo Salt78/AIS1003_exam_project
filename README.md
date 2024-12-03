@@ -59,7 +59,6 @@ If you use MinGW, you'll also have to add these lines into your cmake config:
   </div>
 </div>
 
-
-
+![img.png](imagesReadme/AIS1003_classDiagram.jpg)
 
 
